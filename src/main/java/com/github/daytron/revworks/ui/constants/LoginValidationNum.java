@@ -20,9 +20,9 @@ package com.github.daytron.revworks.ui.constants;
  * @author Ryan Gilera
  */
 public enum LoginValidationNum {
-    STUDENT_ID_MIN_VALUE(10000),
-    STUDENT_ID_MAX_VALUE(99999),
-    STUDENT_ID_LENGTH(5),
+    STUDENT_ID_MIN_VALUE(100000),
+    STUDENT_ID_MAX_VALUE(999999),
+    STUDENT_ID_LENGTH(6),
     EMAIL_MAX_LENGTH(254),
     PASSWORD_MAX_LENGTH(16),
     PASSWORD_MIN_LENGTH(6)

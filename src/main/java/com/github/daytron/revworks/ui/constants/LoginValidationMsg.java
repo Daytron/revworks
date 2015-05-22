@@ -22,7 +22,7 @@ package com.github.daytron.revworks.ui.constants;
  */
 public enum LoginValidationMsg {
 
-    STUDENT_ID_INVALID("Student ID must be 5 numbers (was {0})"),
+    STUDENT_ID_INVALID("Student ID must be 6 numbers (was {0})"),
     STUDENT_ID_EMPTY("Student ID is missing"),
     LECTURER_EMAIL_INVALID("Invalid email"),
     LECTURER_EMAIL_EMPTY("Email is missing"),

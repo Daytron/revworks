@@ -15,6 +15,8 @@
  */
 package com.github.daytron.revworks;
 
+import com.github.daytron.revworks.authentication.AccessControl;
+import com.github.daytron.revworks.authentication.UserAccessControl;
 import com.github.daytron.revworks.ui.LoginScreen;
 import javax.servlet.annotation.WebServlet;
 
@@ -32,15 +34,29 @@ import com.vaadin.ui.UI;
 @Theme("mytheme")
 @Widgetset("com.github.daytron.revworks.MyAppWidgetset")
 public class MainUI extends UI {
-
+    private static final long serialVersionUID = 1L;
+    private final AccessControl accessControl = new UserAccessControl();
+    
+    
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         Responsive.makeResponsive(this);
         setLocale(vaadinRequest.getLocale());
         getPage().setTitle("RevWorks");
         
-        setContent(new LoginScreen());
-
+        if (!accessControl.isUserSignedIn()) {
+            setContent(new LoginScreen(accessControl));
+        } else {
+            // Go straight to main view
+        }
+    }
+    
+    public static MainUI get() {
+        return (MainUI) UI.getCurrent();
+    }
+    
+    public AccessControl getAccessControl() {
+        return accessControl;
     }
 
     @WebServlet(urlPatterns = "/*", name = "MainUIServlet", asyncSupported = true)

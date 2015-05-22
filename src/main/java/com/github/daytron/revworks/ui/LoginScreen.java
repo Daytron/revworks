@@ -15,11 +15,11 @@
  */
 package com.github.daytron.revworks.ui;
 
+import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.behaviour.login.LoginButtonListener;
 import com.github.daytron.revworks.behaviour.login.OptionChangeValueListener;
 import com.github.daytron.revworks.behaviour.validator.LoginValidatorFactory;
 import com.github.daytron.revworks.ui.constants.LoginString;
-import com.github.daytron.revworks.ui.constants.LoginValidationMsg;
 import com.github.daytron.revworks.ui.constants.LoginValidationNum;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -45,10 +45,13 @@ public class LoginScreen extends CssLayout {
     private TextField usernameField;
     private PasswordField passwordField;
     private Button loginButton;
+    
+    private final AccessControl accessControl;
 
-    public LoginScreen() {
+    public LoginScreen(AccessControl accessControl) {
+        this.accessControl = accessControl;
         buildUI();
-        usernameField.focus();
+        this.usernameField.focus();
     }
 
     /**
@@ -153,7 +156,8 @@ public class LoginScreen extends CssLayout {
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         loginButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         loginButton.addClickListener(new LoginButtonListener(
-                usernameField, passwordField));
+                usernameField, passwordField, userOptionGroup,
+                accessControl));
 
         // Add all together
         loginFormLayout.addComponents(userOptionGroup,

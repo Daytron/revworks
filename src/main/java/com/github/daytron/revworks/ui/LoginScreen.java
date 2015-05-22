@@ -15,9 +15,12 @@
  */
 package com.github.daytron.revworks.ui;
 
+import com.github.daytron.revworks.behaviour.login.LoginButtonListener;
+import com.github.daytron.revworks.behaviour.login.OptionChangeValueListener;
+import com.github.daytron.revworks.behaviour.validator.LoginValidatorFactory;
 import com.github.daytron.revworks.ui.constants.LoginString;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeListener;
+import com.github.daytron.revworks.ui.constants.LoginValidationMsg;
+import com.github.daytron.revworks.ui.constants.LoginValidationNum;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -110,62 +113,53 @@ public class LoginScreen extends CssLayout {
                 LoginString.FORM_OPTION_STUDENT.getText(),
                 LoginString.FORM_OPTION_LECTURER.getText());
         // Set default value
-        userOptionGroup.select(LoginString.FORM_OPTION_STUDENT.getText());
+        userOptionGroup.setValue(LoginString.FORM_OPTION_STUDENT.getText());
         userOptionGroup.setNullSelectionAllowed(false);
-        userOptionGroup.setImmediate(true);
         userOptionGroup.addStyleName("horizontal");
 
         // TextField for userid/email
         usernameField = new TextField(
-                LoginString.FORM_USER_ID.getText());
+                LoginString.FORM_STUDENT_ID.getText());
         usernameField.setWidth(15, UNITS_EM);
+        usernameField.setMaxLength(
+                LoginValidationNum.STUDENT_ID_LENGTH.getValue());
+        // By default, hides validation error. Only to show later on explicitly
+        // using the submit button
+        usernameField.setValidationVisible(false);
+
+        // Apply corresponding validator by default
+        usernameField.addValidator(
+                LoginValidatorFactory.buildStudentIDValidator());
 
         // Add listener to option group
-        userOptionGroup.addValueChangeListener(new OptionChangeValueListener());
+        userOptionGroup.addValueChangeListener(
+                new OptionChangeValueListener(usernameField));
 
         // Password field
         passwordField = new PasswordField(
                 LoginString.FORM_USER_PASSWORD.getText());
         passwordField.setWidth(15, UNITS_EM);
+        passwordField.setMaxLength(
+                LoginValidationNum.PASSWORD_MAX_LENGTH.getValue());
+        passwordField.addValidator(
+                LoginValidatorFactory.buildPasswordLengthValidator());
+        // By default, hides validation error. Only to show later on explicitly
+        // using the submit button
+        passwordField.setValidationVisible(false);
 
         // For login button
         loginButton = new Button(
                 LoginString.FORM_LOGIN_BUTTON.getText());
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         loginButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        loginButton.addClickListener(new LoginButtonListener(
+                usernameField, passwordField));
 
         // Add all together
         loginFormLayout.addComponents(userOptionGroup,
                 usernameField, passwordField, loginButton);
 
         return loginFormLayout;
-    }
-
-    /**
-     * Listener inner class for custom behaviour when option group value is
-     * changed. Change the username caption label depending on the type of user
-     * selected in the option group.
-     */
-    private class OptionChangeValueListener implements ValueChangeListener {
-
-        @Override
-        public void valueChange(Property.ValueChangeEvent event) {
-            // retrieve value
-            String value = event.getProperty().getValue().toString();
-
-            // Change username textfield caption according to user type
-            if (value.equalsIgnoreCase(LoginString.FORM_OPTION_STUDENT.getText())) {
-                usernameField.setCaption(LoginString.FORM_USER_ID.getText());
-            } else {
-                usernameField.setCaption(LoginString.FORM_USER_EMAIL.getText());
-            }
-
-            // Clears the textfield if option group value is changed
-            usernameField.setValue("");
-            // Return back the focus
-            usernameField.focus();
-        }
-
     }
 
 }

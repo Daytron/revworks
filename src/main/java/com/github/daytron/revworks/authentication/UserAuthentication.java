@@ -18,16 +18,7 @@ package com.github.daytron.revworks.authentication;
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.UserType;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
-import com.vaadin.data.util.sqlcontainer.query.FreeformQueryDelegate;
-import com.vaadin.data.util.sqlcontainer.query.FreeformStatementDelegate;
-import com.vaadin.data.util.sqlcontainer.query.QueryDelegate;
-import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 import java.security.Principal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -113,7 +104,7 @@ public class UserAuthentication {
             // throw new AuthenticationException
             if (!resultSet.next()) {
                 throw new AuthenticationException(
-                        ExceptionMsg.INVALID_USER_CREDENTIAL.getMsg());
+                        ExceptionMsg.AUTHENTICATION_EXCEPTION_NO_USER.getMsg());
             }
 
             // Move "cursor" to the first row of resulting query table
@@ -143,7 +134,8 @@ public class UserAuthentication {
         } catch (SQLException ex) {
             Logger.getLogger(UserAuthentication.class.getName()).log(Level.SEVERE, null, ex);
 
-            throw new AuthenticationException(ex);
+            throw new AuthenticationException(
+                ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
         }
 
     }

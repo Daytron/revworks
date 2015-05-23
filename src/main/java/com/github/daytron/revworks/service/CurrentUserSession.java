@@ -17,6 +17,7 @@ package com.github.daytron.revworks.service;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinSession;
 import java.security.Principal;
 
 /**
@@ -71,5 +72,9 @@ public class CurrentUserSession {
                     "No request bound to current thread");
         }
         return request;
+    }
+    
+    public static void signOut() {
+        VaadinSession.getCurrent().getSession().invalidate();
     }
 }

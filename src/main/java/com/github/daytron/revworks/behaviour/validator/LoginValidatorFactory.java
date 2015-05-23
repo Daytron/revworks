@@ -15,8 +15,8 @@
  */
 package com.github.daytron.revworks.behaviour.validator;
 
-import com.github.daytron.revworks.ui.constants.LoginValidationMsg;
-import com.github.daytron.revworks.ui.constants.LoginValidationNum;
+import com.github.daytron.revworks.data.LoginValidationMsg;
+import com.github.daytron.revworks.data.LoginValidationNum;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 

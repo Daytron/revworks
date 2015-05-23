@@ -19,7 +19,7 @@ import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.authentication.AuthenticationException;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.NoCurrentUserException;
-import com.github.daytron.revworks.ui.constants.UserType;
+import com.github.daytron.revworks.data.UserType;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;

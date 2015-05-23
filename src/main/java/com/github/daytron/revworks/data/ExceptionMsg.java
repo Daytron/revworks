@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.constants;
+package com.github.daytron.revworks.data;
 
 /**
  *
  * @author Ryan Gilera
  */
-public enum LoginValidationNum {
-    STUDENT_ID_MIN_VALUE(100000),
-    STUDENT_ID_MAX_VALUE(999999),
-    STUDENT_ID_LENGTH(6),
-    EMAIL_MAX_LENGTH(254),
-    PASSWORD_MAX_LENGTH(16),
-    PASSWORD_MIN_LENGTH(6)
+public enum ExceptionMsg {
+    INVALID_USER_CREDENTIAL("No such user found. Invalid credentials."),
+    NO_CURRENT_USER_EXCEPTION("No user is login."),
+    WRONG_CURRENT_USER_TYPE_EXCEPTION("Wrong user type access.")
     ;
-    private final int value;
+        private final String msg;
 
-    private LoginValidationNum(int value) {
-        this.value = value;
+    private ExceptionMsg(String msg) {
+        this.msg = msg;
     }
 
-    public int getValue() {
-        return value;
+    public String getMsg() {
+        return msg;
     }
-
+        
+    
 }

@@ -16,8 +16,8 @@
 package com.github.daytron.revworks.behaviour.login;
 
 import com.github.daytron.revworks.behaviour.validator.LoginValidatorFactory;
-import com.github.daytron.revworks.ui.constants.LoginString;
-import com.github.daytron.revworks.ui.constants.LoginValidationNum;
+import com.github.daytron.revworks.data.LoginString;
+import com.github.daytron.revworks.data.LoginValidationNum;
 import com.vaadin.data.Property;
 import com.vaadin.ui.TextField;
 

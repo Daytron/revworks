@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.constants;
+package com.github.daytron.revworks.data;
 
 /**
- *
+ * Login validation messages
+ * 
  * @author Ryan Gilera
  */
-public enum ExceptionMsg {
-    INVALID_USER_CREDENTIAL("No such user found. Invalid credentials."),
-    NO_CURRENT_USER_EXCEPTION("No user is login."),
-    WRONG_CURRENT_USER_TYPE_EXCEPTION("Wrong user type access.")
-    ;
-        private final String msg;
+public enum LoginValidationMsg {
 
-    private ExceptionMsg(String msg) {
-        this.msg = msg;
+    STUDENT_ID_INVALID("Student ID must be 6 numbers (was {0})"),
+    STUDENT_ID_EMPTY("Student ID is missing"),
+    LECTURER_EMAIL_INVALID("Invalid email"),
+    LECTURER_EMAIL_EMPTY("Email is missing"),
+    PASSWORD_INVALID("Password must be between 6 to 16 characters (was {0})"),
+    PASSWORD_EMPTY("Password is missing");
+    private final String text;
+
+    private LoginValidationMsg(String text) {
+        this.text = text;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getText() {
+        return text;
     }
-        
-    
+
 }

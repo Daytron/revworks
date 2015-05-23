@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright 2015 Ryan Gilera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,29 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.constants;
+package com.github.daytron.revworks.data;
 
 /**
- * Login validation messages
+ * String constants used in Login UI
  * 
  * @author Ryan Gilera
  */
-public enum LoginValidationMsg {
+public enum LoginString {
+    // Logo 
+    LOGO_LABEL("RevWorks"),
+   
+    // Login Form
+    FORM_OPTIONGROUP_USER("Select login type"),
+    FORM_OPTION_STUDENT("Student"),
+    FORM_OPTION_LECTURER("Lecturer"),
+    
+    FORM_STUDENT_ID("Student ID"),
+    FORM_LECTURER_EMAIL("Lecturer Email"),
+    
+    FORM_USER_PASSWORD("Password"),
+    
+    FORM_LOGIN_BUTTON("Login");
 
-    STUDENT_ID_INVALID("Student ID must be 6 numbers (was {0})"),
-    STUDENT_ID_EMPTY("Student ID is missing"),
-    LECTURER_EMAIL_INVALID("Invalid email"),
-    LECTURER_EMAIL_EMPTY("Email is missing"),
-    PASSWORD_INVALID("Password must be between 6 to 16 characters (was {0})"),
-    PASSWORD_EMPTY("Password is missing");
     private final String text;
-
-    private LoginValidationMsg(String text) {
+    private LoginString(String text) {
         this.text = text;
     }
 
     public String getText() {
         return text;
     }
-
+    
+    
+    
+    
 }

@@ -16,8 +16,8 @@
 package com.github.daytron.revworks.authentication;
 
 import com.github.daytron.revworks.service.SQLConnectionManager;
-import com.github.daytron.revworks.ui.constants.ExceptionMsg;
-import com.github.daytron.revworks.ui.constants.UserType;
+import com.github.daytron.revworks.data.ExceptionMsg;
+import com.github.daytron.revworks.data.UserType;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;

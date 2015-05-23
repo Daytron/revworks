@@ -15,7 +15,7 @@
  */
 package com.github.daytron.revworks.authentication;
 
-import com.github.daytron.revworks.ui.constants.UserType;
+import com.github.daytron.revworks.data.UserType;
 import java.security.Principal;
 
 /**

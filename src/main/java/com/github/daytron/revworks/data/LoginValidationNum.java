@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2015 Ryan Gilera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,39 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.constants;
+package com.github.daytron.revworks.data;
 
 /**
- * String constants used in Login UI
- * 
+ *
  * @author Ryan Gilera
  */
-public enum LoginString {
-    // Logo 
-    LOGO_LABEL("RevWorks"),
-   
-    // Login Form
-    FORM_OPTIONGROUP_USER("Select login type"),
-    FORM_OPTION_STUDENT("Student"),
-    FORM_OPTION_LECTURER("Lecturer"),
-    
-    FORM_STUDENT_ID("Student ID"),
-    FORM_LECTURER_EMAIL("Lecturer Email"),
-    
-    FORM_USER_PASSWORD("Password"),
-    
-    FORM_LOGIN_BUTTON("Login");
+public enum LoginValidationNum {
+    STUDENT_ID_MIN_VALUE(100000),
+    STUDENT_ID_MAX_VALUE(999999),
+    STUDENT_ID_LENGTH(6),
+    EMAIL_MAX_LENGTH(254),
+    PASSWORD_MAX_LENGTH(16),
+    PASSWORD_MIN_LENGTH(6)
+    ;
+    private final int value;
 
-    private final String text;
-    private LoginString(String text) {
-        this.text = text;
+    private LoginValidationNum(int value) {
+        this.value = value;
     }
 
-    public String getText() {
-        return text;
+    public int getValue() {
+        return value;
     }
-    
-    
-    
-    
+
 }

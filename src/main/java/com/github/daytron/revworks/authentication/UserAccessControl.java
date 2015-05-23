@@ -18,8 +18,8 @@ package com.github.daytron.revworks.authentication;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.service.WrongCurrentUserTypeException;
-import com.github.daytron.revworks.ui.constants.ExceptionMsg;
-import com.github.daytron.revworks.ui.constants.UserType;
+import com.github.daytron.revworks.data.ExceptionMsg;
+import com.github.daytron.revworks.data.UserType;
 import com.vaadin.server.Page;
 import java.security.Principal;
 

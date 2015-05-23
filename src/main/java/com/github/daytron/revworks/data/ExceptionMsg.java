@@ -20,8 +20,10 @@ package com.github.daytron.revworks.data;
  * @author Ryan Gilera
  */
 public enum ExceptionMsg {
-    INVALID_USER_CREDENTIAL("No such user found. Invalid credentials."),
-    NO_CURRENT_USER_EXCEPTION("No user is login."),
+    AUTHENTICATION_EXCEPTION_NO_USER("No such user found. Invalid credentials."),
+    AUTHENTICATION_EXCEPTION_SYS_ERROR("System error occured, "
+            + "please consult your administrator for help."),
+    NO_CURRENT_USER_EXCEPTION("No user is login"),
     WRONG_CURRENT_USER_TYPE_EXCEPTION("Wrong user type access.")
     ;
         private final String msg;

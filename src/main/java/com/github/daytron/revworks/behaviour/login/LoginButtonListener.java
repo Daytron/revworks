@@ -17,9 +17,10 @@ package com.github.daytron.revworks.behaviour.login;
 
 import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.authentication.AuthenticationException;
-import com.github.daytron.revworks.service.CurrentUserSession;
+import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.data.UserType;
+import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
@@ -61,7 +62,6 @@ public class LoginButtonListener implements Button.ClickListener {
      */
     @Override
     public void buttonClick(Button.ClickEvent event) {
-        Button loginButton = event.getButton();
 
         try {
             userField.validate();
@@ -71,9 +71,10 @@ public class LoginButtonListener implements Button.ClickListener {
         } catch (Validator.InvalidValueException e) {
             userField.setValidationVisible(true);
             passwordField.setValidationVisible(true);
+            
             Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, e);
-            Notification.show("Exception at Button listener "
-                    + e.toString(), Notification.Type.ERROR_MESSAGE);
+            NotificationUtil.showError(
+                    ErrorMsg.INVALID_INPUT_CAPTION.getText());
         }
 
     }
@@ -94,9 +95,10 @@ public class LoginButtonListener implements Button.ClickListener {
                     Notification.Type.TRAY_NOTIFICATION);
 
         } catch (AuthenticationException ex) {
-            Notification.show("Authentication Exception: "
-                    + ex.toString(), Notification.Type.ERROR_MESSAGE);
             Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);
+            NotificationUtil.showError(
+                    ErrorMsg.SIGNIN_FAILED_CAPTION.getText(), 
+                    ex.getMessage());
         } catch (NoCurrentUserException ex) {
             Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);
         }

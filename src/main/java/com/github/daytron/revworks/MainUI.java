@@ -47,7 +47,7 @@ public class MainUI extends UI {
         if (!accessControl.isUserSignedIn()) {
             setContent(new LoginScreen(accessControl));
         } else {
-            // Go straight to main view
+            //accessControl.signOut();
         }
     }
     

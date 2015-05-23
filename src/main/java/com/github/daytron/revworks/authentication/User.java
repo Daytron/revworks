@@ -22,7 +22,7 @@ import java.security.Principal;
  *
  * @author Ryan Gilera
  */
-public class User implements Principal {
+abstract class User implements Principal {
     private final String id;
     private final String firstName;
     private final String lastName;
@@ -61,6 +61,11 @@ public class User implements Principal {
         return id;
     }
     
+    public boolean isLecturerUser() {
+        return userType == UserType.LECTURER;
+    }
     
-
+    public boolean isStudentUser() {
+        return userType == UserType.STUDENT;
+    }
 }

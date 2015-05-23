@@ -17,9 +17,8 @@ package com.github.daytron.revworks.behaviour.login;
 
 import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.authentication.AuthenticationException;
-import com.github.daytron.revworks.authentication.User;
 import com.github.daytron.revworks.service.CurrentUserSession;
-import com.github.daytron.revworks.authentication.UserAccessControl;
+import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.ui.constants.UserType;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Button;
@@ -27,7 +26,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
-import java.security.Principal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,8 +35,9 @@ import java.util.logging.Logger;
  * @author Ryan Gilera
  */
 public class LoginButtonListener implements Button.ClickListener {
+
     private static final long serialVersionUID = 1L;
-    
+
     private final OptionGroup userTypeOptionGroup;
     private final TextField userField;
     private final PasswordField passwordField;
@@ -72,9 +71,9 @@ public class LoginButtonListener implements Button.ClickListener {
         } catch (Validator.InvalidValueException e) {
             userField.setValidationVisible(true);
             passwordField.setValidationVisible(true);
-             Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, e);
-            Notification.show("Exception at Button listener " + 
-                    e.toString(), Notification.Type.ERROR_MESSAGE);
+            Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, e);
+            Notification.show("Exception at Button listener "
+                    + e.toString(), Notification.Type.ERROR_MESSAGE);
         }
 
     }
@@ -84,51 +83,24 @@ public class LoginButtonListener implements Button.ClickListener {
 
         String userName = userField.getValue();
         String password = passwordField.getValue();
-        
-        if (userField == null) {
-            System.out.println("Userfield is null!!!!!!!!!!");
-        }
-        
-        if (passwordField == null) {
-            System.out.println("Password field is null!!!!!!!!");
-        }
-        
-        if (userType == null) {
-            System.out.println("UserType is null!!!!!!!!!!!!!!");
-        }
-        
-        if (userAccessControl == null) {
-            System.out.println("userAccessControl is null!!!!!!!!!");
-        }
 
         try {
             // Retrieve the user upon authentication
-            Principal user = userAccessControl.authenticate(
-                    userType, userName, password);
+            userAccessControl.signIn(userType, userName, password);
 
-            User userObject = (User) user;
-            
-            if (user != null) {
-                // Set the user as current user in the current session
-                CurrentUserSession.set(user);
-                
-                Notification.show("User:\n" +
-                        userObject.getId() +
-                        "Name: " +
-                        userObject.getName() +
-                        "User type: " +
-                        userObject.getUserType().getText(), 
-                        Notification.Type.TRAY_NOTIFICATION);
-            } else {
-                System.out.println("Principal is null");
-            }
+            Notification.show("Welcome "
+                    + userAccessControl.getFirstName()
+                    + "!",
+                    Notification.Type.TRAY_NOTIFICATION);
 
         } catch (AuthenticationException ex) {
-            Notification.show("Verification exception: " + 
-                    ex.toString(), Notification.Type.ERROR_MESSAGE);
+            Notification.show("Authentication Exception: "
+                    + ex.toString(), Notification.Type.ERROR_MESSAGE);
+            Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoCurrentUserException ex) {
             Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     private void determinUserType() {

@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.authentication;
 
+import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.ui.constants.ExceptionMsg;
 import com.github.daytron.revworks.ui.constants.UserType;
 import com.vaadin.data.Item;
@@ -23,9 +24,14 @@ import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
+import com.vaadin.data.util.sqlcontainer.query.FreeformQueryDelegate;
+import com.vaadin.data.util.sqlcontainer.query.FreeformStatementDelegate;
 import com.vaadin.data.util.sqlcontainer.query.QueryDelegate;
-import com.vaadin.ui.Notification;
+import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 import java.security.Principal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,83 +71,79 @@ public class UserAuthentication {
     Principal authenticate(UserType userType, String userfield,
             String password) throws AuthenticationException {
         // Try to connect and make query to the database
-        
-        JDBCConnectionPool connectionPool = null;
-        
-        try {
-            connectionPool = new SimpleJDBCConnectionPool(
-                    "com.mysql.jdbc.Driver",
-                    "jdbc:mysql://localhost/appschema", 
-                    "uservalidator", "sqluserpw",2,10);
 
-            
-            QueryDelegate userQueryDelegate;
+        JDBCConnectionPool connectionPool;
+
+        try {
+            // Create a pool of SQL connections
+            connectionPool = SQLConnectionManager.getInstance().connect();
+            // Reserve a new connection
+            Connection connection = connectionPool.reserveConnection();
+
+            PreparedStatement preparedStatement;
 
             if (userType == UserType.STUDENT) {
-                userQueryDelegate = new FreeformQuery(
-                        "select Student.id, User.first_name, User.last_name "
-                        + "from Student\n"
-                        + "inner join User \n"
-                        + "on Student.person_id = User.id\n"
-                        + "where Student.id = " + userfield + " and "
-                        + "'" + password + "' = Student.password;",
-                        connectionPool,
-                        "id");
+                String query = "SELECT Student.id, User.first_name, User.last_name "
+                        + "FROM Student\n"
+                        + "INNER JOIN User \n"
+                        + "ON Student.person_id = User.id\n"
+                        + "WHERE Student.id = ? and "
+                        + " ? = Student.password";
+                preparedStatement = connection.prepareStatement(query);
+
             } else {
-                userQueryDelegate = new FreeformQuery(
-                        "select Lecturer.id, Lecturer.email, "
+                String query = "SELECT Lecturer.id, "
                         + "User.first_name, User.last_name "
-                        + "from Lecturer\n"
-                        + "inner join User \n"
-                        + "on Lecturer.person_id = User.id\n"
-                        + "where Lecturer.email = '" + userfield + "' and "
-                        + "'" + password + "' = Lecturer.password;",
-                        connectionPool,
-                        "id");
+                        + "FROM Lecturer\n"
+                        + "INNER JOIN User \n"
+                        + "ON Lecturer.person_id = User.id\n"
+                        + "WHERE Lecturer.email = ? and "
+                        + "? = Lecturer.password;";
+                preparedStatement = connection.prepareStatement(query);
             }
 
-            // Add the query delegate to the SQL container
-            SQLContainer personContainer = new SQLContainer(userQueryDelegate);
+            // Apply username and password to the query statement
+            preparedStatement.setString(1, userfield);
+            preparedStatement.setString(2, password);
 
-            if (personContainer.size() < 1) {
+            // Execute statement and save it to ResultSet object
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // If there is no user retrieved with the given username and password,
+            // throw new AuthenticationException
+            if (!resultSet.next()) {
                 throw new AuthenticationException(
                         ExceptionMsg.INVALID_USER_CREDENTIAL.getMsg());
             }
 
-            // Retrieve the user item
-            Item item = personContainer.getItem(personContainer.getIdByIndex(0));
+            // Move "cursor" to the first row of resulting query table
+            resultSet.first();
 
-            // Retrieve the user's information 
-            Property<Long> userID = item.getItemProperty("id");
-            Property<String> firstName = item.getItemProperty("first_name");
-            Property<String> lastName = item.getItemProperty("last_name");
+            // Retrieve user data from the result row table
+            String userID = Integer.toString(resultSet.getInt(1));
+            String firstName = resultSet.getString(2);
+            String lastName = resultSet.getString(3);
 
-            Principal user;
-            // Get the String equivalent
-            String userIDStr = Long.toString(userID.getValue());
-            String firstNameStr = firstName.getValue();
-            String lastNameStr = lastName.getValue();
-            
             // Create appropriate user
+            Principal user;
             if (userType == UserType.STUDENT) {
-                user = new StudentUser(userIDStr, 
-                        userfield, firstNameStr, lastNameStr, userType);
+                user = new StudentUser(userID, userfield, firstName, lastName,
+                        userType);
             } else {
-                user = new LecturerUser(userIDStr, 
-                        userfield, firstNameStr, lastNameStr, userType);
+                user = new LecturerUser(userID, userfield, firstName, lastName,
+                        userType);
             }
             
+            // Close the statement after using it, to free up memory
+            preparedStatement.close();
+            // Then release the connection to free idle SQL connection
+            connectionPool.releaseConnection(connection);
+
             return user;
         } catch (SQLException ex) {
             Logger.getLogger(UserAuthentication.class.getName()).log(Level.SEVERE, null, ex);
 
             throw new AuthenticationException(ex);
-        } finally {
-            // Close connection after authentication process is done to minimise
-            // idle connections
-            if (connectionPool != null) {
-                connectionPool.destroy();
-            }
         }
 
     }

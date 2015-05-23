@@ -15,21 +15,42 @@
  */
 package com.github.daytron.revworks.authentication;
 
+import com.github.daytron.revworks.service.NoCurrentUserException;
+import com.github.daytron.revworks.service.WrongCurrentUserTypeException;
 import com.github.daytron.revworks.ui.constants.UserType;
 import java.security.Principal;
 
 /**
+ * The base interface for authentication and authorisation checks.
  *
  * @author Ryan Gilera
  */
 public interface AccessControl {
-    public Principal authenticate(UserType userType, String userfield, String password) throws AuthenticationException;
-    
+
+    public void signIn(UserType userType, String userfield, String password) 
+            throws AuthenticationException;
+
     public boolean isUserSignedIn();
 
-    public boolean isUserAStudent(UserType role);
-    
-    public boolean isUserALecturer(UserType role);
+    public boolean isUserAStudent() throws NoCurrentUserException ;
 
-    public String getPrincipalName();
+    public boolean isUserALecturer() throws NoCurrentUserException;
+
+    public String getPrincipalName() throws NoCurrentUserException ;
+    
+    public String getFirstName() throws NoCurrentUserException ;
+    
+    public String getLastName() throws NoCurrentUserException ;
+    
+    public String getLecturerEmail() throws NoCurrentUserException, 
+            WrongCurrentUserTypeException;
+    
+    public String getStudentID() throws NoCurrentUserException, 
+            WrongCurrentUserTypeException;
+    
+    public String getUserTypeString() throws NoCurrentUserException ;
+    
+    public UserType getUserType() throws NoCurrentUserException ;
+    
+    public void signOut();
 }

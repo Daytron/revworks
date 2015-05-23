@@ -16,23 +16,42 @@
 package com.github.daytron.revworks.authentication;
 
 import com.github.daytron.revworks.service.CurrentUserSession;
+import com.github.daytron.revworks.service.NoCurrentUserException;
+import com.github.daytron.revworks.service.WrongCurrentUserTypeException;
+import com.github.daytron.revworks.ui.constants.ExceptionMsg;
 import com.github.daytron.revworks.ui.constants.UserType;
+import com.vaadin.server.Page;
 import java.security.Principal;
 
 /**
+ * Default implementation class of {@link AccessControl} interface. This
+ * implementation accepts {@link  UserType} object and any strings as username
+ * and a password, and manage user access control and information.
  *
  * @author Ryan Gilera
  */
 public class UserAccessControl implements AccessControl {
+
     private static final long serialVersionUID = 1L;
-    
+
+    /**
+     * Expose authentication method call of {@link UserAuthentication} to pass
+     * {@link  UserType} object, username and password arguments. As a result,
+     * it accepts and returns a {@link User} as a Principal object.
+     *
+     * @param userType A {@link UserType} object
+     * @param userfield The username either and email for the lecturers and
+     * student id for students
+     * @param password The password as String
+     * @throws AuthenticationException
+     */
     @Override
-    public Principal authenticate(UserType userType, String userfield, 
+    public void signIn(UserType userType, String userfield,
             String password) throws AuthenticationException {
         Principal user = UserAuthentication.getInstance()
                 .authenticate(userType, userfield, password);
-        
-        return user;
+
+        CurrentUserSession.set(user);
     }
 
     @Override
@@ -41,20 +60,120 @@ public class UserAccessControl implements AccessControl {
     }
 
     @Override
-    public boolean isUserAStudent(UserType role) {
-        return role == UserType.STUDENT;
-    }
-    
-    @Override
-    public boolean isUserALecturer(UserType role) {
-        return role == UserType.LECTURER;
+    public boolean isUserAStudent() throws NoCurrentUserException {
+
+        if (!isUserSignedIn()) {
+            return ((User) CurrentUserSession.get()).isStudentUser();
+        } else {
+            throw new NoCurrentUserException(
+                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+        }
     }
 
     @Override
-    public String getPrincipalName() {
-        return CurrentUserSession.get().getName();
+    public boolean isUserALecturer() throws NoCurrentUserException {
+        if (!isUserSignedIn()) {
+            return ((User) CurrentUserSession.get()).isLecturerUser();
+        } else {
+            throw new NoCurrentUserException(
+                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+        }
     }
 
-    
-    
+    @Override
+    public String getPrincipalName() throws NoCurrentUserException {
+
+        if (!isUserSignedIn()) {
+            throw new NoCurrentUserException(
+                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+        } else {
+            return CurrentUserSession.get().getName();
+        }
+
+    }
+
+    @Override
+    public String getFirstName() throws NoCurrentUserException {
+
+        if (!isUserSignedIn()) {
+            throw new NoCurrentUserException(
+                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+        } else {
+            return ((User) CurrentUserSession.get()).getFirstName();
+        }
+
+    }
+
+    @Override
+    public String getLastName() throws NoCurrentUserException {
+
+        if (!isUserSignedIn()) {
+            throw new NoCurrentUserException(
+                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+        } else {
+            return ((User) CurrentUserSession.get()).getLastName();
+        }
+
+    }
+
+    @Override
+    public String getLecturerEmail() throws NoCurrentUserException,
+            WrongCurrentUserTypeException {
+        if (!isUserSignedIn()) {
+            throw new NoCurrentUserException(
+                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+        } else {
+            if (((User) CurrentUserSession.get()).isLecturerUser()) {
+                return ((LecturerUser) (CurrentUserSession.get())).getEmail();
+            } else {
+                throw new WrongCurrentUserTypeException(
+                        ExceptionMsg.WRONG_CURRENT_USER_TYPE_EXCEPTION.getMsg());
+            }
+        }
+    }
+
+    @Override
+    public String getStudentID() throws NoCurrentUserException,
+            WrongCurrentUserTypeException {
+        if (!isUserSignedIn()) {
+            throw new NoCurrentUserException(
+                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+        } else {
+            if (((User) CurrentUserSession.get()).isLecturerUser()) {
+                return ((StudentUser) (CurrentUserSession.get())).getStudentID();
+            } else {
+                throw new WrongCurrentUserTypeException(
+                        ExceptionMsg.WRONG_CURRENT_USER_TYPE_EXCEPTION.getMsg());
+            }
+        }
+    }
+
+    @Override
+    public void signOut() {
+        CurrentUserSession.signOut();
+
+        // Reloads the page which will point back to login page
+        Page.getCurrent().reload();
+    }
+
+    @Override
+    public String getUserTypeString() throws NoCurrentUserException {
+        if (!isUserSignedIn()) {
+            throw new NoCurrentUserException(
+                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+        } else {
+            return ((User) CurrentUserSession.get()).getUserType().getText();
+        }
+    }
+
+    @Override
+    public UserType getUserType() throws NoCurrentUserException {
+        if (!isUserSignedIn()) {
+            throw new NoCurrentUserException(
+                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+        } else {
+            return ((User) CurrentUserSession.get()).getUserType();
+        }
+    }
+
 }

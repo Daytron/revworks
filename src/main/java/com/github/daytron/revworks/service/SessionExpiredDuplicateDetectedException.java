@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright 2015 Ryan Gilera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,35 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.authentication;
+package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.data.UserType;
+import com.github.daytron.revworks.authentication.*;
 
 /**
  *
  * @author Ryan Gilera
  */
-class LecturerUser extends User {
+public class NoCurrentUserException extends Exception {
 
-    private final String email;
-    private final String lecturerID;
-    
-    public LecturerUser(String id, String lecturerID,String email, 
-            String firstname, String lastname, UserType userType) {
-        super(id, firstname, lastname, userType);
-        this.email = email;
-        this.lecturerID = lecturerID;
+    public NoCurrentUserException(String msg, Throwable t) {
+
+        super(msg, t);
     }
 
-    public String getEmail() {
-        return email;
+    public NoCurrentUserException(String msg) {
+
+        super(msg);
     }
 
-    public String getLecturerID() {
-        return lecturerID;
+    public NoCurrentUserException(Throwable t) {
+
+        super(t);
     }
-    
-    
-    
-    
 }

@@ -15,9 +15,11 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.MainUI;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.UI;
 import java.security.Principal;
 
 /**
@@ -42,13 +44,8 @@ public class CurrentUserSession {
      *             if the current session cannot be accessed.
      */
     public static void set(Principal currentUser) {
-        if (currentUser == null) {
-            getCurrentRequest().getWrappedSession().removeAttribute(
-                    CURRENT_USER_SESSION_ATTRIBUTE_KEY);
-        } else {
-            getCurrentRequest().getWrappedSession().setAttribute(
-                    CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
-        }
+        VaadinSession.getCurrent().setAttribute(
+                CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
     }
     
     /**
@@ -60,21 +57,18 @@ public class CurrentUserSession {
      *             if the current session cannot be accessed.
      */
     public static Principal get() {
-        Principal currentUser = (Principal) getCurrentRequest().getWrappedSession()
+        Principal currentUser = (Principal) VaadinSession.getCurrent()
                 .getAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY);
         return (currentUser == null) ? null : currentUser;
     }
     
-    private static VaadinRequest getCurrentRequest() {
-        VaadinRequest request = VaadinService.getCurrentRequest();
-        if (request == null) {
-            throw new IllegalStateException(
-                    "No request bound to current thread");
-        }
-        return request;
-    }
+    
     
     public static void signOut() {
+//        MainUI.MainUIServlet.removeSessonUponLogout(
+//                get().getName());
+        
+        VaadinSession.getCurrent().close();
         VaadinSession.getCurrent().getSession().invalidate();
     }
 }

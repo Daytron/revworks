@@ -74,7 +74,8 @@ public class UserAuthentication {
             PreparedStatement preparedStatement;
 
             if (userType == UserType.STUDENT) {
-                String query = "SELECT Student.id, User.first_name, User.last_name "
+                String query = "SELECT User.id, Student.id, User.first_name, "
+                        + "User.last_name "
                         + "FROM Student\n"
                         + "INNER JOIN User \n"
                         + "ON Student.person_id = User.id\n"
@@ -83,7 +84,7 @@ public class UserAuthentication {
                 preparedStatement = connection.prepareStatement(query);
 
             } else {
-                String query = "SELECT Lecturer.id, "
+                String query = "SELECT User.id, Lecturer.id, "
                         + "User.first_name, User.last_name "
                         + "FROM Lecturer\n"
                         + "INNER JOIN User \n"
@@ -112,8 +113,8 @@ public class UserAuthentication {
 
             // Retrieve user data from the result row table
             String userID = Integer.toString(resultSet.getInt(1));
-            String firstName = resultSet.getString(2);
-            String lastName = resultSet.getString(3);
+            String firstName = resultSet.getString(3);
+            String lastName = resultSet.getString(4);
 
             // Create appropriate user
             Principal user;
@@ -121,8 +122,9 @@ public class UserAuthentication {
                 user = new StudentUser(userID, userfield, firstName, lastName,
                         userType);
             } else {
-                user = new LecturerUser(userID, userfield, firstName, lastName,
-                        userType);
+                String lecturerID = Integer.toString(resultSet.getInt(2));
+                user = new LecturerUser(userID, lecturerID, userfield, 
+                        firstName, lastName, userType);
             }
             
             // Close the statement after using it, to free up memory

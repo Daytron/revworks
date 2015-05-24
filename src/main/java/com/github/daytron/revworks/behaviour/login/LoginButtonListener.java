@@ -15,18 +15,23 @@
  */
 package com.github.daytron.revworks.behaviour.login;
 
+import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.authentication.AuthenticationException;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.data.UserType;
+import com.github.daytron.revworks.service.CurrentUserSession;
+import com.github.daytron.revworks.ui.DashboardScreen;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.Validator;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,11 +93,26 @@ public class LoginButtonListener implements Button.ClickListener {
         try {
             // Retrieve the user upon authentication
             userAccessControl.signIn(userType, userName, password);
-
+            
+            
+            // Verifies if this is the only login session for the current user
+            // If this is second login session made by the user,
+            // it terminates the old session and continue with this new session
+            // created. Afterwards this session is recorded in the servlet.
+            // See MainUIServlet documentation
+            MainUI.MainUIServlet.saveUserSessionInfo(
+                    userAccessControl.getPrincipalName(), 
+                    VaadinSession.getCurrent());
+            MainUI.MainUIServlet.printSessions("user login");
+            
+            DashboardScreen tempUI = new DashboardScreen();
+            UI.getCurrent().setContent(tempUI);
+            
             Notification.show("Welcome "
                     + userAccessControl.getFirstName()
                     + "!",
                     Notification.Type.TRAY_NOTIFICATION);
+                   
 
         } catch (AuthenticationException ex) {
             Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);

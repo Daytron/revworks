@@ -23,11 +23,12 @@ import java.security.Principal;
  * @author Ryan Gilera
  */
 abstract class User implements Principal {
+
     private final String id;
     private final String firstName;
     private final String lastName;
     private final UserType userType;
-    
+
     /**
      * Only {@link UserAuthentication} may create new instances.
      *
@@ -40,9 +41,22 @@ abstract class User implements Principal {
         this.userType = userType;
     }
 
+    /**
+     * Returns the unique identifier of a user. {@link Principal} class default
+     * implementation of this method refers to the username of a user to
+     * identify them uniquely but since there are two different usernames from
+     * two different user types, it is better to treat it as User ID as they are
+     * identified in the database.
+     *
+     * @return A unique ID of the user
+     */
     @Override
     public String getName() {
-        return this.firstName + " " + this.lastName;
+        return this.id;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
     public String getFirstName() {
@@ -57,14 +71,10 @@ abstract class User implements Principal {
         return userType;
     }
 
-    public String getId() {
-        return id;
-    }
-    
     public boolean isLecturerUser() {
         return userType == UserType.LECTURER;
     }
-    
+
     public boolean isStudentUser() {
         return userType == UserType.STUDENT;
     }

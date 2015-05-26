@@ -24,9 +24,10 @@ import com.github.daytron.revworks.data.UserType;
  */
 class AdminUser extends User {
 
+    private final String adminID;
     private final String adminEmail;
 
-     /**
+    /**
      * Creates a new AdminUser object with parameter values namely the user id,
      * admin's email, first name and last name.
      *
@@ -36,19 +37,29 @@ class AdminUser extends User {
      * @param firstname The first name of the lecturer
      * @param lastname The last name of the lecturer
      */
-    public AdminUser(String id, String adminEmail, String firstname,
+    public AdminUser(String id, String adminId, String adminEmail, String firstname,
             String lastname) {
         super(id, firstname, lastname, UserType.ADMIN);
+        this.adminID = adminId;
         this.adminEmail = adminEmail;
     }
 
     /**
      * Returns admin's email address.
-     * 
+     *
      * @return String object for admin's email information
      */
     public String getadminEmail() {
         return adminEmail;
+    }
+
+    /**
+     * Returns admin's id.
+     *
+     * @return String object for admin's id information
+     */
+    public String getAdminID() {
+        return adminID;
     }
 
 }

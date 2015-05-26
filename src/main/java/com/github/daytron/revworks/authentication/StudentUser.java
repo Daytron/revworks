@@ -18,6 +18,7 @@ package com.github.daytron.revworks.authentication;
 import com.github.daytron.revworks.data.UserType;
 
 /**
+ * The child class of {@link User} for Students user role.
  *
  * @author Ryan Gilera
  */
@@ -25,16 +26,29 @@ class StudentUser extends User {
 
     private final String studentID;
 
-    public StudentUser(String id, String studentID, String firstname, 
-            String lastname, UserType userType) {
-        super(id, firstname, lastname, userType);
+    /**
+     * Creates a new StudentUser object with parameter values namely the user
+     * id, student id, first name and last name.
+     *
+     * @param userId The identifying id for a user
+     * @param lecturerId The identifying id for a lecturer
+     * @param email The email assigned by the College which acts as a username
+     * @param firstname The first name of the lecturer
+     * @param lastname The last name of the lecturer
+     */
+    public StudentUser(String id, String studentID, String firstname,
+            String lastname) {
+        super(id, firstname, lastname, UserType.STUDENT);
         this.studentID = studentID;
     }
 
+    /**
+     * Returns student's id code.
+     *
+     * @return String object for student id information
+     */
     public String getStudentID() {
         return studentID;
     }
-    
-    
 
 }

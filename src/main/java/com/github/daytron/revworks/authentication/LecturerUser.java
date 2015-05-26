@@ -18,6 +18,7 @@ package com.github.daytron.revworks.authentication;
 import com.github.daytron.revworks.data.UserType;
 
 /**
+ * The child class of {@link User} for Lecturers user role.
  *
  * @author Ryan Gilera
  */
@@ -25,23 +26,40 @@ class LecturerUser extends User {
 
     private final String email;
     private final String lecturerID;
-    
-    public LecturerUser(String id, String lecturerID,String email, 
-            String firstname, String lastname, UserType userType) {
-        super(id, firstname, lastname, userType);
+
+    /**
+     * Creates a new LecturerUser object with parameter values namely the user
+     * id, lecturer id, lecturer email, first name and last name.
+     *
+     * @param userId The identifying id for a user
+     * @param lecturerId The identifying id for a lecturer
+     * @param email The email assigned by the College which acts as a username
+     * @param firstname The first name of the lecturer
+     * @param lastname The last name of the lecturer
+     */
+    public LecturerUser(String userId, String lecturerId, String email,
+            String firstname, String lastname) {
+        super(userId, firstname, lastname, UserType.LECTURER);
         this.email = email;
-        this.lecturerID = lecturerID;
+        this.lecturerID = lecturerId;
     }
 
+    /**
+     * Returns the lecturer's email address.
+     *
+     * @return String object for lecturer's email information
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Returns the lecturer's id.
+     *
+     * @return String object for lecturer's id information
+     */
     public String getLecturerID() {
         return lecturerID;
     }
-    
-    
-    
-    
+
 }

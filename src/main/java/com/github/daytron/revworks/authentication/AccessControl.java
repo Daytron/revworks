@@ -18,10 +18,10 @@ package com.github.daytron.revworks.authentication;
 import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.service.WrongCurrentUserTypeException;
 import com.github.daytron.revworks.data.UserType;
-import java.security.Principal;
 
 /**
- * The base interface for authentication and authorisation checks.
+ * The base interface for authentication, authorisation checks and access 
+ * control for the user.
  *
  * @author Ryan Gilera
  */

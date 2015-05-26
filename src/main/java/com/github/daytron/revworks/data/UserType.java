@@ -20,7 +20,7 @@ package com.github.daytron.revworks.data;
  * @author Ryan Gilera
  */
 public enum UserType {
-    STUDENT("Student"), LECTURER("Lecturer");
+    STUDENT("Student"), LECTURER("Lecturer"), ADMIN("Admin");
     
     private final String text;
 

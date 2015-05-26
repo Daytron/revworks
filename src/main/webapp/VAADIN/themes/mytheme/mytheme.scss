@@ -27,13 +27,18 @@
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
-$login-background-color: #3b3f42 !default;
+$login-background-color: #2C59A9 !default;
 $login-background-opacity: 0.7 !default;
 
 $login-info-width: 300px !default;
 
 $logo-text-font-size: 4rem;
 $logo-text-color: #000;
+
+$login-footer-height: 40px !default;
+$login-footer-background-color: #132F63 !default;
+$login-footer-font-color: #fff !default;
+$login-footer-font-size: 0.8rem;
 
 $v-focus-color: rgb(96, 160, 234) !default;
 $v-error-indicator-color: #eb2977 !default;
@@ -64,7 +69,7 @@ $v-layout-margin-left: $v-layout-margin-top !default;
             padding-left: $v-layout-margin-left;
             padding-bottom: $v-layout-margin-bottom;
             padding-right: $v-layout-margin-right;
-            @include valo-animate-in-fade($duration: 2s);
+            @include valo-animate-in-slide-up($duration: 1s);
 
             .logo-main {
                 padding-bottom: 5px;
@@ -91,6 +96,20 @@ $v-layout-margin-left: $v-layout-margin-top !default;
             }
         }
 
+        .login-footer {
+            display: inline-block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            font-size: $login-footer-font-size;
+            width: 100%;
+            color: $login-footer-font-color;
+            background-color: $login-footer-background-color;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            @include animation(valo-animate-in-slide-up 1s 1s backwards);
+        }
+
         /* Lay the options horizontally */
         .v-select-optiongroup-horizontal .v-select-option {
             display: inline-block;
@@ -105,6 +124,12 @@ $v-layout-margin-left: $v-layout-margin-top !default;
         .v-select-optiongroup-horizontal
         .v-select-option.v-radiobutton {
             padding-right: 10px;
+        }
+
+        /* Removes padding for button as link in ValoTheme */
+        .v-button-link {
+            height: auto;
+            padding: 0;
         }
 
 

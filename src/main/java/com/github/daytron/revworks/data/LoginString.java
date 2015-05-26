@@ -23,6 +23,12 @@ package com.github.daytron.revworks.data;
 public enum LoginString {
     // Logo 
     LOGO_LABEL("RevWorks"),
+    
+    // Admin login
+    FORM_ADMIN_WINDOW_LABEL("Admin Login"),
+    FORM_ADMIN_LABEL("For administrators only. Enter your credentials."),
+    FORM_ADMIN_EMAIL("Username"),
+    FORM_CANCEL_BUTTON("Cancel"),
    
     // Login Form
     FORM_OPTIONGROUP_USER("Select login type"),
@@ -34,7 +40,9 @@ public enum LoginString {
     
     FORM_USER_PASSWORD("Password"),
     
-    FORM_LOGIN_BUTTON("Login");
+    FORM_LOGIN_BUTTON("Login"),
+    
+    WEBMASTER_LINK_LABEL("Webmaster");
 
     private final String text;
     private LoginString(String text) {

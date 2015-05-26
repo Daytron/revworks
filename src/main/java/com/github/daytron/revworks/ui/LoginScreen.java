@@ -18,17 +18,22 @@ package com.github.daytron.revworks.ui;
 import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.behaviour.login.LoginButtonListener;
 import com.github.daytron.revworks.behaviour.login.OptionChangeValueListener;
+import com.github.daytron.revworks.behaviour.login.WebmasterLinkButtonListener;
 import com.github.daytron.revworks.behaviour.validator.LoginValidatorFactory;
+import com.github.daytron.revworks.data.ExternalLink;
 import com.github.daytron.revworks.data.LoginString;
 import com.github.daytron.revworks.data.LoginValidationNum;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
@@ -40,12 +45,13 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  * @author Ryan Gilera
  */
-public class LoginScreen extends CssLayout {
-
+public final class LoginScreen extends CssLayout {
+    private static final long serialVersionUID = 1L;
+    
     private TextField usernameField;
     private PasswordField passwordField;
     private Button loginButton;
-    
+
     private final AccessControl accessControl;
 
     public LoginScreen(AccessControl accessControl) {
@@ -70,6 +76,7 @@ public class LoginScreen extends CssLayout {
                 Alignment.MIDDLE_CENTER);
 
         addComponent(centerFormLayout);
+        addComponent(createFooter());
     }
 
     /**
@@ -164,6 +171,55 @@ public class LoginScreen extends CssLayout {
                 usernameField, passwordField, loginButton);
 
         return loginFormLayout;
+    }
+
+    /**
+     * Creates the component for the footer.
+     *
+     * @return The generated footer component
+     */
+    private Component createFooter() {
+        final VerticalLayout footerLayout = new VerticalLayout();
+        footerLayout.addStyleName("login-footer");
+        footerLayout.setHeight("60px");
+        footerLayout.setWidth("100%");
+
+        // The first row of contents which has the external links
+        final HorizontalLayout footerLinksLayout = new HorizontalLayout();
+        footerLinksLayout.setSizeUndefined();
+
+        // External links to student and lecturer portal
+        Link studentPortalLink = new Link(ExternalLink.STUDENT_PORTAL.getName(),
+                new ExternalResource(ExternalLink.STUDENT_PORTAL.getLink()));
+        Link lecturerPortalLink = new Link(ExternalLink.LECTURER_PORTAL.getName(),
+                new ExternalResource(ExternalLink.LECTURER_PORTAL.getLink()));
+
+        // The button masquerading as a link to launch admin login form 
+        Button webmasterButtonLink = new Button(
+                LoginString.WEBMASTER_LINK_LABEL.getText());
+        webmasterButtonLink.setStyleName(ValoTheme.BUTTON_LINK);
+        webmasterButtonLink.setSizeUndefined();
+        webmasterButtonLink.addClickListener(
+                new WebmasterLinkButtonListener(accessControl));
+
+        // Add these links and button together
+        footerLinksLayout.addComponents(studentPortalLink,
+                lecturerPortalLink, webmasterButtonLink);
+        footerLinksLayout.setSpacing(true);
+
+        // The final row of the footer
+        final HorizontalLayout footerBottomLayout = new HorizontalLayout();
+        Label allRightsReservedLabel = new Label("All Rights Reserved 2015. Ryan Gilera");
+        footerBottomLayout.addComponent(allRightsReservedLabel);
+        footerBottomLayout.setSizeUndefined();
+
+        // Bring all of them together
+        footerLayout.addComponents(footerLinksLayout, footerBottomLayout);
+        // Sets positions for the two rows
+        footerLayout.setComponentAlignment(footerLinksLayout, Alignment.MIDDLE_CENTER);
+        footerLayout.setComponentAlignment(footerBottomLayout, Alignment.BOTTOM_CENTER);
+
+        return footerLayout;
     }
 
 }

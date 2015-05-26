@@ -18,23 +18,37 @@ package com.github.daytron.revworks.authentication;
 import com.github.daytron.revworks.data.UserType;
 
 /**
+ * The child class of {@link User} for Administrators user role.
  *
  * @author Ryan Gilera
  */
-class StudentUser extends User {
+class AdminUser extends User {
 
-    private final String studentID;
+    private final String adminEmail;
 
-    public StudentUser(String id, String studentID, String firstname, 
-            String lastname, UserType userType) {
-        super(id, firstname, lastname, userType);
-        this.studentID = studentID;
+     /**
+     * Creates a new AdminUser object with parameter values namely the user id,
+     * admin's email, first name and last name.
+     *
+     * @param userId The identifying id for a user
+     * @param lecturerId The identifying id for a lecturer
+     * @param email The email assigned by the College which acts as a username
+     * @param firstname The first name of the lecturer
+     * @param lastname The last name of the lecturer
+     */
+    public AdminUser(String id, String adminEmail, String firstname,
+            String lastname) {
+        super(id, firstname, lastname, UserType.ADMIN);
+        this.adminEmail = adminEmail;
     }
 
-    public String getStudentID() {
-        return studentID;
+    /**
+     * Returns admin's email address.
+     * 
+     * @return String object for admin's email information
+     */
+    public String getadminEmail() {
+        return adminEmail;
     }
-    
-    
 
 }

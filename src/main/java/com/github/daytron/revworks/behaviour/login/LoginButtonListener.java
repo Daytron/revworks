@@ -21,7 +21,6 @@ import com.github.daytron.revworks.authentication.AuthenticationException;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.data.UserType;
-import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.ui.DashboardScreen;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.Validator;

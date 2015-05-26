@@ -83,7 +83,7 @@ public class UserAuthentication {
                         + " ? = Student.password";
                 preparedStatement = connection.prepareStatement(query);
 
-            } else {
+            } else if (userType == UserType.LECTURER) {
                 String query = "SELECT User.id, Lecturer.id, "
                         + "User.first_name, User.last_name "
                         + "FROM Lecturer\n"
@@ -91,6 +91,15 @@ public class UserAuthentication {
                         + "ON Lecturer.person_id = User.id\n"
                         + "WHERE Lecturer.email = ? and "
                         + "? = Lecturer.password;";
+                preparedStatement = connection.prepareStatement(query);
+            } else {
+                String query = "SELECT User.id, Admin.id, "
+                        + "User.first_name, User.last_name "
+                        + "FROM Admin\n"
+                        + "INNER JOIN User \n"
+                        + "ON Admin.person_id = User.id\n"
+                        + "WHERE Admin.email = ? and "
+                        + "? = Admin.password;";
                 preparedStatement = connection.prepareStatement(query);
             }
 
@@ -119,12 +128,15 @@ public class UserAuthentication {
             // Create appropriate user
             Principal user;
             if (userType == UserType.STUDENT) {
-                user = new StudentUser(userID, userfield, firstName, lastName,
-                        userType);
-            } else {
+                user = new StudentUser(userID, userfield, firstName, lastName);
+            } else if (userType == UserType.STUDENT) {
                 String lecturerID = Integer.toString(resultSet.getInt(2));
                 user = new LecturerUser(userID, lecturerID, userfield, 
-                        firstName, lastName, userType);
+                        firstName, lastName);
+            } else {
+                String adminID = Integer.toString(resultSet.getInt(2));
+                user = new AdminUser(userID, adminID, userfield, firstName, 
+                        lastName);
             }
             
             // Close the statement after using it, to free up memory

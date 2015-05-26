@@ -16,23 +16,22 @@
 package com.github.daytron.revworks.authentication;
 
 /**
+ * Custom Exception for invalid authentication when cross-checking the user's
+ * credentials with the information in the database.
  *
  * @author Ryan Gilera
  */
 public class AuthenticationException extends Exception {
 
     public AuthenticationException(String msg, Throwable t) {
-
         super(msg, t);
     }
 
     public AuthenticationException(String msg) {
-
         super(msg);
     }
 
     public AuthenticationException(Throwable t) {
-
         super(t);
     }
 }

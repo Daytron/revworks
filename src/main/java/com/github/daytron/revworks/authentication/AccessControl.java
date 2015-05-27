@@ -36,21 +36,21 @@ public interface AccessControl {
 
     public boolean isUserALecturer() throws NoCurrentUserException;
 
-    public String getPrincipalName() throws NoCurrentUserException ;
+    public String getPrincipalName();
     
-    public String getFirstName() throws NoCurrentUserException ;
+    public String getFirstName();
     
-    public String getLastName() throws NoCurrentUserException ;
+    public String getLastName();
     
-    public String getLecturerEmail() throws NoCurrentUserException, 
-            WrongCurrentUserTypeException;
+    public String getFullName();
     
-    public String getStudentID() throws NoCurrentUserException, 
-            WrongCurrentUserTypeException;
+    public String getLecturerEmail() throws WrongCurrentUserTypeException;
     
-    public String getUserTypeString() throws NoCurrentUserException ;
+    public String getStudentID() throws WrongCurrentUserTypeException;
     
-    public UserType getUserType() throws NoCurrentUserException ;
+    public String getUserTypeString();
+    
+    public UserType getUserType();
     
     public void signOut();
 }

@@ -81,70 +81,42 @@ public class UserAccessControl implements AccessControl {
     }
 
     @Override
-    public String getPrincipalName() throws NoCurrentUserException {
-
-        if (!isUserSignedIn()) {
-            throw new NoCurrentUserException(
-                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
-        } else {
-            return CurrentUserSession.get().getName();
-        }
-
+    public String getPrincipalName() {
+        return CurrentUserSession.get().getName();
     }
 
     @Override
-    public String getFirstName() throws NoCurrentUserException {
-
-        if (!isUserSignedIn()) {
-            throw new NoCurrentUserException(
-                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
-        } else {
-            return ((User) CurrentUserSession.get()).getFirstName();
-        }
-
+    public String getFirstName() {
+        return ((User) CurrentUserSession.get()).getFirstName();
     }
 
     @Override
-    public String getLastName() throws NoCurrentUserException {
-
-        if (!isUserSignedIn()) {
-            throw new NoCurrentUserException(
-                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
-        } else {
-            return ((User) CurrentUserSession.get()).getLastName();
-        }
-
+    public String getLastName() {
+        return ((User) CurrentUserSession.get()).getLastName();
     }
 
     @Override
-    public String getLecturerEmail() throws NoCurrentUserException,
-            WrongCurrentUserTypeException {
-        if (!isUserSignedIn()) {
-            throw new NoCurrentUserException(
-                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+    public String getFullName() {
+        return ((User) CurrentUserSession.get()).getFullName();
+    }
+
+    @Override
+    public String getLecturerEmail() throws WrongCurrentUserTypeException {
+        if (((User) CurrentUserSession.get()).isLecturerUser()) {
+            return ((LecturerUser) (CurrentUserSession.get())).getEmail();
         } else {
-            if (((User) CurrentUserSession.get()).isLecturerUser()) {
-                return ((LecturerUser) (CurrentUserSession.get())).getEmail();
-            } else {
-                throw new WrongCurrentUserTypeException(
-                        ExceptionMsg.WRONG_CURRENT_USER_TYPE_EXCEPTION.getMsg());
-            }
+            throw new WrongCurrentUserTypeException(
+                    ExceptionMsg.WRONG_CURRENT_USER_TYPE_EXCEPTION.getMsg());
         }
     }
 
     @Override
-    public String getStudentID() throws NoCurrentUserException,
-            WrongCurrentUserTypeException {
-        if (!isUserSignedIn()) {
-            throw new NoCurrentUserException(
-                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
+    public String getStudentID() throws WrongCurrentUserTypeException {
+        if (((User) CurrentUserSession.get()).isLecturerUser()) {
+            return ((StudentUser) (CurrentUserSession.get())).getStudentID();
         } else {
-            if (((User) CurrentUserSession.get()).isLecturerUser()) {
-                return ((StudentUser) (CurrentUserSession.get())).getStudentID();
-            } else {
-                throw new WrongCurrentUserTypeException(
-                        ExceptionMsg.WRONG_CURRENT_USER_TYPE_EXCEPTION.getMsg());
-            }
+            throw new WrongCurrentUserTypeException(
+                    ExceptionMsg.WRONG_CURRENT_USER_TYPE_EXCEPTION.getMsg());
         }
     }
 
@@ -157,23 +129,13 @@ public class UserAccessControl implements AccessControl {
     }
 
     @Override
-    public String getUserTypeString() throws NoCurrentUserException {
-        if (!isUserSignedIn()) {
-            throw new NoCurrentUserException(
-                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
-        } else {
-            return ((User) CurrentUserSession.get()).getUserType().getText();
-        }
+    public String getUserTypeString() {
+        return ((User) CurrentUserSession.get()).getUserType().getText();
     }
 
     @Override
-    public UserType getUserType() throws NoCurrentUserException {
-        if (!isUserSignedIn()) {
-            throw new NoCurrentUserException(
-                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
-        } else {
-            return ((User) CurrentUserSession.get()).getUserType();
-        }
+    public UserType getUserType() {
+        return ((User) CurrentUserSession.get()).getUserType();
     }
 
 }

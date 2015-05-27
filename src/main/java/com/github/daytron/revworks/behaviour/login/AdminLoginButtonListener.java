@@ -21,6 +21,7 @@ import com.github.daytron.revworks.authentication.AuthenticationException;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.service.NoCurrentUserException;
+import com.github.daytron.revworks.ui.AdminDashboardScreen;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
 import com.github.daytron.revworks.ui.DashboardScreen;
 import com.github.daytron.revworks.util.NotificationUtil;
@@ -94,8 +95,8 @@ public class AdminLoginButtonListener implements Button.ClickListener {
             
             adminLoginPopup.close();
             
-            DashboardScreen tempUI = new DashboardScreen();
-            UI.getCurrent().setContent(tempUI);
+            AdminDashboardScreen adminDashboard = new AdminDashboardScreen();
+            UI.getCurrent().setContent(adminDashboard);
 
             Notification.show("Welcome "
                     + userAccessControl.getFirstName()

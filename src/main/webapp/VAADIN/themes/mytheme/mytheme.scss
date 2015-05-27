@@ -27,6 +27,9 @@
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
+// Custom text under spinner
+$v-app-loading-text: "Creating new session...";
+
 $login-background-color: #2C59A9 !default;
 $login-background-opacity: 0.7 !default;
 
@@ -52,6 +55,8 @@ $v-layout-margin-top: round($v-unit-size / 1.5) !default;
 $v-layout-margin-right: $v-layout-margin-top !default;
 $v-layout-margin-bottom: $v-layout-margin-top !default;
 $v-layout-margin-left: $v-layout-margin-top !default;
+
+$view-padding: round($v-unit-size / 1.5) !default;
 
 @import "../valo/valo.scss";
 
@@ -134,6 +139,31 @@ $v-layout-margin-left: $v-layout-margin-top !default;
 
 
 
+    }
+
+    .view-dashboard-header {
+        padding-bottom: $view-padding;
+        width: 100%;
+        text-align: right;
+        white-space: normal;
+
+        .v-slot-h1 {
+            float: left;
+        }
+
+        .h1 {
+            white-space: normal;
+        }
+
+        .dashboard-toolbar {
+            white-space: normal;
+
+            > .v-spacing {
+                height: round($v-unit-size / 4);
+            }
+            
+            .v-label.welcome-text { font-size: 1rem }
+        }
     }
 
 

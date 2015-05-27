@@ -16,18 +16,21 @@
 package com.github.daytron.revworks.data;
 
 /**
+ * Collection of external links.
  *
  * @author Ryan Gilera
  */
 public enum ExternalLink {
-    STUDENT_PORTAL("Student Portal","https://www.gsomportal.com/student/login.aspx"),
-    LECTURER_PORTAL("Lecturer Portal","https://www.gsomportal.com/lecturer/login.aspx");
-    
-   private final String name;
-    private final String link;
-   
 
-    private ExternalLink(String name,String link) {
+    STUDENT_PORTAL("Student Portal", 
+            "https://www.gsomportal.com/student/login.aspx"),
+    LECTURER_PORTAL("Lecturer Portal", 
+            "https://www.gsomportal.com/lecturer/login.aspx");
+
+    private final String name;
+    private final String link;
+
+    private ExternalLink(String name, String link) {
         this.name = name;
         this.link = link;
     }
@@ -39,7 +42,5 @@ public enum ExternalLink {
     public String getName() {
         return name;
     }
-    
-    
-    
+
 }

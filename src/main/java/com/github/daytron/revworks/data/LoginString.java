@@ -16,11 +16,12 @@
 package com.github.daytron.revworks.data;
 
 /**
- * String constants used in Login UI
- * 
+ * Collection of String constants used in Login screen.
+ *
  * @author Ryan Gilera
  */
 public enum LoginString {
+
     // Logo 
     LOGO_LABEL("RevWorks"),
     
@@ -29,22 +30,19 @@ public enum LoginString {
     FORM_ADMIN_LABEL("For administrators only. Enter your credentials."),
     FORM_ADMIN_EMAIL("Username"),
     FORM_CANCEL_BUTTON("Cancel"),
-   
+    
     // Login Form
     FORM_OPTIONGROUP_USER("Select login type"),
     FORM_OPTION_STUDENT("Student"),
     FORM_OPTION_LECTURER("Lecturer"),
-    
     FORM_STUDENT_ID("Student ID"),
     FORM_LECTURER_EMAIL("Lecturer Email"),
-    
     FORM_USER_PASSWORD("Password"),
-    
     FORM_LOGIN_BUTTON("Login"),
-    
     WEBMASTER_LINK_LABEL("Webmaster");
 
     private final String text;
+
     private LoginString(String text) {
         this.text = text;
     }
@@ -52,8 +50,5 @@ public enum LoginString {
     public String getText() {
         return text;
     }
-    
-    
-    
-    
+
 }

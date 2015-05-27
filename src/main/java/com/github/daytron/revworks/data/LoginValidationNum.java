@@ -16,7 +16,8 @@
 package com.github.daytron.revworks.data;
 
 /**
- *
+ * Collection of constant integer values for Login screen.
+ * 
  * @author Ryan Gilera
  */
 public enum LoginValidationNum {
@@ -25,8 +26,8 @@ public enum LoginValidationNum {
     STUDENT_ID_LENGTH(6),
     EMAIL_MAX_LENGTH(254),
     PASSWORD_MAX_LENGTH(16),
-    PASSWORD_MIN_LENGTH(6)
-    ;
+    PASSWORD_MIN_LENGTH(6);
+    
     private final int value;
 
     private LoginValidationNum(int value) {

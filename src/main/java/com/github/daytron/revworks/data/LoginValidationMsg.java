@@ -16,8 +16,8 @@
 package com.github.daytron.revworks.data;
 
 /**
- * Login validation messages
- * 
+ * Collection of Login validation messages.
+ *
  * @author Ryan Gilera
  */
 public enum LoginValidationMsg {
@@ -28,6 +28,7 @@ public enum LoginValidationMsg {
     LECTURER_EMAIL_EMPTY("Email is missing"),
     PASSWORD_INVALID("Password must be between 6 to 16 characters (was {0})"),
     PASSWORD_EMPTY("Password is missing");
+    
     private final String text;
 
     private LoginValidationMsg(String text) {

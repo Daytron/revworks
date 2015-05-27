@@ -16,11 +16,14 @@
 package com.github.daytron.revworks.data;
 
 /**
- *
+ * Collection of user types.
+ * 
  * @author Ryan Gilera
  */
 public enum UserType {
-    STUDENT("Student"), LECTURER("Lecturer"), ADMIN("Admin");
+    STUDENT("Student"), 
+    LECTURER("Lecturer"), 
+    ADMIN("Admin");
     
     private final String text;
 

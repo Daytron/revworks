@@ -16,17 +16,18 @@
 package com.github.daytron.revworks.data;
 
 /**
+ * Collection of exception messages.
  *
  * @author Ryan Gilera
  */
 public enum ExceptionMsg {
+
     AUTHENTICATION_EXCEPTION_NO_USER("No such user found. Invalid credentials."),
     AUTHENTICATION_EXCEPTION_SYS_ERROR("System error occured, "
             + "please consult your administrator for help."),
     NO_CURRENT_USER_EXCEPTION("No user is login"),
-    WRONG_CURRENT_USER_TYPE_EXCEPTION("Wrong user type access.")
-    ;
-        private final String msg;
+    WRONG_CURRENT_USER_TYPE_EXCEPTION("Wrong user type access.");
+    private final String msg;
 
     private ExceptionMsg(String msg) {
         this.msg = msg;
@@ -35,6 +36,5 @@ public enum ExceptionMsg {
     public String getMsg() {
         return msg;
     }
-        
-    
+
 }

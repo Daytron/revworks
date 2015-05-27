@@ -48,6 +48,10 @@ INSERT INTO `appschema`.`User` (`first_name`, `last_name`) VALUES ('Anwar', 'Ul 
 INSERT INTO `appschema`.`User` (`first_name`, `last_name`) VALUES ('Salvatore', 'Maiorano');
 INSERT INTO `appschema`.`User` (`first_name`, `last_name`) VALUES ('Tendai', 'Mhlanga');
 INSERT INTO `appschema`.`User` (`first_name`, `last_name`) VALUES ('Usman', 'Butt');
+INSERT INTO `appschema`.`User` (`first_name`, `last_name`) VALUES ('Jarvis', 'Ada');
+
+INSERT INTO `appschema`.`Admin` (`email`,`password`,`person_id`)
+VALUES ('admin@gsm.org.uk','youview',51);
 
 INSERT INTO `appschema`.`Student` (`id`,`password`,`person_id`)
 VALUES (126250,'youview',1);
@@ -186,27 +190,11 @@ INSERT INTO `appschema`.`Module` VALUES ('PI208_313_C15','Telecommunications and
 INSERT INTO `appschema`.`Module` VALUES ('PC302_343_C15','Mobile Devices and Applications');
 INSERT INTO `appschema`.`Module` VALUES ('PC303_344_C15','E-Commerce');
 INSERT INTO `appschema`.`Module` VALUES ('PC304_345_C15','Software Development');
-INSERT INTO `appschema`.`Module` VALUES ('_C15','');
-INSERT INTO `appschema`.`Module` VALUES ('_C15','');
 INSERT INTO `appschema`.`Module` VALUES ('PM302A_583_C15','Financial Research Project');
-INSERT INTO `appschema`.`Module` VALUES ('_C15','');
-INSERT INTO `appschema`.`Module` VALUES ('_C15','');
-INSERT INTO `appschema`.`Module` VALUES ('_C15','');
-INSERT INTO `appschema`.`Module` VALUES ('_C15','');
-INSERT INTO `appschema`.`Module` VALUES ('_C15','');
-INSERT INTO `appschema`.`Module` VALUES ('_C15','');
 
 INSERT INTO `appschema`.`CourseModule` (`course_id`,`module_id`) 
 VALUES (1,'PC107_332_C15');
 INSERT INTO `appschema`.`CourseModule` (`course_id`,`module_id`) 
 VALUES (2,'PC107_332_C15');
-INSERT INTO `appschema`.`CourseModule` (`course_id`,`module_id`) 
-VALUES (,'');
-INSERT INTO `appschema`.`CourseModule` (`course_id`,`module_id`) 
-VALUES (,'');
-INSERT INTO `appschema`.`CourseModule` (`course_id`,`module_id`) 
-VALUES (,'');
-INSERT INTO `appschema`.`CourseModule` (`course_id`,`module_id`) 
-VALUES (,'');
 INSERT INTO `appschema`.`CourseModule` (`course_id`,`module_id`) 
 VALUES (6,'PM302A_583_C15');

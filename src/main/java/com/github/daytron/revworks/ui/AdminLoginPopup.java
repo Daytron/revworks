@@ -15,10 +15,7 @@
  */
 package com.github.daytron.revworks.ui;
 
-import com.github.daytron.revworks.MainUI;
-import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.behaviour.login.AdminLoginButtonListener;
-import com.github.daytron.revworks.behaviour.login.LoginButtonListener;
 import com.github.daytron.revworks.behaviour.validator.LoginValidatorFactory;
 import com.github.daytron.revworks.data.LoginString;
 import com.github.daytron.revworks.data.LoginValidationNum;
@@ -93,7 +90,7 @@ public final class AdminLoginPopup extends Window {
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         loginButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         loginButton.addClickListener(new AdminLoginButtonListener(userField, 
-                passwordField));
+                passwordField, this));
         
         final FormLayout loginFormLayout = new FormLayout(userField, passwordField,
                 loginButton);

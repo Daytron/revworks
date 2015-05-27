@@ -21,11 +21,15 @@ import com.github.daytron.revworks.authentication.AuthenticationException;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.service.NoCurrentUserException;
+import com.github.daytron.revworks.ui.AdminLoginPopup;
+import com.github.daytron.revworks.ui.DashboardScreen;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,12 +45,14 @@ public class AdminLoginButtonListener implements Button.ClickListener {
     private final TextField userField;
     private final PasswordField passwordField;
     private final AccessControl userAccessControl;
+    private final AdminLoginPopup adminLoginPopup;
 
     public AdminLoginButtonListener(TextField userField,
-            PasswordField passwordField) {
+            PasswordField passwordField, AdminLoginPopup adminLoginPopup) {
         this.userField = userField;
         this.passwordField = passwordField;
         this.userAccessControl = MainUI.get().getAccessControl();
+        this.adminLoginPopup = adminLoginPopup;
     }
 
     @Override
@@ -54,6 +60,8 @@ public class AdminLoginButtonListener implements Button.ClickListener {
         try {
             userField.validate();
             passwordField.validate();
+            
+            verifyUserCredentials();
         } catch (Exception e) {
             userField.setValidationVisible(true);
             passwordField.setValidationVisible(true);
@@ -83,6 +91,16 @@ public class AdminLoginButtonListener implements Button.ClickListener {
                     userAccessControl.getPrincipalName(),
                     VaadinSession.getCurrent());
             MainUI.MainUIServlet.printSessions("admin login");
+            
+            adminLoginPopup.close();
+            
+            DashboardScreen tempUI = new DashboardScreen();
+            UI.getCurrent().setContent(tempUI);
+
+            Notification.show("Welcome "
+                    + userAccessControl.getFirstName()
+                    + "!",
+                    Notification.Type.TRAY_NOTIFICATION);
 
         } catch (AuthenticationException ex) {
             Logger.getLogger(AdminLoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);

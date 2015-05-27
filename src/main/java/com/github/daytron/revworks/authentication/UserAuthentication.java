@@ -53,9 +53,9 @@ public class UserAuthentication {
     /**
      * Connects to the database and retrieve user from it.
      *
-     * @param userType
-     * @param userfield
-     * @param password
+     * @param userType A UserType object
+     * @param userfield String for username field
+     * @param password String for password
      * @return The Principal object (the user) if the connection and query are
      * successful, otherwise returns null.
      */

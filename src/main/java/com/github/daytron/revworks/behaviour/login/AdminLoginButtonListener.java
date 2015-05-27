@@ -107,8 +107,6 @@ public class AdminLoginButtonListener implements Button.ClickListener {
             NotificationUtil.showError(
                     ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
                     ex.getMessage());
-        } catch (NoCurrentUserException ex) {
-            Logger.getLogger(AdminLoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

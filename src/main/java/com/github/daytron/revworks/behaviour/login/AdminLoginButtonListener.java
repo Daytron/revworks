@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * The login behaviour for the {@link AdminLoginPopup}.
  *
  * @author Ryan Gilera
  */
@@ -42,10 +43,10 @@ public class AdminLoginButtonListener implements Button.ClickListener {
     private final AccessControl userAccessControl;
 
     public AdminLoginButtonListener(TextField userField,
-            PasswordField passwordField, AccessControl userAccessControl) {
+            PasswordField passwordField) {
         this.userField = userField;
         this.passwordField = passwordField;
-        this.userAccessControl = userAccessControl;
+        this.userAccessControl = MainUI.get().getAccessControl();
     }
 
     @Override
@@ -72,23 +73,21 @@ public class AdminLoginButtonListener implements Button.ClickListener {
         try {
             // Retrieve the user upon authentication
             userAccessControl.signIn(userType, userName, password);
-            
+
             // Verifies if this is the only login session for the current user
             // If this is second login session made by the user,
             // it terminates the old session and continue with this new session
             // created. Afterwards this session is recorded in the servlet.
             // See MainUIServlet documentation
             MainUI.MainUIServlet.saveUserSessionInfo(
-                    userAccessControl.getPrincipalName(), 
+                    userAccessControl.getPrincipalName(),
                     VaadinSession.getCurrent());
             MainUI.MainUIServlet.printSessions("admin login");
-            
-            
-            
+
         } catch (AuthenticationException ex) {
             Logger.getLogger(AdminLoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);
             NotificationUtil.showError(
-                    ErrorMsg.SIGNIN_FAILED_CAPTION.getText(), 
+                    ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
                     ex.getMessage());
         } catch (NoCurrentUserException ex) {
             Logger.getLogger(AdminLoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);

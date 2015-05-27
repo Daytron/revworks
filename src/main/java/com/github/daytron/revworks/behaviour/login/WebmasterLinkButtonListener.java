@@ -36,14 +36,12 @@ public class WebmasterLinkButtonListener implements Button.ClickListener {
         this.userAccessControl = uac;
     }
     
-    
-    
+
     @Override
     public void buttonClick(Button.ClickEvent event) {
-        AdminLoginPopup adminLoginPopup = new AdminLoginPopup(userAccessControl);
+        AdminLoginPopup adminLoginPopup = new AdminLoginPopup();
 
         adminLoginPopup.setSizeUndefined();
-
         adminLoginPopup.center();
 
         UI.getCurrent().addWindow(adminLoginPopup);

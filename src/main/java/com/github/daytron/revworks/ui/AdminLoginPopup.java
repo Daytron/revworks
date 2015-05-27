@@ -15,8 +15,10 @@
  */
 package com.github.daytron.revworks.ui;
 
+import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.behaviour.login.AdminLoginButtonListener;
+import com.github.daytron.revworks.behaviour.login.LoginButtonListener;
 import com.github.daytron.revworks.behaviour.validator.LoginValidatorFactory;
 import com.github.daytron.revworks.data.LoginString;
 import com.github.daytron.revworks.data.LoginValidationNum;
@@ -38,7 +40,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public final class AdminLoginPopup extends Window {
     private static final long serialVersionUID = 1L;
     
-    public AdminLoginPopup(AccessControl uac) {
+    public AdminLoginPopup() {
         super(LoginString.FORM_ADMIN_WINDOW_LABEL.getText()); // Window label
 
         VerticalLayout popupLayout = new VerticalLayout();
@@ -55,7 +57,7 @@ public final class AdminLoginPopup extends Window {
         welcomeLabel.setCaption(LoginString.FORM_ADMIN_LABEL.getText());
         
         popupLayout.addComponent(welcomeLabel);
-        popupLayout.addComponent(buildLoginForm(uac));
+        popupLayout.addComponent(buildLoginForm());
     }
 
     /**
@@ -63,7 +65,7 @@ public final class AdminLoginPopup extends Window {
      *
      * @return A FormLayout object
      */
-    private FormLayout buildLoginForm(AccessControl uac) {
+    private FormLayout buildLoginForm() {
 
         // Username field
         TextField userField = new TextField(
@@ -90,8 +92,8 @@ public final class AdminLoginPopup extends Window {
                 LoginString.FORM_LOGIN_BUTTON.getText());
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         loginButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        loginButton.addClickListener(new AdminLoginButtonListener(
-                userField, passwordField, uac));
+        loginButton.addClickListener(new AdminLoginButtonListener(userField, 
+                passwordField));
         
         final FormLayout loginFormLayout = new FormLayout(userField, passwordField,
                 loginButton);

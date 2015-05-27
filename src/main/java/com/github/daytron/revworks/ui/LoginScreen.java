@@ -162,9 +162,10 @@ public final class LoginScreen extends CssLayout {
                 LoginString.FORM_LOGIN_BUTTON.getText());
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         loginButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        
+        
         loginButton.addClickListener(new LoginButtonListener(
-                usernameField, passwordField, userOptionGroup,
-                accessControl));
+                usernameField, passwordField, userOptionGroup));
 
         // Add all together
         loginFormLayout.addComponents(userOptionGroup,

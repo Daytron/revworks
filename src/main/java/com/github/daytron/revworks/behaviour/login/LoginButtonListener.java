@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The login behaviour upon user click the login button.
+ * The login behaviour for the {@link LoginScreen}.
  *
  * @author Ryan Gilera
  */
@@ -51,12 +51,12 @@ public class LoginButtonListener implements Button.ClickListener {
     private final AccessControl userAccessControl;
 
     public LoginButtonListener(TextField textField, PasswordField passwordField,
-            OptionGroup userType, AccessControl accessControl) {
+            OptionGroup userType) {
         this.userTypeOptionGroup = userType;
         this.userField = textField;
         this.passwordField = passwordField;
 
-        this.userAccessControl = accessControl;
+        this.userAccessControl = MainUI.get().getAccessControl();
     }
 
     /**
@@ -75,7 +75,7 @@ public class LoginButtonListener implements Button.ClickListener {
         } catch (Validator.InvalidValueException e) {
             userField.setValidationVisible(true);
             passwordField.setValidationVisible(true);
-            
+
             Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, e);
             NotificationUtil.showError(
                     ErrorMsg.INVALID_INPUT_CAPTION.getText());
@@ -92,31 +92,29 @@ public class LoginButtonListener implements Button.ClickListener {
         try {
             // Retrieve the user upon authentication
             userAccessControl.signIn(userType, userName, password);
-            
-            
+
             // Verifies if this is the only login session for the current user
             // If this is second login session made by the user,
             // it terminates the old session and continue with this new session
             // created. Afterwards this session is recorded in the servlet.
             // See MainUIServlet documentation
             MainUI.MainUIServlet.saveUserSessionInfo(
-                    userAccessControl.getPrincipalName(), 
+                    userAccessControl.getPrincipalName(),
                     VaadinSession.getCurrent());
             MainUI.MainUIServlet.printSessions("user login");
-            
+
             DashboardScreen tempUI = new DashboardScreen();
             UI.getCurrent().setContent(tempUI);
-            
+
             Notification.show("Welcome "
                     + userAccessControl.getFirstName()
                     + "!",
                     Notification.Type.TRAY_NOTIFICATION);
-                   
 
         } catch (AuthenticationException ex) {
             Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);
             NotificationUtil.showError(
-                    ErrorMsg.SIGNIN_FAILED_CAPTION.getText(), 
+                    ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
                     ex.getMessage());
         } catch (NoCurrentUserException ex) {
             Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);

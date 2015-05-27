@@ -21,7 +21,7 @@ import com.github.daytron.revworks.authentication.AuthenticationException;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.data.UserType;
-import com.github.daytron.revworks.ui.DashboardScreen;
+import com.github.daytron.revworks.ui.dashboard.DashboardScreen;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.Validator;
 import com.vaadin.server.VaadinSession;
@@ -103,7 +103,8 @@ public class LoginButtonListener implements Button.ClickListener {
                     VaadinSession.getCurrent());
             MainUI.MainUIServlet.printSessions("user login");
 
-            DashboardScreen tempUI = new DashboardScreen();
+            DashboardScreen tempUI = new DashboardScreen(
+                    MainUI.get());
             UI.getCurrent().setContent(tempUI);
 
             Notification.show("Welcome "
@@ -116,8 +117,6 @@ public class LoginButtonListener implements Button.ClickListener {
             NotificationUtil.showError(
                     ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
                     ex.getMessage());
-        } catch (NoCurrentUserException ex) {
-            Logger.getLogger(LoginButtonListener.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

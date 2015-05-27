@@ -39,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.ServletException;
 
 /**
- *
+ * The main class to launch the web application.
  */
 @Theme("mytheme")
 @Widgetset("com.github.daytron.revworks.MyAppWidgetset")
@@ -78,8 +78,7 @@ public class MainUI extends UI {
     public static class MainUIServlet extends VaadinServlet implements
             SessionDestroyListener {
 
-        private static final ConcurrentHashMap<String, VaadinSession> 
-                listOfUserSessions = new ConcurrentHashMap<>();
+        private static final ConcurrentHashMap<String, VaadinSession> listOfUserSessions = new ConcurrentHashMap<>();
 
         /**
          * Saves the new login session to the collection member,
@@ -148,10 +147,10 @@ public class MainUI extends UI {
         }
 
         /**
-         * Overrides sessionDestroy method to implement removal of session 
-         * when session is destroyed.
-         * 
-         * @param event The event object triggered when closing a session 
+         * Overrides sessionDestroy method to implement removal of session when
+         * session is destroyed.
+         *
+         * @param event The event object triggered when closing a session
          */
         @Override
         public void sessionDestroy(SessionDestroyEvent event) {

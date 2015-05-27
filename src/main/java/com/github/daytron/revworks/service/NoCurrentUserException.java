@@ -15,9 +15,9 @@
  */
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.authentication.*;
-
 /**
+ * A custom exception when executing {@link User} methods without any user
+ * attached to the session.
  *
  * @author Ryan Gilera
  */

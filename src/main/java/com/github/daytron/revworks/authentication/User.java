@@ -19,6 +19,7 @@ import com.github.daytron.revworks.data.UserType;
 import java.security.Principal;
 
 /**
+ * The class to hold user information when login.
  *
  * @author Ryan Gilera
  */

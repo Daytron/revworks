@@ -16,6 +16,7 @@
 package com.github.daytron.revworks.service;
 
 /**
+ * A custom exception when user login authentication fails.
  *
  * @author Ryan Gilera
  */

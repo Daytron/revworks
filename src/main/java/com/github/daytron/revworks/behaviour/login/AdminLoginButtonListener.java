@@ -23,7 +23,6 @@ import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.ui.AdminDashboardScreen;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
-import com.github.daytron.revworks.ui.DashboardScreen;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;

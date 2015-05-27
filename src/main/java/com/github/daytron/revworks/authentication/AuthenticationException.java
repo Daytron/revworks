@@ -16,7 +16,7 @@
 package com.github.daytron.revworks.authentication;
 
 /**
- * Custom Exception for invalid authentication when cross-checking the user's
+ * A custom exception for invalid authentication when cross-checking the user's
  * credentials with the information in the database.
  *
  * @author Ryan Gilera

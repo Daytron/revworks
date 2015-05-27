@@ -46,8 +46,9 @@ import com.vaadin.ui.themes.ValoTheme;
  * @author Ryan Gilera
  */
 public final class LoginScreen extends CssLayout {
+
     private static final long serialVersionUID = 1L;
-    
+
     private TextField usernameField;
     private PasswordField passwordField;
     private Button loginButton;
@@ -162,8 +163,7 @@ public final class LoginScreen extends CssLayout {
                 LoginString.FORM_LOGIN_BUTTON.getText());
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         loginButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        
-        
+
         loginButton.addClickListener(new LoginButtonListener(
                 usernameField, passwordField, userOptionGroup));
 

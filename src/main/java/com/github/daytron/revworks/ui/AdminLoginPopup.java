@@ -36,6 +36,7 @@ import com.vaadin.ui.themes.ValoTheme;
  */
 public final class AdminLoginPopup extends Window {
     private static final long serialVersionUID = 1L;
+    private TextField userField;
     
     public AdminLoginPopup() {
         super(LoginString.FORM_ADMIN_WINDOW_LABEL.getText()); // Window label
@@ -55,6 +56,9 @@ public final class AdminLoginPopup extends Window {
         
         popupLayout.addComponent(welcomeLabel);
         popupLayout.addComponent(buildLoginForm());
+        
+        // Sets default focus on username field
+        userField.focus();
     }
 
     /**
@@ -65,7 +69,7 @@ public final class AdminLoginPopup extends Window {
     private FormLayout buildLoginForm() {
 
         // Username field
-        TextField userField = new TextField(
+        userField = new TextField(
                 LoginString.FORM_ADMIN_EMAIL.getText());
         userField.setWidth(15, UNITS_EM);
         userField.setMaxLength(

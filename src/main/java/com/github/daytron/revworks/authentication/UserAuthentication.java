@@ -17,6 +17,7 @@ package com.github.daytron.revworks.authentication;
 
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.data.ExceptionMsg;
+import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.data.UserType;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import java.security.Principal;
@@ -74,33 +75,15 @@ public class UserAuthentication {
             PreparedStatement preparedStatement;
 
             if (userType == UserType.STUDENT) {
-                String query = "SELECT User.id, Student.id, User.first_name, "
-                        + "User.last_name "
-                        + "FROM Student\n"
-                        + "INNER JOIN User \n"
-                        + "ON Student.person_id = User.id\n"
-                        + "WHERE Student.id = ? and "
-                        + " ? = Student.password";
-                preparedStatement = connection.prepareStatement(query);
+                preparedStatement = connection.prepareStatement(
+                        PreparedQueryStatement.LOGIN_USER_STUDENT.getQuery());
 
             } else if (userType == UserType.LECTURER) {
-                String query = "SELECT User.id, Lecturer.id, "
-                        + "User.first_name, User.last_name "
-                        + "FROM Lecturer\n"
-                        + "INNER JOIN User \n"
-                        + "ON Lecturer.person_id = User.id\n"
-                        + "WHERE Lecturer.email = ? and "
-                        + "? = Lecturer.password;";
-                preparedStatement = connection.prepareStatement(query);
+                preparedStatement = connection.prepareStatement(
+                        PreparedQueryStatement.LOGIN_USER_LECTURER.getQuery());
             } else {
-                String query = "SELECT User.id, Admin.id, "
-                        + "User.first_name, User.last_name "
-                        + "FROM Admin\n"
-                        + "INNER JOIN User \n"
-                        + "ON Admin.person_id = User.id\n"
-                        + "WHERE Admin.email = ? and "
-                        + "? = Admin.password;";
-                preparedStatement = connection.prepareStatement(query);
+                preparedStatement = connection.prepareStatement(
+                        PreparedQueryStatement.LOGIN_USER_ADMIN.getQuery());
             }
 
             // Apply username and password to the query statement
@@ -131,14 +114,14 @@ public class UserAuthentication {
                 user = new StudentUser(userID, userfield, firstName, lastName);
             } else if (userType == UserType.STUDENT) {
                 String lecturerID = Integer.toString(resultSet.getInt(2));
-                user = new LecturerUser(userID, lecturerID, userfield, 
+                user = new LecturerUser(userID, lecturerID, userfield,
                         firstName, lastName);
             } else {
                 String adminID = Integer.toString(resultSet.getInt(2));
-                user = new AdminUser(userID, adminID, userfield, firstName, 
+                user = new AdminUser(userID, adminID, userfield, firstName,
                         lastName);
             }
-            
+
             // Close the statement after using it, to free up memory
             preparedStatement.close();
             // Then release the connection to free idle SQL connection
@@ -149,7 +132,7 @@ public class UserAuthentication {
             Logger.getLogger(UserAuthentication.class.getName()).log(Level.SEVERE, null, ex);
 
             throw new AuthenticationException(
-                ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
+                    ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
         }
 
     }

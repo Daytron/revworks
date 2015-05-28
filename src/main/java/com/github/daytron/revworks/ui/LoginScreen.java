@@ -25,6 +25,7 @@ import com.github.daytron.revworks.data.LoginString;
 import com.github.daytron.revworks.data.LoginValidationNum;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -137,6 +138,8 @@ public final class LoginScreen extends CssLayout {
         // By default, hides validation error. Only to show later on explicitly
         // using the submit button
         usernameField.setValidationVisible(false);
+        usernameField.setIcon(FontAwesome.USER);
+        
 
         // Apply corresponding validator by default
         usernameField.addValidator(
@@ -152,6 +155,7 @@ public final class LoginScreen extends CssLayout {
         passwordField.setWidth(15, UNITS_EM);
         passwordField.setMaxLength(
                 LoginValidationNum.PASSWORD_MAX_LENGTH.getValue());
+        passwordField.setIcon(FontAwesome.LOCK);
         passwordField.addValidator(
                 LoginValidatorFactory.buildPasswordLengthValidator());
         // By default, hides validation error. Only to show later on explicitly
@@ -162,7 +166,7 @@ public final class LoginScreen extends CssLayout {
         loginButton = new Button(
                 LoginString.FORM_LOGIN_BUTTON.getText());
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        loginButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        loginButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
 
         loginButton.addClickListener(new LoginButtonListener(
                 usernameField, passwordField, userOptionGroup));

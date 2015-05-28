@@ -16,7 +16,6 @@
 package com.github.daytron.revworks.authentication;
 
 import com.github.daytron.revworks.service.CurrentUserSession;
-import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.service.WrongCurrentUserTypeException;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.UserType;
@@ -60,24 +59,18 @@ public class UserAccessControl implements AccessControl {
     }
 
     @Override
-    public boolean isUserAStudent() throws NoCurrentUserException {
-
-        if (!isUserSignedIn()) {
-            return ((User) CurrentUserSession.get()).isStudentUser();
-        } else {
-            throw new NoCurrentUserException(
-                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
-        }
+    public boolean isUserAStudent() {
+        return ((User) CurrentUserSession.get()).isStudentUser();
     }
 
     @Override
-    public boolean isUserALecturer() throws NoCurrentUserException {
-        if (!isUserSignedIn()) {
-            return ((User) CurrentUserSession.get()).isLecturerUser();
-        } else {
-            throw new NoCurrentUserException(
-                    ExceptionMsg.NO_CURRENT_USER_EXCEPTION.getMsg());
-        }
+    public boolean isUserALecturer() {
+        return ((User) CurrentUserSession.get()).isLecturerUser();
+    }
+
+    @Override
+    public boolean isUserAdmin() {
+        return ((User) CurrentUserSession.get()).isAdminUser();
     }
 
     @Override

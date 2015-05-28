@@ -32,9 +32,11 @@ public interface AccessControl {
 
     public boolean isUserSignedIn();
 
-    public boolean isUserAStudent() throws NoCurrentUserException ;
+    public boolean isUserAStudent();
 
-    public boolean isUserALecturer() throws NoCurrentUserException;
+    public boolean isUserALecturer();
+    
+    public boolean isUserAdmin();
 
     public String getPrincipalName();
     

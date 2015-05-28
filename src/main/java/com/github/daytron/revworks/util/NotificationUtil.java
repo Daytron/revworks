@@ -36,12 +36,35 @@ public class NotificationUtil {
     
     /**
      * Creates an error notification with two parameters for caption and 
+     * time delay.
+     * 
+     * @param caption The main message of the notification
+     * @param delay The time delay in milliseconds
+     */
+    public static void showError(String caption, int delay) {
+        showError(caption, "", delay);
+    }
+    
+    /**
+     * Creates an error notification with two parameters for caption and 
      * description.
      * 
      * @param caption The main message of the notification
      * @param description Secondary description message
      */
     public static void showError(String caption, String description) {
+        showError(caption, description, 0);
+    }
+    
+    /**
+     * Creates an error notification with three parameters for caption, 
+     * description and time delay.
+     * 
+     * @param caption The main message of the notification
+     * @param description Secondary description message
+     * @param delay The time delay in milliseconds
+     */
+    public static void showError(String caption, String description, int delay) {
         Notification errorNotification;
         
         caption = "<i class=\"fa fa-exclamation-circle fa-2x\"></i>&nbsp;&nbsp;"
@@ -56,6 +79,10 @@ public class NotificationUtil {
         
         errorNotification.setHtmlContentAllowed(true);
         errorNotification.setPosition(Position.TOP_CENTER);
+        
+        if (delay != 0) {
+            errorNotification.setDelayMsec(delay);
+        }
         
         errorNotification.show(Page.getCurrent());
     }

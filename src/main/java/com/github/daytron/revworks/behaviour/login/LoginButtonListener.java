@@ -102,10 +102,8 @@ public class LoginButtonListener implements Button.ClickListener {
                     userAccessControl.getPrincipalName(),
                     VaadinSession.getCurrent());
             MainUI.MainUIServlet.printSessions("user login");
-
-            DashboardScreen tempUI = new DashboardScreen(
-                    MainUI.get());
-            UI.getCurrent().setContent(tempUI);
+            
+            MainUI.get().showDashboardScreen();
 
             Notification.show("Welcome "
                     + userAccessControl.getFirstName()

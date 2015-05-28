@@ -74,7 +74,8 @@ $view-padding: round($v-unit-size / 1.5) !default;
             padding-left: $v-layout-margin-left;
             padding-bottom: $v-layout-margin-bottom;
             padding-right: $v-layout-margin-right;
-            @include valo-animate-in-slide-up($duration: 1s);
+            @include animation(valo-animate-in-slide-up 800ms 10ms backwards, valo-animate-in-fade 600ms 100ms backwards);
+
 
             .logo-main {
                 padding-bottom: 5px;
@@ -144,6 +145,7 @@ $view-padding: round($v-unit-size / 1.5) !default;
     .view-dashboard-header {
         padding-bottom: $view-padding;
         width: 100%;
+        height: 2rem;
         text-align: right;
         white-space: normal;
 

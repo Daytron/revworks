@@ -53,11 +53,12 @@ public final class LoginScreen extends CssLayout {
     private TextField usernameField;
     private PasswordField passwordField;
     private Button loginButton;
-
+    
     private final AccessControl accessControl;
 
     public LoginScreen(AccessControl accessControl) {
         this.accessControl = accessControl;
+        
         buildUI();
         this.usernameField.focus();
     }
@@ -226,5 +227,5 @@ public final class LoginScreen extends CssLayout {
 
         return footerLayout;
     }
-
+    
 }

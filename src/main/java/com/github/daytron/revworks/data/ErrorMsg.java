@@ -17,13 +17,15 @@ package com.github.daytron.revworks.data;
 
 /**
  * Collection of error messages.
- * 
+ *
  * @author Ryan Gilera
  */
 public enum ErrorMsg {
 
     INVALID_INPUT_CAPTION("Invalid input!"),
-    SIGNIN_FAILED_CAPTION("Sign-In failed!");
+    SIGNIN_FAILED_CAPTION("Sign-In failed!"),
+    NO_USER_SIGNIN("No login user found. The session has been reset. ");
+
     private final String text;
 
     private ErrorMsg(String text) {

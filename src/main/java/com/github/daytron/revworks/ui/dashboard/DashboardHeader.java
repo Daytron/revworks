@@ -17,6 +17,7 @@ package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.MainUI;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -62,6 +63,7 @@ public class DashboardHeader extends HorizontalLayout {
         notificatioButton, logOutButton);
         toolbar.setSpacing(true);
         toolbar.setStyleName("dashboard-toolbar");
+        toolbar.setComponentAlignment(welcomeUserLabel, Alignment.BOTTOM_LEFT);
         
         addComponent(toolbar);
     }

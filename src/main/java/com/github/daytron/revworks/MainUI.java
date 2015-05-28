@@ -19,7 +19,7 @@ import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.authentication.UserAccessControl;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.ui.LoginScreen;
-import com.github.daytron.revworks.ui.DashboardScreen;
+import com.github.daytron.revworks.ui.dashboard.DashboardScreen;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -70,7 +70,8 @@ public class MainUI extends UI {
     }
 
     public void showDashboardScreen() {
-        setContent(new DashboardScreen());
+        setContent(new DashboardScreen(MainUI.this));
+        getNavigator().navigateTo(getNavigator().getState());
     }
 
     @WebServlet(urlPatterns = "/*", name = "MainUIServlet", asyncSupported = true)

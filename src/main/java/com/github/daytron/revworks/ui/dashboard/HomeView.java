@@ -15,6 +15,9 @@
  */
 package com.github.daytron.revworks.ui.dashboard;
 
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEventBus;
+import com.github.daytron.revworks.service.DataProvider;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
@@ -26,7 +29,10 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -36,13 +42,15 @@ public class HomeView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "Home";
 
+    // Flags
+    private boolean initialised = false;
+    private boolean isDataLoaded = false;
+
+    private static final String viewTitle = "What's New";
+
+    private ResultSet dataContainer;
+
     public HomeView() {
-        setSizeFull();
-        setMargin(true);
-        setSpacing(true);
-
-        Label whatsNewLabel = new Label();
-
     }
 
     private Component createAnnouncementPanel(
@@ -82,13 +90,35 @@ public class HomeView extends VerticalLayout implements View {
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
 
-//        if (!initialized) {
-//            initalizeLayouts();
-//        }
-//
-//        if (!isDataUpToDate) {
-//            updateData();
-//        }
+        if (!initialised) {
+            AppEventBus.post(new AppEvent.LoadHomeViewDataEvent());
+            this.dataContainer = DataProvider.get().getAnnouncementsContainer();
+
+            if (dataContainer != null) {
+                initialiseLayout();
+                
+                AppEventBus.post(new AppEvent.CloseSQLStatementAndConnectionEvent());
+            }
+
+        }
+    }
+
+    private void initialiseLayout() {
+        setSizeFull();
+        setMargin(true);
+        setSpacing(true);
+
+        Label whatsNewLabel = new Label(viewTitle);
+        VerticalLayout contentLayout = new VerticalLayout();
+        contentLayout.setSizeFull();
+        
+        // TODO logic for creating panel news from resultset object (dataContainer)
+        
+        
+        addComponent(whatsNewLabel);
+        addComponent(contentLayout);
+        
+        setExpandRatio(contentLayout, 1);
     }
 
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.behaviour.validator;
+package com.github.daytron.revworks.validator;
 
 import com.vaadin.data.validator.AbstractValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -25,7 +25,6 @@ import com.vaadin.data.validator.IntegerRangeValidator;
  */
 public class StudentIDRangeValidator extends AbstractValidator<String> {
 
-    private static final long serialVersionUID = 1L;
     private final IntegerRangeValidator integerRangeValidator;
 
     public StudentIDRangeValidator(String errorMessage, Integer minimumValue,

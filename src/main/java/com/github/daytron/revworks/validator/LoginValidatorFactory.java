@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.behaviour.validator;
+package com.github.daytron.revworks.validator;
 
 import com.github.daytron.revworks.data.LoginValidationMsg;
 import com.github.daytron.revworks.data.LoginValidationNum;

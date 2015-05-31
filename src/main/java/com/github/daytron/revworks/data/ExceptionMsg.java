@@ -23,10 +23,10 @@ package com.github.daytron.revworks.data;
 public enum ExceptionMsg {
 
     AUTHENTICATION_EXCEPTION_NO_USER("No such user found. Invalid credentials."),
-    AUTHENTICATION_EXCEPTION_SYS_ERROR("System error occured, "
-            + "please consult your administrator for help."),
+    AUTHENTICATION_EXCEPTION_SYS_ERROR("System error occured "),
     NO_CURRENT_USER_EXCEPTION("No user is login"),
-    WRONG_CURRENT_USER_TYPE_EXCEPTION("Wrong user type access.");
+    WRONG_CURRENT_USER_TYPE_EXCEPTION("Wrong user type access."),
+    EMPTY_SQL_RESULT("Empty SQL query result.");
     private final String msg;
 
     private ExceptionMsg(String msg) {

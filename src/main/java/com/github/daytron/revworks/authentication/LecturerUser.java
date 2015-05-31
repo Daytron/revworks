@@ -25,7 +25,6 @@ import com.github.daytron.revworks.data.UserType;
 class LecturerUser extends User {
 
     private final String email;
-    private final String lecturerID;
 
     /**
      * Creates a new LecturerUser object with parameter values namely the user
@@ -37,11 +36,10 @@ class LecturerUser extends User {
      * @param firstname The first name of the lecturer
      * @param lastname The last name of the lecturer
      */
-    public LecturerUser(String userId, String lecturerId, String email,
+    public LecturerUser(String userId, String email,
             String firstname, String lastname) {
         super(userId, firstname, lastname, UserType.LECTURER);
         this.email = email;
-        this.lecturerID = lecturerId;
     }
 
     /**
@@ -51,15 +49,6 @@ class LecturerUser extends User {
      */
     public String getEmail() {
         return email;
-    }
-
-    /**
-     * Returns the lecturer's id.
-     *
-     * @return String object for lecturer's id information
-     */
-    public String getLecturerID() {
-        return lecturerID;
     }
 
 }

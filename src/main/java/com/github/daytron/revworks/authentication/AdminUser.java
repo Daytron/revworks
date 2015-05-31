@@ -24,7 +24,6 @@ import com.github.daytron.revworks.data.UserType;
  */
 class AdminUser extends User {
 
-    private final String adminID;
     private final String adminEmail;
 
     /**
@@ -37,10 +36,9 @@ class AdminUser extends User {
      * @param firstname The first name of the lecturer
      * @param lastname The last name of the lecturer
      */
-    public AdminUser(String id, String adminId, String adminEmail, String firstname,
+    public AdminUser(String id, String adminEmail, String firstname,
             String lastname) {
         super(id, firstname, lastname, UserType.ADMIN);
-        this.adminID = adminId;
         this.adminEmail = adminEmail;
     }
 
@@ -51,15 +49,6 @@ class AdminUser extends User {
      */
     public String getadminEmail() {
         return adminEmail;
-    }
-
-    /**
-     * Returns admin's id.
-     *
-     * @return String object for admin's id information
-     */
-    public String getAdminID() {
-        return adminID;
     }
 
 }

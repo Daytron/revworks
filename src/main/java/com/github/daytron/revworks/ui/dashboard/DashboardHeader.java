@@ -16,6 +16,8 @@
 package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEventBus;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -55,7 +57,7 @@ public class DashboardHeader extends HorizontalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                MainUI.get().getAccessControl().signOut();
+                AppEventBus.post(new AppEvent.UserLogoutRequestEvent());
             }
         });
         

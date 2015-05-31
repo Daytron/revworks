@@ -15,14 +15,13 @@
  */
 package com.github.daytron.revworks.ui;
 
-import com.github.daytron.revworks.authentication.AccessControl;
-import com.github.daytron.revworks.behaviour.login.LoginButtonListener;
-import com.github.daytron.revworks.behaviour.login.OptionChangeValueListener;
-import com.github.daytron.revworks.behaviour.login.WebmasterLinkButtonListener;
-import com.github.daytron.revworks.behaviour.validator.LoginValidatorFactory;
+import com.github.daytron.revworks.validator.LoginValidatorFactory;
 import com.github.daytron.revworks.data.ExternalLink;
 import com.github.daytron.revworks.data.LoginString;
 import com.github.daytron.revworks.data.LoginValidationNum;
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEventBus;
+import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
@@ -46,18 +45,15 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public final class LoginScreen extends CssLayout {
-
-    private static final long serialVersionUID = 1L;
 
     private TextField usernameField;
     private PasswordField passwordField;
     private Button loginButton;
     
-    private final AccessControl accessControl;
 
-    public LoginScreen(AccessControl accessControl) {
-        this.accessControl = accessControl;
+    public LoginScreen() {
         
         buildUI();
         this.usernameField.focus();
@@ -120,7 +116,7 @@ public final class LoginScreen extends CssLayout {
         FormLayout loginFormLayout = new FormLayout();
 
         // Options for students or lecturers
-        OptionGroup userOptionGroup = new OptionGroup(
+        final OptionGroup userOptionGroup = new OptionGroup(
                 LoginString.FORM_OPTIONGROUP_USER.getText());
         userOptionGroup.addItems(
                 LoginString.FORM_OPTION_STUDENT.getText(),
@@ -147,8 +143,14 @@ public final class LoginScreen extends CssLayout {
                 LoginValidatorFactory.buildStudentIDValidator());
 
         // Add listener to option group
-        userOptionGroup.addValueChangeListener(
-                new OptionChangeValueListener(usernameField));
+        userOptionGroup.addValueChangeListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                AppEventBus.post(new AppEvent.OptionChangeValueEvent(
+                        usernameField, event.getProperty().getValue().toString()));
+            }
+        });
 
         // Password field
         passwordField = new PasswordField(
@@ -169,8 +171,14 @@ public final class LoginScreen extends CssLayout {
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         loginButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
 
-        loginButton.addClickListener(new LoginButtonListener(
-                usernameField, passwordField, userOptionGroup));
+        loginButton.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                AppEventBus.post(new AppEvent.UserLoginRequestEvent(
+                        usernameField, passwordField, userOptionGroup));
+            }
+        });
 
         // Add all together
         loginFormLayout.addComponents(userOptionGroup,
@@ -205,8 +213,13 @@ public final class LoginScreen extends CssLayout {
                 LoginString.WEBMASTER_LINK_LABEL.getText());
         webmasterButtonLink.setStyleName(ValoTheme.BUTTON_LINK);
         webmasterButtonLink.setSizeUndefined();
-        webmasterButtonLink.addClickListener(
-                new WebmasterLinkButtonListener(accessControl));
+        webmasterButtonLink.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                AppEventBus.post(new AppEvent.WebmasterLinkClickEvent());
+            }
+        });
 
         // Add these links and button together
         footerLinksLayout.addComponents(studentPortalLink,

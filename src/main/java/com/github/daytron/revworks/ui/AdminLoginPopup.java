@@ -15,10 +15,11 @@
  */
 package com.github.daytron.revworks.ui;
 
-import com.github.daytron.revworks.behaviour.login.AdminLoginButtonListener;
-import com.github.daytron.revworks.behaviour.validator.LoginValidatorFactory;
+import com.github.daytron.revworks.validator.LoginValidatorFactory;
 import com.github.daytron.revworks.data.LoginString;
 import com.github.daytron.revworks.data.LoginValidationNum;
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEventBus;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
@@ -79,7 +80,7 @@ public final class AdminLoginPopup extends Window {
         userField.setValidationVisible(false);
 
         // Password field
-        PasswordField passwordField = new PasswordField(
+        final PasswordField passwordField = new PasswordField(
                 LoginString.FORM_USER_PASSWORD.getText());
         passwordField.setWidth(15, UNITS_EM);
         passwordField.setMaxLength(
@@ -93,8 +94,14 @@ public final class AdminLoginPopup extends Window {
                 LoginString.FORM_LOGIN_BUTTON.getText());
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         loginButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        loginButton.addClickListener(new AdminLoginButtonListener(userField, 
-                passwordField, this));
+        loginButton.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                AppEventBus.post(new AppEvent.AdminLoginRequestEvent(
+                        userField, passwordField, AdminLoginPopup.this));
+            }
+        });
         
         final FormLayout loginFormLayout = new FormLayout(userField, passwordField,
                 loginButton);

@@ -15,12 +15,29 @@
  */
 package com.github.daytron.revworks.authentication;
 
+import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.validator.LoginValidatorFactory;
+import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.WrongCurrentUserTypeException;
 import com.github.daytron.revworks.data.ExceptionMsg;
+import com.github.daytron.revworks.data.LoginString;
+import com.github.daytron.revworks.data.LoginValidationNum;
 import com.github.daytron.revworks.data.UserType;
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.ui.AdminDashboardScreen;
+import com.github.daytron.revworks.ui.AdminLoginPopup;
+import com.github.daytron.revworks.util.NotificationUtil;
+import com.google.common.eventbus.Subscribe;
+import com.vaadin.data.Validator;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import java.security.Principal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Default implementation class of {@link AccessControl} interface. This
@@ -29,28 +46,217 @@ import java.security.Principal;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class UserAccessControl implements AccessControl {
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * Expose authentication method call of {@link UserAuthentication} to pass
      * {@link  UserType} object, username and password arguments. As a result,
      * it accepts and returns a {@link User} as a Principal object.
      *
-     * @param userType A {@link UserType} object
-     * @param userfield The username either and email for the lecturers and
-     * student id for students
-     * @param password The password as String
-     * @throws AuthenticationException
+     * @param event
      */
+    @Subscribe
     @Override
-    public void signIn(UserType userType, String userfield,
-            String password) throws AuthenticationException {
-        Principal user = UserAuthentication.getInstance()
-                .authenticate(userType, userfield, password);
+    public void signIn(final AppEvent.UserLoginRequestEvent event) {
 
-        CurrentUserSession.set(user);
+        try {
+            event.getUserField().validate();
+            event.getPasswordField().validate();
+
+            authenticateUserLoginRequest(event);
+        } catch (Validator.InvalidValueException e) {
+            event.getUserField().setValidationVisible(true);
+            event.getPasswordField().setValidationVisible(true);
+
+            Logger.getLogger(UserAccessControl.class.getName())
+                    .log(Level.SEVERE, null, e);
+            NotificationUtil.showError(
+                    ErrorMsg.INVALID_INPUT_CAPTION.getText());
+        }
+
+    }
+
+    /**
+     * Authenticates the user login credentials. When deem successful, a new
+     * User object is created pulled from the user info from the database and
+     * save the object to the current session.
+     *
+     * @param event The custom event for regular user sign-in event
+     */
+    private void authenticateUserLoginRequest(
+            final AppEvent.UserLoginRequestEvent event) {
+        String userTypeString = (String) event.getUserTypeOptionGroup().getValue();
+
+        UserType userType = (userTypeString.equalsIgnoreCase(UserType.STUDENT.getText()))
+                ? UserType.STUDENT : UserType.LECTURER;
+
+        String userName = event.getUserField().getValue();
+        String password = event.getPasswordField().getValue();
+
+        Principal user;
+        try {
+            user = UserAuthentication.getInstance()
+                    .authenticate(userType, userName, password);
+            CurrentUserSession.set(user);
+
+            // Verifies if this is the only login session for the current user
+            // If this is second login session made by the user,
+            // it terminates the old session and continue with this new session
+            // created. Afterwards this session is recorded in the servlet.
+            // See MainUIServlet documentation
+            MainUI.MainUIServlet.saveUserSessionInfo(getPrincipalName(),
+                    VaadinSession.getCurrent());
+            MainUI.MainUIServlet.printSessions("user login");
+
+            MainUI.get().showDashboardScreen();
+
+            Notification.show("Welcome "
+                    + getFirstName()
+                    + "!",
+                    Notification.Type.TRAY_NOTIFICATION);
+        } catch (AuthenticationException ex) {
+            Logger.getLogger(UserAccessControl.class.getName()).log(Level.SEVERE, null, ex);
+            NotificationUtil.showError(
+                    ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
+                    ex.getMessage());
+        }
+
+    }
+
+    /**
+     * Validates admin login form fields and call sign-in authentication method.
+     *
+     * @param event The custom event for admin sign-in event
+     */
+    @Subscribe
+    @Override
+    public void signInAdmin(final AppEvent.AdminLoginRequestEvent event) {
+        try {
+            event.getUserField().validate();
+            event.getPasswordField().validate();
+
+            authenticateAdminLoginRequest(event);
+        } catch (Exception e) {
+            event.getUserField().setValidationVisible(true);
+            event.getPasswordField().setValidationVisible(true);
+
+            Logger.getLogger(UserAccessControl.class.getName())
+                    .log(Level.SEVERE, null, e);
+            NotificationUtil.showError(
+                    ErrorMsg.INVALID_INPUT_CAPTION.getText());
+        }
+    }
+
+    /**
+     * Authenticates the admin login credentials. When deem successful, a new
+     * User object is created pulled from the user info from the database and
+     * save the object to the current session.
+     *
+     * @param event The custom event for admin sign-in event
+     */
+    private void authenticateAdminLoginRequest(
+            final AppEvent.AdminLoginRequestEvent event) {
+        UserType userType = UserType.ADMIN;
+        String userName = event.getUserField().getValue();
+        String password = event.getPasswordField().getValue();
+
+        Principal adminUser;
+
+        try {
+            adminUser = UserAuthentication.getInstance()
+                    .authenticate(userType, userName, password);
+            CurrentUserSession.set(adminUser);
+
+            // Verifies if this is the only login session for the current user
+            // If this is second login session made by the user,
+            // it terminates the old session and continue with this new session
+            // created. Afterwards this session is recorded in the servlet.
+            // See MainUIServlet documentation
+            MainUI.MainUIServlet.saveUserSessionInfo(
+                    getPrincipalName(),
+                    VaadinSession.getCurrent());
+            MainUI.MainUIServlet.printSessions("admin login");
+
+            event.getAdminLoginPopup().close();
+
+            AdminDashboardScreen adminDashboard = new AdminDashboardScreen();
+            UI.getCurrent().setContent(adminDashboard);
+
+            Notification.show("Welcome "
+                    + getFirstName()
+                    + "!",
+                    Notification.Type.TRAY_NOTIFICATION);
+        } catch (AuthenticationException ex) {
+            Logger.getLogger(UserAccessControl.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            NotificationUtil.showError(
+                    ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
+                    ex.getMessage());
+        }
+
+    }
+
+    /**
+     * Launches a new modal popup window for admin login when user click the
+     * webmaster link located at the login screen footer section.
+     *
+     * @param event The custom event for webmaster link click event
+     */
+    @Subscribe
+    @Override
+    public void webmasterLinkOnClick(
+            final AppEvent.WebmasterLinkClickEvent event) {
+        AdminLoginPopup adminLoginPopup = new AdminLoginPopup();
+
+        adminLoginPopup.setSizeUndefined();
+        adminLoginPopup.center();
+
+        UI.getCurrent().addWindow(adminLoginPopup);
+    }
+
+    /**
+     * Applies the necessary setting for each user type. The textfield is shared
+     * by student ID and lecturer's email address.
+     *
+     * @param event The custom event for OptionGroup's value change event
+     */
+    @Subscribe
+    @Override
+    public void optionGroupOnChangeValue(final AppEvent.OptionChangeValueEvent event) {
+        // Retrieve component and new value
+        final TextField usernameField = event.getUsernameField();
+        String value = event.getValue();
+
+        // Clear previous validators
+        usernameField.removeAllValidators();
+
+        // Clears the textfield if option group value is changed
+        usernameField.clear();
+
+        // Change username textfield caption according to user type
+        if (value.equalsIgnoreCase(LoginString.FORM_OPTION_STUDENT.getText())) {
+            usernameField.setCaption(LoginString.FORM_STUDENT_ID.getText());
+
+            // Apply corresponding validator
+            usernameField.addValidator(
+                    LoginValidatorFactory.buildStudentIDValidator());
+            // Apply max entry length for student ID
+            usernameField.setMaxLength(
+                    LoginValidationNum.STUDENT_ID_LENGTH.getValue());
+
+        } else {
+            usernameField.setCaption(LoginString.FORM_LECTURER_EMAIL.getText());
+
+            usernameField.addValidator(
+                    LoginValidatorFactory.buildEmailValidator());
+
+            usernameField.setMaxLength(
+                    LoginValidationNum.EMAIL_MAX_LENGTH.getValue());
+        }
+
+        // Return back the focus
+        usernameField.focus();
     }
 
     @Override
@@ -113,8 +319,9 @@ public class UserAccessControl implements AccessControl {
         }
     }
 
+    @Subscribe
     @Override
-    public void signOut() {
+    public void signOut(final AppEvent.UserLogoutRequestEvent event) {
         CurrentUserSession.signOut();
 
         // Reloads the page which will point back to login page

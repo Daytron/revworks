@@ -15,44 +15,50 @@
  */
 package com.github.daytron.revworks.authentication;
 
-import com.github.daytron.revworks.service.NoCurrentUserException;
 import com.github.daytron.revworks.service.WrongCurrentUserTypeException;
 import com.github.daytron.revworks.data.UserType;
+import com.github.daytron.revworks.event.AppEvent;
 
 /**
- * The base interface for authentication, authorisation checks and access 
+ * The base interface for authentication, authorisation checks and access
  * control for the user.
  *
  * @author Ryan Gilera
  */
 public interface AccessControl {
 
-    public void signIn(UserType userType, String userfield, String password) 
-            throws AuthenticationException;
+    public void signIn(AppEvent.UserLoginRequestEvent event);
+
+    public void signOut(AppEvent.UserLogoutRequestEvent event);
+
+    public void signInAdmin(AppEvent.AdminLoginRequestEvent event);
+
+    public void webmasterLinkOnClick(AppEvent.WebmasterLinkClickEvent event);
+
+    public void optionGroupOnChangeValue(AppEvent.OptionChangeValueEvent event);
 
     public boolean isUserSignedIn();
 
     public boolean isUserAStudent();
 
     public boolean isUserALecturer();
-    
+
     public boolean isUserAdmin();
 
     public String getPrincipalName();
-    
+
     public String getFirstName();
-    
+
     public String getLastName();
-    
+
     public String getFullName();
-    
+
     public String getLecturerEmail() throws WrongCurrentUserTypeException;
-    
+
     public String getStudentID() throws WrongCurrentUserTypeException;
-    
+
     public String getUserTypeString();
-    
+
     public UserType getUserType();
-    
-    public void signOut();
+
 }

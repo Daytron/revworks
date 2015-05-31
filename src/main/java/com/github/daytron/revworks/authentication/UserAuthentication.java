@@ -35,9 +35,9 @@ import java.util.logging.Logger;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class UserAuthentication {
 
-    private static final long serialVersionUID = 1L;
 
     private UserAuthentication() {
     }
@@ -112,13 +112,11 @@ public class UserAuthentication {
             Principal user;
             if (userType == UserType.STUDENT) {
                 user = new StudentUser(userID, userfield, firstName, lastName);
-            } else if (userType == UserType.STUDENT) {
-                String lecturerID = Integer.toString(resultSet.getInt(2));
-                user = new LecturerUser(userID, lecturerID, userfield,
+            } else if (userType == UserType.LECTURER) {
+                user = new LecturerUser(userID, userfield,
                         firstName, lastName);
             } else {
-                String adminID = Integer.toString(resultSet.getInt(2));
-                user = new AdminUser(userID, adminID, userfield, firstName,
+                user = new AdminUser(userID, userfield, firstName,
                         lastName);
             }
 

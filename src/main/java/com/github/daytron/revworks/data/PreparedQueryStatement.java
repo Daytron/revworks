@@ -21,25 +21,25 @@ package com.github.daytron.revworks.data;
  * @author Ryan Gilera
  */
 public enum PreparedQueryStatement {
-    LOGIN_USER_STUDENT("SELECT User.id, Student.id, User.first_name, "
+    LOGIN_USER_STUDENT("SELECT User.id, Student.student_id, User.first_name, "
                         + "User.last_name "
                         + "FROM Student\n"
                         + "INNER JOIN User \n"
-                        + "ON Student.person_id = User.id\n"
-                        + "WHERE Student.id = ? and "
+                        + "ON Student.user_id = User.id\n"
+                        + "WHERE Student.student_id = ? and "
                         + " ? = Student.password"),
-    LOGIN_USER_LECTURER("SELECT User.id, Lecturer.id, "
+    LOGIN_USER_LECTURER("SELECT User.id, Lecturer.email, "
                         + "User.first_name, User.last_name "
                         + "FROM Lecturer\n"
                         + "INNER JOIN User \n"
-                        + "ON Lecturer.person_id = User.id\n"
+                        + "ON Lecturer.user_id = User.id\n"
                         + "WHERE Lecturer.email = ? and "
                         + "? = Lecturer.password;"),
-    LOGIN_USER_ADMIN("SELECT User.id, Admin.id, "
+    LOGIN_USER_ADMIN("SELECT User.id, Admin.email, "
                         + "User.first_name, User.last_name "
                         + "FROM Admin\n"
                         + "INNER JOIN User \n"
-                        + "ON Admin.person_id = User.id\n"
+                        + "ON Admin.user_id = User.id\n"
                         + "WHERE Admin.email = ? and "
                         + "? = Admin.password;");
     

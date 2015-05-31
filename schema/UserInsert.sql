@@ -344,12 +344,12 @@ INSERT INTO `appschema`.`AnnouncementType` VALUES (2,'ClassWide');
 INSERT INTO `appschema`.`Announcement` (`title`,`message`,`date_submitted`,`announcement_type_id`)
 VALUES ('Welcome to Revworks!','This is your main portal for coursework reviews from your lecturers. 
 If you have any problem please visit us in the CIT clinic or email us at support@gsm.org.uk.',
-curdate(),1);
+'2015-05-31 13:29:00',1);
 INSERT INTO `appschema`.`Announcement` (`title`,`message`,`date_submitted`,`announcement_type_id`)
 VALUES ('Review Availability','Dear Students, I am available to review over the weekends. If you have 
 something that youe would like me to review please send it by friday. On late submissions, 
 I\'ll look at them next week. Thank you.',
-curdate(),2);
+'2015-05-31 20:05:14',2);
 
 # ClassWideAnnouncement table
 INSERT INTO `appschema`.`ClassWideAnnouncement` VALUES (2,1);

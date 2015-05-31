@@ -108,4 +108,10 @@ public abstract class AppEvent {
         }
 
     }
+    
+    public static final class LoadHomeViewDataEvent {
+    }
+    
+    public static final class CloseSQLStatementAndConnectionEvent {
+    }
 }

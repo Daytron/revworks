@@ -71,7 +71,7 @@ public class UserAuthentication {
 
         try {
             // Create a pool of SQL connections
-            connectionPool = SQLConnectionManager.getInstance().connect();
+            connectionPool = SQLConnectionManager.get().connect();
             // Reserve a new connection
             Connection connection = connectionPool.reserveConnection();
 

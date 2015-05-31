@@ -37,7 +37,7 @@ public class SQLConnectionManager {
      * 
      * @return SQLConnectionManager object
      */
-    public static SQLConnectionManager getInstance() {
+    public static SQLConnectionManager get() {
         return SQLConnectionManagerHolder.INSTANCE;
     }
 

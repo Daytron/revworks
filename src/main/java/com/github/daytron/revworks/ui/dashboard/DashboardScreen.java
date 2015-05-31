@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui;
+package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.MainUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.UI;
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -26,18 +29,56 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class DashboardScreen extends VerticalLayout {
 
-    public DashboardScreen() {
-        Button logout = new Button("Logout");
-        logout.addClickListener(new Button.ClickListener() {
+    private final NavigationMenu menu;
 
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                MainUI.get().getAccessControl().signOut();
-               
-            }
-        });
-        
-        addComponent(logout);
+    public DashboardScreen(MainUI mainUI) {
+
+        setMargin(true);
+        HorizontalLayout headerLayout = new DashboardHeader();
+
+        CssLayout viewContainer = new CssLayout();
+        viewContainer.addStyleName("valo-content");
+        viewContainer.setSizeFull();
+
+        final Navigator navigator = new Navigator(mainUI, viewContainer);
+        navigator.setErrorView(ErrorView.class);
+        menu = new NavigationMenu(navigator);
+
+        if (mainUI.getAccessControl().isUserAStudent()) {
+            menu.addView(HomeView.class,
+                    "",
+                    HomeView.VIEW_NAME, FontAwesome.HOME);
+        } else if (mainUI.getAccessControl().isUserALecturer()) {
+            menu.addView(HomeView.class,
+                    "",
+                    HomeView.VIEW_NAME, FontAwesome.HOME);
+        } else {
+
+        }
+
+        navigator.addViewChangeListener(viewChangeListener);
+
+        addComponent(headerLayout);
+        addComponent(menu);
+        addComponent(viewContainer);
+        setExpandRatio(viewContainer, 1);
+        setSizeFull();
+
     }
-    
+
+    // notify the view menu about view changes so that it can display which view
+    // is currently active
+    ViewChangeListener viewChangeListener = new ViewChangeListener() {
+
+        @Override
+        public boolean beforeViewChange(ViewChangeListener.ViewChangeEvent event) {
+            return true;
+        }
+
+        @Override
+        public void afterViewChange(ViewChangeListener.ViewChangeEvent event) {
+        }
+
+    };
+
 }

@@ -22,7 +22,7 @@ import com.github.daytron.revworks.data.UserType;
  *
  * @author Ryan Gilera
  */
-class AdminUser extends User {
+public class AdminUser extends User {
 
     private final String adminEmail;
 
@@ -30,9 +30,8 @@ class AdminUser extends User {
      * Creates a new AdminUser object with parameter values namely the user id,
      * admin's email, first name and last name.
      *
-     * @param userId The identifying id for a user
-     * @param lecturerId The identifying id for a lecturer
-     * @param email The email assigned by the College which acts as a username
+     * @param id The identifying id for a user
+     * @param adminEmail The email assigned by the College which acts as a username
      * @param firstname The first name of the lecturer
      * @param lastname The last name of the lecturer
      */

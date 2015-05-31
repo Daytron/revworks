@@ -22,7 +22,7 @@ import com.github.daytron.revworks.data.UserType;
  *
  * @author Ryan Gilera
  */
-class LecturerUser extends User {
+public class LecturerUser extends User {
 
     private final String email;
 
@@ -31,7 +31,6 @@ class LecturerUser extends User {
      * id, lecturer id, lecturer email, first name and last name.
      *
      * @param userId The identifying id for a user
-     * @param lecturerId The identifying id for a lecturer
      * @param email The email assigned by the College which acts as a username
      * @param firstname The first name of the lecturer
      * @param lastname The last name of the lecturer

@@ -23,7 +23,7 @@ import java.security.Principal;
  *
  * @author Ryan Gilera
  */
-abstract class User implements Principal {
+public abstract class User implements Principal {
 
     private final String id;
     private final String firstName;

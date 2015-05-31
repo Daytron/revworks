@@ -19,6 +19,7 @@ import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.authentication.UserAccessControl;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
+import com.github.daytron.revworks.service.DataProvider;
 import com.github.daytron.revworks.ui.LoginScreen;
 import com.github.daytron.revworks.ui.dashboard.DashboardScreen;
 import javax.servlet.annotation.WebServlet;
@@ -55,7 +56,7 @@ public class MainUI extends UI {
         Responsive.makeResponsive(this);
         setLocale(vaadinRequest.getLocale());
 
-        AppEventBus.register(accessControl);
+        registerObservers();
 
         getPage().setTitle("RevWorks");
 
@@ -81,6 +82,11 @@ public class MainUI extends UI {
 
     public static AppEventBus getAppEventbus() {
         return get().appEventBus;
+    }
+    
+    private void registerObservers() {
+        AppEventBus.register(accessControl);
+        AppEventBus.register(DataProvider.get());
     }
 
     @WebServlet(urlPatterns = "/*", name = "MainUIServlet", asyncSupported = true)

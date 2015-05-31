@@ -79,8 +79,12 @@ public abstract class User implements Principal {
     public boolean isStudentUser() {
         return userType == UserType.STUDENT;
     }
-    
+
     public boolean isAdminUser() {
         return userType == UserType.ADMIN;
+    }
+
+    public String getId() {
+        return id;
     }
 }

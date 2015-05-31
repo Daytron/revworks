@@ -122,7 +122,7 @@ public class UserAccessControl implements AccessControl {
             Logger.getLogger(UserAccessControl.class.getName()).log(Level.SEVERE, null, ex);
             NotificationUtil.showError(
                     ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
-                    ex.getMessage());
+                    ErrorMsg.CONSULT_YOUR_ADMIN.getText());
         }
 
     }
@@ -195,7 +195,7 @@ public class UserAccessControl implements AccessControl {
                     .log(Level.SEVERE, null, ex);
             NotificationUtil.showError(
                     ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
-                    ex.getMessage());
+                    ErrorMsg.CONSULT_YOUR_ADMIN.getText());
         }
 
     }
@@ -339,6 +339,11 @@ public class UserAccessControl implements AccessControl {
     @Override
     public UserType getUserType() {
         return ((User) CurrentUserSession.get()).getUserType();
+    }
+
+    @Override
+    public String getUserId() {
+        return ((User) CurrentUserSession.get()).getId();
     }
 
 }

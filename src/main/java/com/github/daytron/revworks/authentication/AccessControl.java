@@ -44,6 +44,8 @@ public interface AccessControl {
     public boolean isUserALecturer();
 
     public boolean isUserAdmin();
+    
+    public String getUserId();
 
     public String getPrincipalName();
 

@@ -41,7 +41,34 @@ public enum PreparedQueryStatement {
                         + "INNER JOIN User \n"
                         + "ON Admin.user_id = User.id\n"
                         + "WHERE Admin.email = ? and "
-                        + "? = Admin.password;");
+                        + "? = Admin.password;"),
+    
+    ANNOUNCEMENT_STUDENT_QUERY("SELECT Announcement.id AS id, "
+            + "Announcement.title AS title, Announcement.message as message, " 
+            + "Announcement.date_submitted AS dateSubmitted, "
+            + "Announcement.announcement_type_id AS announcementTypeId " 
+            + "FROM Announcement " 
+            + "LEFT JOIN ClassWideAnnouncement "
+            + "ON Announcement.id = ClassWideAnnouncement.id " 
+            + "LEFT JOIN Class "
+            + "ON Class.id = ClassWideAnnouncement.class_id " 
+            + "LEFT JOIN StudentClass "
+            + "ON StudentClass.class_id = Class.id " 
+            + "WHERE StudentClass.user_id = ? "
+            + "OR Announcement.announcement_type_id = 1 " 
+            + "ORDER BY date_submitted DESC;"),
+    
+    ANNOUNCEMENT_LECTURER_QUERY("SELECT Announcement.id AS id, "
+            + "Announcement.title AS title, Announcement.message as message, "
+            + "Announcement.date_submitted AS dateSubmitted, "
+            + "Announcement.announcement_type_id AS announcementTypeId " 
+            + "FROM Announcement " 
+            + "LEFT JOIN ClassWideAnnouncement "
+            + "ON Announcement.id = ClassWideAnnouncement.id " 
+            + "LEFT JOIN Class ON Class.id = ClassWideAnnouncement.class_id " 
+            + "WHERE Class.lecturer_id = ? "
+            + "OR Announcement.announcement_type_id = 1 " 
+            + "ORDER BY date_submitted DESC;");
     
     private final String query;
 

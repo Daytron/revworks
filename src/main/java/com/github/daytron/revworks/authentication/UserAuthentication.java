@@ -15,6 +15,9 @@
  */
 package com.github.daytron.revworks.authentication;
 
+import com.github.daytron.revworks.model.LecturerUser;
+import com.github.daytron.revworks.model.StudentUser;
+import com.github.daytron.revworks.model.AdminUser;
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.PreparedQueryStatement;

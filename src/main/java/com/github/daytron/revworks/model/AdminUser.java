@@ -13,41 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.authentication;
+package com.github.daytron.revworks.model;
 
 import com.github.daytron.revworks.data.UserType;
 
 /**
- * The child class of {@link User} for Lecturers user role.
+ * The child class of {@link User} for Administrators user role.
  *
  * @author Ryan Gilera
  */
-public class LecturerUser extends User {
+public class AdminUser extends User {
 
-    private final String email;
+    private final String adminEmail;
 
     /**
-     * Creates a new LecturerUser object with parameter values namely the user
-     * id, lecturer id, lecturer email, first name and last name.
+     * Creates a new AdminUser object with parameter values namely the user id,
+     * admin's email, first name and last name.
      *
-     * @param userId The identifying id for a user
-     * @param email The email assigned by the College which acts as a username
+     * @param id The identifying id for a user
+     * @param adminEmail The email assigned by the College which acts as a username
      * @param firstname The first name of the lecturer
      * @param lastname The last name of the lecturer
      */
-    public LecturerUser(String userId, String email,
-            String firstname, String lastname) {
-        super(userId, firstname, lastname, UserType.LECTURER);
-        this.email = email;
+    public AdminUser(String id, String adminEmail, String firstname,
+            String lastname) {
+        super(id, firstname, lastname, UserType.ADMIN);
+        this.adminEmail = adminEmail;
     }
 
     /**
-     * Returns the lecturer's email address.
+     * Returns admin's email address.
      *
-     * @return String object for lecturer's email information
+     * @return String object for admin's email information
      */
-    public String getEmail() {
-        return email;
+    public String getadminEmail() {
+        return adminEmail;
     }
 
 }

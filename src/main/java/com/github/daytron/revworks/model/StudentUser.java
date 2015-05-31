@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.authentication;
+package com.github.daytron.revworks.model;
 
 import com.github.daytron.revworks.data.UserType;
 

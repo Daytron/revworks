@@ -36,7 +36,7 @@ public enum LoginString {
     FORM_OPTION_STUDENT("Student"),
     FORM_OPTION_LECTURER("Lecturer"),
     FORM_STUDENT_ID("Student ID"),
-    FORM_LECTURER_EMAIL("Lecturer Email"),
+    FORM_LECTURER_EMAIL("Email"),
     FORM_USER_PASSWORD("Password"),
     FORM_LOGIN_BUTTON("Login"),
     WEBMASTER_LINK_LABEL("Webmaster");

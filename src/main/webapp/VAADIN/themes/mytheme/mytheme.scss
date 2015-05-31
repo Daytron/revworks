@@ -60,9 +60,11 @@ $view-padding: round($v-unit-size / 1.1) !default;
 $header-height: round($v-unit-size / 1.1) !default;
 
 @import "../valo/valo.scss";
+@import "views/announcement-view.scss";
 
 @mixin mytheme {
     @include valo;
+    @include announcement-view;
 
     // Login Screen
     .login-screen {

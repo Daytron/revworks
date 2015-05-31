@@ -22,9 +22,11 @@ package com.github.daytron.revworks.data;
  */
 public enum ErrorMsg {
 
+    CONSULT_YOUR_ADMIN("Please consult your administrator for help."),
     INVALID_INPUT_CAPTION("Invalid input!"),
     SIGNIN_FAILED_CAPTION("Sign-In failed!"),
-    NO_USER_SIGNIN("No login user found. The session has been reset. ");
+    NO_USER_SIGNIN("No login user found. The session has been reset. "),
+    DATA_FETCH_ERROR("Could not retrieve user data.");
 
     private final String text;
 

@@ -17,6 +17,7 @@ package com.github.daytron.revworks;
 
 import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.authentication.UserAccessControl;
+import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.ui.LoginScreen;
 import com.github.daytron.revworks.ui.dashboard.DashboardScreen;
@@ -42,20 +43,24 @@ import javax.servlet.ServletException;
  * The main class to launch the web application.
  */
 @Theme("mytheme")
+@SuppressWarnings("serial")
 @Widgetset("com.github.daytron.revworks.MyAppWidgetset")
 public class MainUI extends UI {
 
-    private static final long serialVersionUID = 1L;
     private final AccessControl accessControl = new UserAccessControl();
+    private final AppEventBus appEventBus = new AppEventBus();
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         Responsive.makeResponsive(this);
         setLocale(vaadinRequest.getLocale());
+
+        AppEventBus.register(accessControl);
+
         getPage().setTitle("RevWorks");
 
         if (!accessControl.isUserSignedIn()) {
-            setContent(new LoginScreen(accessControl));
+            setContent(new LoginScreen());
         } else {
             showDashboardScreen();
         }
@@ -72,6 +77,10 @@ public class MainUI extends UI {
     public void showDashboardScreen() {
         setContent(new DashboardScreen(MainUI.this));
         getNavigator().navigateTo(getNavigator().getState());
+    }
+
+    public static AppEventBus getAppEventbus() {
+        return get().appEventBus;
     }
 
     @WebServlet(urlPatterns = "/*", name = "MainUIServlet", asyncSupported = true)

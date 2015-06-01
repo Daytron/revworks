@@ -26,7 +26,10 @@ public enum ExceptionMsg {
     AUTHENTICATION_EXCEPTION_SYS_ERROR("System error occured "),
     NO_CURRENT_USER_EXCEPTION("No user is login"),
     WRONG_CURRENT_USER_TYPE_EXCEPTION("Wrong user type access."),
-    EMPTY_SQL_RESULT("Empty SQL query result.");
+    EMPTY_SQL_RESULT("Empty SQL query result."),
+    SQL_ERROR_CONNECTION("SQL: Related connection service failed."),
+    SQL_NO_RESULT_FOUND("SQL: The last query resulted to empty set."),
+    SQL_ERROR_QUERY("SQL: Error query action.");
     private final String msg;
 
     private ExceptionMsg(String msg) {

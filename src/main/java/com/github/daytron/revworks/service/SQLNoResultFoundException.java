@@ -16,23 +16,23 @@
 package com.github.daytron.revworks.service;
 
 /**
- * A custom exception when user login authentication fails.
+ * A custom exception when retrieving data from the database fails.
  *
  * @author Ryan Gilera
  */
-public class WrongCurrentUserTypeException extends Exception {
+public class SQLNoResultFoundException extends Exception {
 
-    public WrongCurrentUserTypeException(String msg, Throwable t) {
+    public SQLNoResultFoundException(String msg, Throwable t) {
 
         super(msg, t);
     }
 
-    public WrongCurrentUserTypeException(String msg) {
+    public SQLNoResultFoundException(String msg) {
 
         super(msg);
     }
 
-    public WrongCurrentUserTypeException(Throwable t) {
+    public SQLNoResultFoundException(Throwable t) {
 
         super(t);
     }

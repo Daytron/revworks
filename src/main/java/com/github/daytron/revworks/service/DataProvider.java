@@ -16,18 +16,20 @@
 package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
-import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.data.AnnouncementType;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
-import com.github.daytron.revworks.event.AppEvent;
-import com.github.daytron.revworks.util.NotificationUtil;
-import com.google.common.eventbus.Subscribe;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.github.daytron.revworks.data.UserType;
+import com.github.daytron.revworks.model.Announcement;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +39,9 @@ import java.util.logging.Logger;
  */
 public class DataProvider {
 
-    private ResultSet announcementsContainer = null;
+    private static final String GSM_LONDON = "GSM London";
+
+    private List<Announcement> listOfAnnouncements;
     private JDBCConnectionPool connectionPool;
     private Connection connection;
     private PreparedStatement preparedStatement;
@@ -49,9 +53,9 @@ public class DataProvider {
         return DataProviderHolder.INSTANCE;
     }
 
-    @Subscribe
-    private void populateHomeViewWithData(
-            final AppEvent.LoadHomeViewDataEvent event) {
+    public List<Announcement> populateHomeViewWithData() throws
+            SQLErrorQueryException, SQLNoResultFoundException,
+            SQLErrorRetrievingConnectionAndPoolException {
 
         if (getConnectionPool()) {
             try {
@@ -68,65 +72,104 @@ public class DataProvider {
                             .getQuery());
                 }
 
-                preparedStatement.setString(1,
-                        MainUI.get().getAccessControl().getUserId());
+                preparedStatement.setInt(1, 
+                       MainUI.get().getAccessControl().getUserId());
 
-                this.announcementsContainer = preparedStatement.executeQuery();
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-                if (!announcementsContainer.next()) {
+                if (!resultSet.next()) {
                     Throwable throwable
                             = new NoCurrentUserException(
                                     ExceptionMsg.EMPTY_SQL_RESULT.getMsg());
                     Logger.getLogger(DataProvider.class.getName())
                             .log(Level.SEVERE, null, throwable);
-                    showSQLErrorNotification();
-                    return;
+                    throw new SQLNoResultFoundException(
+                            ExceptionMsg.SQL_NO_RESULT_FOUND.getMsg());
                 }
+                
+                resultSet.beforeFirst();
+                
+                this.listOfAnnouncements = new ArrayList<>();
+
+                
+                while (resultSet.next()) {
+                    Timestamp timestamp = resultSet.getTimestamp(4);
+                    LocalDateTime dateSubmitted = timestamp.toLocalDateTime();
+
+                    AnnouncementType announcementType;
+                    String announcementSource;
+                    Announcement announcement;
+
+                    if (resultSet.getInt(5) == 2) {
+                        String moduleId = resultSet.getString(6);
+                        String moduleName = resultSet.getString(7);
+
+                        announcementType = AnnouncementType.CLASS_WIDE;
+                        
+                        if (MainUI.get().getAccessControl().getUserType() == 
+                                UserType.STUDENT) {
+                            announcementSource = resultSet.getString(8) + 
+                                    " " + resultSet.getString(9);
+                        } else {
+                            announcementSource
+                                = MainUI.get().getAccessControl().getFullName();
+                        }
+                        
+
+                        announcement = new Announcement(
+                                resultSet.getInt(1),
+                                resultSet.getString(2),
+                                resultSet.getString(3),
+                                dateSubmitted,
+                                announcementType,
+                                announcementSource,
+                                moduleId,
+                                moduleName);
+                    } else {
+                        announcementType = AnnouncementType.SYSTEM_WIDE;
+                        announcementSource = GSM_LONDON;
+
+                        announcement = new Announcement(
+                                resultSet.getInt(1),
+                                resultSet.getString(2),
+                                resultSet.getString(3),
+                                dateSubmitted,
+                                announcementType,
+                                announcementSource);
+                    }
+
+                    this.listOfAnnouncements.add(announcement);
+                }
+
+                preparedStatement.close();
+                connectionPool.releaseConnection(connection);
+
+                return listOfAnnouncements;
 
             } catch (SQLException ex) {
                 Logger.getLogger(DataProvider.class.getName())
                         .log(Level.SEVERE, null, ex);
-                showSQLErrorNotification();
+                throw new SQLErrorQueryException(
+                        ExceptionMsg.SQL_ERROR_QUERY.getMsg());
             }
+        } else {
+            throw new SQLErrorRetrievingConnectionAndPoolException(
+                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
         }
 
-    }
-
-    @Subscribe
-    public void closeStatementAndConnection(
-            final AppEvent.CloseSQLStatementAndConnectionEvent event) {
-        try {
-            preparedStatement.close();
-            connectionPool.releaseConnection(connection);
-            announcementsContainer = null;
-        } catch (SQLException ex) {
-            Logger.getLogger(DataProvider.class.getName())
-                    .log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    private void showSQLErrorNotification() {
-        NotificationUtil.showError(
-                ErrorMsg.DATA_FETCH_ERROR.getText(),
-                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
     }
 
     private boolean getConnectionPool() {
         try {
             this.connectionPool = SQLConnectionManager.get().connect();
             this.connection = connectionPool.reserveConnection();
-            
+
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(DataProvider.class.getName())
                     .log(Level.SEVERE, null, ex);
             return false;
         }
-    }
-
-    public ResultSet getAnnouncementsContainer() {
-        return announcementsContainer;
     }
 
     private static class DataProviderHolder {

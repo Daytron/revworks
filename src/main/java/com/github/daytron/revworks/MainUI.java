@@ -83,10 +83,9 @@ public class MainUI extends UI {
     public static AppEventBus getAppEventbus() {
         return get().appEventBus;
     }
-    
+
     private void registerObservers() {
         AppEventBus.register(accessControl);
-        AppEventBus.register(DataProvider.get());
     }
 
     @WebServlet(urlPatterns = "/*", name = "MainUIServlet", asyncSupported = true)

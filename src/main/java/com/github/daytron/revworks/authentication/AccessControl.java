@@ -45,7 +45,7 @@ public interface AccessControl {
 
     public boolean isUserAdmin();
     
-    public String getUserId();
+    public int getUserId();
 
     public String getPrincipalName();
 

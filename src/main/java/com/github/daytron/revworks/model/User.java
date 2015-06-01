@@ -25,7 +25,7 @@ import java.security.Principal;
  */
 public abstract class User implements Principal {
 
-    private final String id;
+    private final int id;
     private final String firstName;
     private final String lastName;
     private final UserType userType;
@@ -35,7 +35,7 @@ public abstract class User implements Principal {
      *
      * @param name
      */
-    User(String id, String firstname, String lastname, UserType userType) {
+    User(int id, String firstname, String lastname, UserType userType) {
         this.id = id;
         this.firstName = firstname;
         this.lastName = lastname;
@@ -53,7 +53,7 @@ public abstract class User implements Principal {
      */
     @Override
     public String getName() {
-        return this.id;
+        return Integer.toString(this.id);
     }
 
     public String getFullName() {
@@ -84,7 +84,7 @@ public abstract class User implements Principal {
         return userType == UserType.ADMIN;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 }

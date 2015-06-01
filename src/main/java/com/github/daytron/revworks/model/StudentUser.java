@@ -35,7 +35,7 @@ public class StudentUser extends User {
      * @param firstname The first name of the lecturer
      * @param lastname The last name of the lecturer
      */
-    public StudentUser(String id, String studentID, String firstname,
+    public StudentUser(int id, String studentID, String firstname,
             String lastname) {
         super(id, firstname, lastname, UserType.STUDENT);
         this.studentID = studentID;

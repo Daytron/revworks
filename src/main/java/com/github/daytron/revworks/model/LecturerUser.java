@@ -35,7 +35,7 @@ public class LecturerUser extends User {
      * @param firstname The first name of the lecturer
      * @param lastname The last name of the lecturer
      */
-    public LecturerUser(String userId, String email,
+    public LecturerUser(int userId, String email,
             String firstname, String lastname) {
         super(userId, firstname, lastname, UserType.LECTURER);
         this.email = email;

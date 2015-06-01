@@ -35,7 +35,7 @@ public class AdminUser extends User {
      * @param firstname The first name of the lecturer
      * @param lastname The last name of the lecturer
      */
-    public AdminUser(String id, String adminEmail, String firstname,
+    public AdminUser(int id, String adminEmail, String firstname,
             String lastname) {
         super(id, firstname, lastname, UserType.ADMIN);
         this.adminEmail = adminEmail;

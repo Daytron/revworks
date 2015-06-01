@@ -42,8 +42,13 @@ public class CurrentUserSession {
      * @throws IllegalStateException if the current session cannot be accessed.
      */
     public static void set(Principal currentUser) {
-        VaadinSession.getCurrent().setAttribute(
-                CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
+        try {
+            VaadinSession.getCurrent().getLockInstance().lock();
+            VaadinSession.getCurrent().setAttribute(
+                    CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
+        } finally {
+            VaadinSession.getCurrent().getLockInstance().unlock();
+        }
     }
 
     /**

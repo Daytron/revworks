@@ -342,7 +342,7 @@ public class UserAccessControl implements AccessControl {
     }
 
     @Override
-    public String getUserId() {
+    public int getUserId() {
         return ((User) CurrentUserSession.get()).getId();
     }
 

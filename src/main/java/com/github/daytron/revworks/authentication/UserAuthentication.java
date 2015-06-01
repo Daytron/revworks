@@ -107,7 +107,7 @@ public class UserAuthentication {
             resultSet.first();
 
             // Retrieve user data from the result row table
-            String userID = Integer.toString(resultSet.getInt(1));
+            int userID = resultSet.getInt(1);
             String firstName = resultSet.getString(3);
             String lastName = resultSet.getString(4);
 

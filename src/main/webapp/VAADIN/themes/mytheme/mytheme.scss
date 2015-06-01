@@ -28,7 +28,7 @@
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
 // Custom text under spinner
-$v-app-loading-text: "Creating new session...";
+$v-app-loading-text: "Loading components...";
 
 $login-background-color: #2C59A9 !default;
 $login-background-opacity: 0.7 !default;
@@ -77,7 +77,7 @@ $header-height: round($v-unit-size / 1.1) !default;
             padding-left: $v-layout-margin-left;
             padding-bottom: $v-layout-margin-bottom;
             padding-right: $v-layout-margin-right;
-            @include animation(valo-animate-in-slide-up 800ms 10ms backwards, valo-animate-in-fade 600ms 100ms backwards);
+            @include animation(valo-animate-in-fade 1s 1s backwards);
 
 
             .logo-main {

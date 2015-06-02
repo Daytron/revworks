@@ -38,8 +38,9 @@ public class DashboardHeader extends HorizontalLayout {
         
         Label titleLabel = new Label("RevWorks");
         titleLabel.setSizeUndefined();
-        titleLabel.addStyleName(ValoTheme.LABEL_H1);
+        titleLabel.addStyleName(ValoTheme.LABEL_H2);
         titleLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        titleLabel.addStyleName(ValoTheme.LABEL_BOLD);
         addComponent(titleLabel);
 
         Label welcomeUserLabel = new Label("Welcome " +
@@ -48,10 +49,12 @@ public class DashboardHeader extends HorizontalLayout {
         
         Button notificatioButton = new Button();
         notificatioButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        notificatioButton.setStyleName(ValoTheme.BUTTON_SMALL);
         notificatioButton.setIcon(FontAwesome.BELL);
         
         Button logOutButton = new Button();
         logOutButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        logOutButton.setStyleName(ValoTheme.BUTTON_SMALL);
         logOutButton.setIcon(FontAwesome.SIGN_OUT);
         logOutButton.addClickListener(new Button.ClickListener() {
 

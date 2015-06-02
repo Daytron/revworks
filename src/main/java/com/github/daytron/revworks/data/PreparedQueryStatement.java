@@ -107,7 +107,13 @@ public enum PreparedQueryStatement {
             + "INNER JOIN Module ON Module.id = Class.module_id "
             + "INNER JOIN Semester ON Semester.id = Class.semester_id "
             + "WHERE Class.lecturer_id = ? AND "
-            + "curdate() BETWEEN Semester.startDate AND Semester.endDate;");
+            + "curdate() BETWEEN Semester.startDate AND Semester.endDate;"),
+    LECTURER_INSERT_NEW_ANNOUNCEMENT("INSERT INTO Announcement "
+            + "(title,message,date_submitted,announcement_type_id) "
+            + "VALUES (?,?,now(),2);"),
+    LECTURER_INSERT_NEW_CLASSWIDE_ANNOUNCEMENT("INSERT INTO "
+            + "ClassWideAnnouncement VALUES (?,?);"),
+    SELECT_LASTROW_ANNOUNCEMENT("SELECT id FROM Announcement ORDER BY id DESC LIMIT 1;");
 
     private final String query;
 

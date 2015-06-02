@@ -16,6 +16,8 @@
 package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.ui.dashboard.lecturer.NewAnnouncementView;
+import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkModuleView;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
@@ -46,24 +48,32 @@ public class DashboardScreen extends VerticalLayout {
 
         if (mainUI.getAccessControl().isUserAStudent()) {
             menu.addView(HomeView.class,
-                    "",
-                    HomeView.VIEW_NAME, FontAwesome.HOME);
+                    HomeView.VIEW_NAME,
+                    HomeView.VIEW_CAPTION, FontAwesome.HOME);
+            menu.addView(StudentCourseworkModuleView.class, 
+                    StudentCourseworkModuleView.VIEW_NAME, 
+                    StudentCourseworkModuleView.VIEW_CAPTION, FontAwesome.FOLDER);
         } else if (mainUI.getAccessControl().isUserALecturer()) {
             menu.addView(HomeView.class,
-                    "",
-                    HomeView.VIEW_NAME, FontAwesome.HOME);
+                    HomeView.VIEW_NAME,
+                    HomeView.VIEW_CAPTION, FontAwesome.HOME);
+            menu.addView(NewAnnouncementView.class, 
+                    NewAnnouncementView.VIEW_NAME, 
+                    NewAnnouncementView.VIEW_CAPTION, FontAwesome.BULLHORN);
         } else {
 
         }
 
+        
+        
         navigator.addViewChangeListener(viewChangeListener);
 
         addComponent(headerLayout);
         addComponent(menu);
         addComponent(viewContainer);
         setExpandRatio(viewContainer, 1);
-        setSizeFull();
-
+        setWidth("100%");
+        navigator.navigateTo(HomeView.VIEW_NAME);
     }
 
     // notify the view menu about view changes so that it can display which view

@@ -32,5 +32,5 @@ public interface DataProvider {
             SQLErrorQueryException, SQLNoResultFoundException,
             SQLErrorRetrievingConnectionAndPoolException;
 
-    public boolean getConnectionPool();
+    public boolean reserveConnectionPool();
 }

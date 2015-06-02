@@ -17,10 +17,11 @@ package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.model.Announcement;
-import com.github.daytron.revworks.service.DataProvider;
+import com.github.daytron.revworks.service.DataProviderAbstract;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
+import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -132,8 +133,11 @@ public class HomeView extends VerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!initialised) {
             try {
+                
+                // Does not matter if lecturer or student's data provider
+                // They share the common method
                 this.listOfAnnouncements
-                        = DataProvider.get().populateHomeViewWithData();
+                        = StudentDataProviderImpl.get().populateHomeViewWithData();
 
                 initView();
                 initialised = true;

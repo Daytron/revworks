@@ -15,22 +15,22 @@
  */
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.exception.SQLErrorQueryException;
-import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
-import com.github.daytron.revworks.model.Announcement;
-import java.util.List;
-
 /**
- * The base interface for common SQL connection process for users.
  *
  * @author Ryan Gilera
  */
-public interface DataProvider {
+public class StudentDataProviderImpl extends DataProviderAbstract
+        implements StudentDataProvider {
 
-    public List<Announcement> populateHomeViewWithData() throws
-            SQLErrorQueryException, SQLNoResultFoundException,
-            SQLErrorRetrievingConnectionAndPoolException;
+    private StudentDataProviderImpl() {
+    }
 
-    public boolean getConnectionPool();
+    public static StudentDataProviderImpl get() {
+        return StudentDataProviderHolder.INSTANCE;
+    }
+
+    private static class StudentDataProviderHolder {
+
+        private static final StudentDataProviderImpl INSTANCE = new StudentDataProviderImpl();
+    }
 }

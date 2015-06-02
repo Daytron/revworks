@@ -15,6 +15,22 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.data.ExceptionMsg;
+import com.github.daytron.revworks.data.PreparedQueryStatement;
+import com.github.daytron.revworks.exception.NoCurrentUserException;
+import com.github.daytron.revworks.exception.SQLErrorQueryException;
+import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
+import com.github.daytron.revworks.exception.SQLNoResultFoundException;
+import com.github.daytron.revworks.model.Class;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Ryan Gilera
@@ -22,12 +38,66 @@ package com.github.daytron.revworks.service;
 public class LecturerDataProviderImpl extends DataProviderAbstract
         implements LecturerDataProvider {
 
+    private List<Class> listOfClasses;
+    
     private LecturerDataProviderImpl() {
         super();
     }
 
     public static LecturerDataProviderImpl get() {
         return LecturerDataProviderHolder.INSTANCE;
+    }
+
+    @Override
+    public List<Class> extractClassData()
+            throws SQLErrorRetrievingConnectionAndPoolException,
+            SQLErrorQueryException, SQLNoResultFoundException {
+        if (reserveConnectionPool()) {
+            try {
+                final PreparedStatement preparedStatement = getConnection()
+                        .prepareStatement(
+                                PreparedQueryStatement.LECTURER_CLASS_SELECT_QUERY.getQuery());
+
+                preparedStatement.setInt(1,
+                        MainUI.get().getAccessControl().getUserId());
+                
+                ResultSet resultSet = preparedStatement.executeQuery();
+                
+                if (!resultSet.next()) {
+                    Throwable throwable
+                            = new SQLNoResultFoundException(
+                                    ExceptionMsg.EMPTY_SQL_RESULT.getMsg());
+                    Logger.getLogger(LecturerDataProviderImpl.class.getName())
+                            .log(Level.SEVERE, null, throwable);
+                    throw new SQLNoResultFoundException(
+                            ExceptionMsg.SQL_NO_RESULT_FOUND.getMsg());
+                }
+                
+                resultSet.beforeFirst();
+                this.listOfClasses = new ArrayList<>();
+                
+                while (resultSet.next()) {
+                    this.listOfClasses.add(
+                        new Class(resultSet.getInt(1), 
+                                resultSet.getString(2), 
+                                resultSet.getString(3)));
+                }
+                
+                preparedStatement.close();
+                getConnectionPool().releaseConnection(getConnection());
+                
+                return this.listOfClasses;
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(LecturerDataProviderImpl.class.getName())
+                        .log(Level.SEVERE, null, ex);
+                throw new SQLErrorQueryException(
+                        ExceptionMsg.SQL_ERROR_QUERY.getMsg());
+            }
+        } else {
+            throw new SQLErrorRetrievingConnectionAndPoolException(
+                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
+        }
     }
 
     private static class LecturerDataProviderHolder {

@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.authentication;
+package com.github.daytron.revworks.exception;
 
 /**
- * A custom exception for invalid authentication when cross-checking the user's
- * credentials with the information in the database.
+ * A custom exception when user login authentication fails.
  *
  * @author Ryan Gilera
  */
-public class AuthenticationException extends Exception {
+public class WrongCurrentUserTypeException extends Exception {
 
-    public AuthenticationException(String msg, Throwable t) {
+    public WrongCurrentUserTypeException(String msg, Throwable t) {
+
         super(msg, t);
     }
 
-    public AuthenticationException(String msg) {
+    public WrongCurrentUserTypeException(String msg) {
+
         super(msg);
     }
 
-    public AuthenticationException(Throwable t) {
+    public WrongCurrentUserTypeException(Throwable t) {
+
         super(t);
     }
 }

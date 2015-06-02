@@ -13,27 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.service;
+package com.github.daytron.revworks.exception;
 
 /**
- * A custom exception when retrieving data from the database fails.
+ * A custom exception for invalid authentication when cross-checking the user's
+ * credentials with the information in the database.
  *
  * @author Ryan Gilera
  */
-public class SQLErrorRetrievingConnectionAndPoolException extends Exception {
+public class AuthenticationException extends Exception {
 
-    public SQLErrorRetrievingConnectionAndPoolException(String msg, Throwable t) {
-
+    public AuthenticationException(String msg, Throwable t) {
         super(msg, t);
     }
 
-    public SQLErrorRetrievingConnectionAndPoolException(String msg) {
-
+    public AuthenticationException(String msg) {
         super(msg);
     }
 
-    public SQLErrorRetrievingConnectionAndPoolException(Throwable t) {
-
+    public AuthenticationException(Throwable t) {
         super(t);
     }
 }

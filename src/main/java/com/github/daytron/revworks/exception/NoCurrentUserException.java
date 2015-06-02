@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.service;
+package com.github.daytron.revworks.exception;
 
 /**
  * A custom exception when executing {@link User} methods without any user

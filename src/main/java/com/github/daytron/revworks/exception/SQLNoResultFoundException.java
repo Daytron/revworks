@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.service;
+package com.github.daytron.revworks.exception;
 
 /**
  * A custom exception when retrieving data from the database fails.
  *
  * @author Ryan Gilera
  */
-public class SQLErrorQueryException extends Exception {
+public class SQLNoResultFoundException extends Exception {
 
-    public SQLErrorQueryException(String msg, Throwable t) {
+    public SQLNoResultFoundException(String msg, Throwable t) {
 
         super(msg, t);
     }
 
-    public SQLErrorQueryException(String msg) {
+    public SQLNoResultFoundException(String msg) {
 
         super(msg);
     }
 
-    public SQLErrorQueryException(Throwable t) {
+    public SQLNoResultFoundException(Throwable t) {
 
         super(t);
     }

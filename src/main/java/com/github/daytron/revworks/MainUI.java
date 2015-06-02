@@ -56,7 +56,7 @@ public class MainUI extends UI {
         Responsive.makeResponsive(this);
         setLocale(vaadinRequest.getLocale());
 
-        registerObservers();
+        registerEventHandlers();
 
         getPage().setTitle("RevWorks");
 
@@ -84,7 +84,7 @@ public class MainUI extends UI {
         return get().appEventBus;
     }
 
-    private void registerObservers() {
+    private void registerEventHandlers() {
         AppEventBus.register(accessControl);
     }
 

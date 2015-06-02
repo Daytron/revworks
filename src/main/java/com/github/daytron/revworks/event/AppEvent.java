@@ -15,9 +15,11 @@
  */
 package com.github.daytron.revworks.event;
 
+import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
 
 /**
@@ -108,5 +110,32 @@ public abstract class AppEvent {
         }
 
     }
-    
+
+    public static final class LecturerSubmitNewAnnouncementEvent {
+
+        private final ClassTable selectedClass;
+        private final TextField title;
+        private final RichTextArea richTextArea;
+
+        public LecturerSubmitNewAnnouncementEvent(ClassTable selectedClass,
+                TextField title, RichTextArea richTextArea) {
+            this.selectedClass = selectedClass;
+            this.title = title;
+            this.richTextArea = richTextArea;
+        }
+
+        public ClassTable getSelectedClass() {
+            return selectedClass;
+        }
+
+        public TextField getTitle() {
+            return title;
+        }
+        
+        public RichTextArea getRichTextArea() {
+            return richTextArea;
+        }
+
+    }
+
 }

@@ -152,7 +152,7 @@ $header-height: round($v-unit-size / 1.1) !default;
         text-align: right;
         white-space: normal;
 
-        .v-slot-h1 {
+        .v-slot-h2 {
             float: left;
         }
 
@@ -167,7 +167,7 @@ $header-height: round($v-unit-size / 1.1) !default;
                 height: round($v-unit-size / 4);
             }
             
-            .v-label.welcome-text { font-size: 1rem }
+            .v-label.welcome-text { font-size: 0.8rem }
         }
     }
 

@@ -26,7 +26,8 @@ public enum ErrorMsg {
     INVALID_INPUT_CAPTION("Invalid input!"),
     SIGNIN_FAILED_CAPTION("Sign-In failed!"),
     NO_USER_SIGNIN("No login user found. The session has been reset. "),
-    DATA_FETCH_ERROR("Could not retrieve user data.");
+    DATA_FETCH_ERROR("Could not retrieve user data."),
+    DATA_SEND_ERROR("Could not send data.");
 
     private final String text;
 

@@ -18,11 +18,10 @@ package com.github.daytron.revworks.service;
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
-import com.github.daytron.revworks.exception.NoCurrentUserException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
-import com.github.daytron.revworks.model.Class;
+import com.github.daytron.revworks.model.ClassTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,7 +37,7 @@ import java.util.logging.Logger;
 public class LecturerDataProviderImpl extends DataProviderAbstract
         implements LecturerDataProvider {
 
-    private List<Class> listOfClasses;
+    private List<ClassTable> listOfClasses;
     
     private LecturerDataProviderImpl() {
         super();
@@ -49,7 +48,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
     }
 
     @Override
-    public List<Class> extractClassData()
+    public List<ClassTable> extractClassData()
             throws SQLErrorRetrievingConnectionAndPoolException,
             SQLErrorQueryException, SQLNoResultFoundException {
         if (reserveConnectionPool()) {
@@ -77,8 +76,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                 this.listOfClasses = new ArrayList<>();
                 
                 while (resultSet.next()) {
-                    this.listOfClasses.add(
-                        new Class(resultSet.getInt(1), 
+                    this.listOfClasses.add(new ClassTable(resultSet.getInt(1), 
                                 resultSet.getString(2), 
                                 resultSet.getString(3)));
                 }

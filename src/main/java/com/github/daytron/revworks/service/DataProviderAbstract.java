@@ -18,7 +18,6 @@ package com.github.daytron.revworks.service;
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
-import com.github.daytron.revworks.exception.NoCurrentUserException;
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.AnnouncementType;
 import com.github.daytron.revworks.data.ExceptionMsg;
@@ -48,7 +47,6 @@ public abstract class DataProviderAbstract implements DataProvider {
     private List<Announcement> listOfAnnouncements;
     private JDBCConnectionPool connectionPool;
     private Connection connection;
-    private PreparedStatement preparedStatement;
 
     public DataProviderAbstract() {
     }
@@ -58,29 +56,31 @@ public abstract class DataProviderAbstract implements DataProvider {
             SQLErrorQueryException, SQLNoResultFoundException,
             SQLErrorRetrievingConnectionAndPoolException {
 
-        if (getConnectionPool()) {
+        if (reserveConnectionPool()) {
             try {
-
+                PreparedStatement preparedStatement;
                 if (MainUI.get().getAccessControl().isUserAStudent()) {
                     preparedStatement = connection.prepareStatement(
-                            PreparedQueryStatement.ANNOUNCEMENT_STUDENT_QUERY
+                            PreparedQueryStatement.STUDENT_ANNOUNCEMENT_SELECT_QUERY
                             .getQuery());
 
                 } else {
                     // Otherwise it's a lecturer
                     preparedStatement = connection.prepareStatement(
-                            PreparedQueryStatement.ANNOUNCEMENT_LECTURER_QUERY
+                            PreparedQueryStatement.LECTURER_ANNOUNCEMENT_SELECT_QUERY
                             .getQuery());
                 }
 
                 preparedStatement.setInt(1, 
                        MainUI.get().getAccessControl().getUserId());
-
+                preparedStatement.setInt(2, 
+                       MainUI.get().getAccessControl().getUserId());
+                
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (!resultSet.next()) {
                     Throwable throwable
-                            = new NoCurrentUserException(
+                            = new SQLNoResultFoundException(
                                     ExceptionMsg.EMPTY_SQL_RESULT.getMsg());
                     Logger.getLogger(DataProviderAbstract.class.getName())
                             .log(Level.SEVERE, null, throwable);
@@ -161,7 +161,7 @@ public abstract class DataProviderAbstract implements DataProvider {
     }
 
     @Override
-    public boolean getConnectionPool() {
+    public boolean reserveConnectionPool() {
         try {
             this.connectionPool = SQLConnectionManager.get().connect();
             this.connection = connectionPool.reserveConnection();
@@ -173,5 +173,15 @@ public abstract class DataProviderAbstract implements DataProvider {
             return false;
         }
     }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public JDBCConnectionPool getConnectionPool() {
+        return connectionPool;
+    }
+    
+    
 
 }

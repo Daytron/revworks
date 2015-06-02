@@ -22,6 +22,7 @@ import com.github.daytron.revworks.data.UserType;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class LecturerUser extends User {
 
     private final String email;

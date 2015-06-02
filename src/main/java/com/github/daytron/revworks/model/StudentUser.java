@@ -22,6 +22,7 @@ import com.github.daytron.revworks.data.UserType;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class StudentUser extends User {
 
     private final String studentID;

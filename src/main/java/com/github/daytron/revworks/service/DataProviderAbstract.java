@@ -24,8 +24,6 @@ import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.model.Announcement;
-import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,13 +38,12 @@ import java.util.logging.Logger;
  *
  * @author Ryan Gilera
  */
-public abstract class DataProviderAbstract implements DataProvider {
+public abstract class DataProviderAbstract extends QueryManagerAbstract
+        implements DataProvider {
 
     private static final String GSM_LONDON = "GSM London";
 
     private List<Announcement> listOfAnnouncements;
-    private JDBCConnectionPool connectionPool;
-    private Connection connection;
 
     public DataProviderAbstract() {
     }
@@ -60,22 +57,22 @@ public abstract class DataProviderAbstract implements DataProvider {
             try {
                 PreparedStatement preparedStatement;
                 if (MainUI.get().getAccessControl().isUserAStudent()) {
-                    preparedStatement = connection.prepareStatement(
+                    preparedStatement = getConnection().prepareStatement(
                             PreparedQueryStatement.STUDENT_ANNOUNCEMENT_SELECT_QUERY
                             .getQuery());
 
                 } else {
                     // Otherwise it's a lecturer
-                    preparedStatement = connection.prepareStatement(
+                    preparedStatement = getConnection().prepareStatement(
                             PreparedQueryStatement.LECTURER_ANNOUNCEMENT_SELECT_QUERY
                             .getQuery());
                 }
 
-                preparedStatement.setInt(1, 
-                       MainUI.get().getAccessControl().getUserId());
-                preparedStatement.setInt(2, 
-                       MainUI.get().getAccessControl().getUserId());
-                
+                preparedStatement.setInt(1,
+                        MainUI.get().getAccessControl().getUserId());
+                preparedStatement.setInt(2,
+                        MainUI.get().getAccessControl().getUserId());
+
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (!resultSet.next()) {
@@ -87,12 +84,11 @@ public abstract class DataProviderAbstract implements DataProvider {
                     throw new SQLNoResultFoundException(
                             ExceptionMsg.SQL_NO_RESULT_FOUND.getMsg());
                 }
-                
+
                 resultSet.beforeFirst();
-                
+
                 this.listOfAnnouncements = new ArrayList<>();
 
-                
                 while (resultSet.next()) {
                     Timestamp timestamp = resultSet.getTimestamp(4);
                     LocalDateTime dateSubmitted = timestamp.toLocalDateTime();
@@ -106,16 +102,15 @@ public abstract class DataProviderAbstract implements DataProvider {
                         String moduleName = resultSet.getString(7);
 
                         announcementType = AnnouncementType.CLASS_WIDE;
-                        
-                        if (MainUI.get().getAccessControl().getUserType() == 
-                                UserType.STUDENT) {
-                            announcementSource = resultSet.getString(8) + 
-                                    " " + resultSet.getString(9);
+
+                        if (MainUI.get().getAccessControl().getUserType()
+                                == UserType.STUDENT) {
+                            announcementSource = resultSet.getString(8)
+                                    + " " + resultSet.getString(9);
                         } else {
                             announcementSource
-                                = MainUI.get().getAccessControl().getFullName();
+                                    = MainUI.get().getAccessControl().getFullName();
                         }
-                        
 
                         announcement = new Announcement(
                                 resultSet.getInt(1),
@@ -143,7 +138,7 @@ public abstract class DataProviderAbstract implements DataProvider {
                 }
 
                 preparedStatement.close();
-                connectionPool.releaseConnection(connection);
+                releaseConnection();
 
                 return listOfAnnouncements;
 
@@ -159,29 +154,5 @@ public abstract class DataProviderAbstract implements DataProvider {
         }
 
     }
-
-    @Override
-    public boolean reserveConnectionPool() {
-        try {
-            this.connectionPool = SQLConnectionManager.get().connect();
-            this.connection = connectionPool.reserveConnection();
-
-            return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(DataProviderAbstract.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
-
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public JDBCConnectionPool getConnectionPool() {
-        return connectionPool;
-    }
-    
-    
 
 }

@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.authentication;
 
+import com.github.daytron.revworks.exception.AuthenticationException;
 import com.github.daytron.revworks.model.LecturerUser;
 import com.github.daytron.revworks.model.StudentUser;
 import com.github.daytron.revworks.model.AdminUser;

@@ -15,6 +15,10 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.exception.SQLNoResultFoundException;
+import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
+import com.github.daytron.revworks.exception.SQLErrorQueryException;
+import com.github.daytron.revworks.exception.NoCurrentUserException;
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.AnnouncementType;
 import com.github.daytron.revworks.data.ExceptionMsg;

@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.authentication;
 
+import com.github.daytron.revworks.exception.AuthenticationException;
 import com.github.daytron.revworks.model.LecturerUser;
 import com.github.daytron.revworks.model.StudentUser;
 import com.github.daytron.revworks.model.User;
@@ -22,7 +23,7 @@ import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.validator.LoginValidatorFactory;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.service.CurrentUserSession;
-import com.github.daytron.revworks.service.WrongCurrentUserTypeException;
+import com.github.daytron.revworks.exception.WrongCurrentUserTypeException;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.LoginString;
 import com.github.daytron.revworks.data.LoginValidationNum;

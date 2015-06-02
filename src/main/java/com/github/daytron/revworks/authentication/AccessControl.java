@@ -15,7 +15,7 @@
  */
 package com.github.daytron.revworks.authentication;
 
-import com.github.daytron.revworks.service.WrongCurrentUserTypeException;
+import com.github.daytron.revworks.exception.WrongCurrentUserTypeException;
 import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.event.AppEvent;
 

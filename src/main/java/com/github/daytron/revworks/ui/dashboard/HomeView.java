@@ -18,9 +18,9 @@ package com.github.daytron.revworks.ui.dashboard;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.model.Announcement;
 import com.github.daytron.revworks.service.DataProvider;
-import com.github.daytron.revworks.service.SQLErrorQueryException;
-import com.github.daytron.revworks.service.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.service.SQLNoResultFoundException;
+import com.github.daytron.revworks.exception.SQLErrorQueryException;
+import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
+import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -41,12 +41,12 @@ import java.util.List;
  */
 public class HomeView extends VerticalLayout implements View {
 
-    public static final String VIEW_NAME = "Home";
+    public static final String VIEW_NAME = "HomeView";
+    public static final String VIEW_CAPTION = "Home";
+    private static final String VIEW_TITLE = "What's New";
 
-    // Flags
+    // Flag
     private boolean initialised = false;
-
-    private static final String viewTitle = "What's New";
 
     private List<Announcement> listOfAnnouncements;
 
@@ -135,7 +135,7 @@ public class HomeView extends VerticalLayout implements View {
                 this.listOfAnnouncements
                         = DataProvider.get().populateHomeViewWithData();
 
-                initialiseLayout();
+                initView();
                 initialised = true;
 
             } catch (SQLErrorQueryException | SQLNoResultFoundException |
@@ -147,13 +147,15 @@ public class HomeView extends VerticalLayout implements View {
         }
     }
 
-    private void initialiseLayout() {
+    private void initView() {
 
         setSizeFull();
         setMargin(true);
         setSpacing(true);
 
-        Label whatsNewLabel = new Label(viewTitle);
+        Label whatsNewLabel = new Label(VIEW_TITLE);
+        whatsNewLabel.setStyleName(ValoTheme.LABEL_H3);
+        whatsNewLabel.setStyleName(ValoTheme.LABEL_BOLD);
         VerticalLayout contentLayout = new VerticalLayout();
         contentLayout.setMargin(true);
         contentLayout.setSpacing(true);

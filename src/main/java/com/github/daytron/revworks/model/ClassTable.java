@@ -20,13 +20,13 @@ package com.github.daytron.revworks.model;
  *
  * @author Ryan Gilera
  */
-public class Class {
+public class ClassTable {
 
     private final int id;
     private final String moduleId;
     private final String moduleName;
 
-    public Class(int id, String moduleId, String moduleName) {
+    public ClassTable(int id, String moduleId, String moduleName) {
         this.id = id;
         this.moduleId = moduleId;
         this.moduleName = moduleName;

@@ -25,6 +25,7 @@ import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.exception.WrongCurrentUserTypeException;
 import com.github.daytron.revworks.data.ExceptionMsg;
+import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.data.LoginString;
 import com.github.daytron.revworks.data.LoginValidationNum;
 import com.github.daytron.revworks.data.UserType;
@@ -124,11 +125,11 @@ public class UserAccessControl implements AccessControl {
             }
             
             MainUI.get().showDashboardScreen();
-
-            Notification.show("Welcome "
-                    + getFirstName()
-                    + "!",
-                    Notification.Type.TRAY_NOTIFICATION);
+            
+            NotificationUtil.showProcessDone(
+                    FontAwesomeIcon.THUMBS_O_UP.getLgSize(),
+                    "Welcome " + getFirstName() + "!", "");
+            
         } catch (AuthenticationException ex) {
             Logger.getLogger(UserAccessControl.class.getName()).log(Level.SEVERE, null, ex);
             NotificationUtil.showError(

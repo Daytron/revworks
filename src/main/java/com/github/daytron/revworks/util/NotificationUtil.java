@@ -24,6 +24,7 @@ import com.vaadin.ui.Notification;
  * 
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class NotificationUtil {
     /**
      * Creates an error notification with a single parameter for caption.
@@ -86,4 +87,31 @@ public class NotificationUtil {
         
         errorNotification.show(Page.getCurrent());
     }
+    
+    public static void showProcessDone(String title, String message) {
+        showProcessDone("", title, message);
+    }
+    
+    public static void showProcessDone(String fontAwesomeIcon, String title, 
+            String message) {
+        if (!fontAwesomeIcon.isEmpty()) {
+            title = fontAwesomeIcon + title;
+        }
+        
+        Notification newNotification;
+        if (message == null || message.isEmpty()) {
+            newNotification = new Notification(title, 
+                    Notification.Type.TRAY_NOTIFICATION);
+        } else {
+            newNotification = new Notification(title, message, 
+                    Notification.Type.TRAY_NOTIFICATION);
+        }
+        
+        newNotification.setHtmlContentAllowed(true);
+        newNotification.setStyleName("custom-tray-notifications");
+        newNotification.setDelayMsec(4000);
+        newNotification.setPosition(Position.TOP_RIGHT);
+        newNotification.show(Page.getCurrent());
+    }
+    
 }

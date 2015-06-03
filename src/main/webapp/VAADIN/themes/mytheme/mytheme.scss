@@ -170,6 +170,17 @@ $header-height: round($v-unit-size / 1.1) !default;
             .v-label.welcome-text { font-size: 0.8rem }
         }
     }
+    
+    .v-Notification.custom-tray-notifications {
+        background:rgba(19,47,99,0.8);
+        font-size: 0.8rem;
+        color: #fff;
+        border-radius: 5px;
+        
+        h1 {
+            color: #fff;
+        }
+    }
 
 
 }

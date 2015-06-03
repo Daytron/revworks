@@ -64,8 +64,9 @@ public class MainUI extends UI {
         } else {
             showDashboardScreen();
         }
+        
     }
-
+    
     public static MainUI get() {
         return (MainUI) UI.getCurrent();
     }

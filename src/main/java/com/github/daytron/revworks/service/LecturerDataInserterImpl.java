@@ -27,73 +27,69 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Concrete implementation of {@link LecturerDataInserter}.
  *
  * @author Ryan Gilera
  */
-public class LecturerDataInserter extends DataInserterAbstract {
+public class LecturerDataInserterImpl extends DataInserterAbstract implements
+        LecturerDataInserter {
 
     @Subscribe
-    public void insertNewAnnouncement(final 
-            AppEvent.LecturerSubmitNewAnnouncementEvent event) {
+    @Override
+    public void insertNewAnnouncement(final AppEvent.LecturerSubmitNewAnnouncementEvent event) {
 
         if (reserveConnectionPool()) {
             try {
                 int newId;
                 // Insert new Announcement item
                 PreparedStatement preparedStatement1 = getConnection()
-                    .prepareStatement(
-                        PreparedQueryStatement
-                           .LECTURER_INSERT_NEW_ANNOUNCEMENT.getQuery());
+                        .prepareStatement(
+                                PreparedQueryStatement.LECTURER_INSERT_NEW_ANNOUNCEMENT.getQuery());
                 preparedStatement1.setString(1, event.getTitle().getValue());
                 preparedStatement1.setString(2, event.getRichTextArea().getValue());
                 System.out.println("Prepared 1: " + preparedStatement1.toString());
                 preparedStatement1.executeUpdate();
                 getConnection().commit();
-                
+
                 // Retrive last id of the last row of Announcement, that is 
                 // the announcement just added
                 PreparedStatement preparedStatement2 = getConnection()
-                    .prepareStatement(
-                        PreparedQueryStatement
-                            .SELECT_LASTROW_ANNOUNCEMENT.getQuery());
+                        .prepareStatement(
+                                PreparedQueryStatement.SELECT_LASTROW_ANNOUNCEMENT.getQuery());
                 ResultSet idResultSet = preparedStatement2.executeQuery();
                 idResultSet.first();
-                
+
                 newId = idResultSet.getInt(1);
                 System.out.println("id: " + newId);
-                
+
                 // Insert new class wide announcement item
                 PreparedStatement preparedStatement3 = getConnection()
-                    .prepareStatement(
-                        PreparedQueryStatement
-                           .LECTURER_INSERT_NEW_CLASSWIDE_ANNOUNCEMENT.getQuery());
-                
+                        .prepareStatement(
+                                PreparedQueryStatement.LECTURER_INSERT_NEW_CLASSWIDE_ANNOUNCEMENT.getQuery());
+
                 preparedStatement3.setInt(1, newId);
                 preparedStatement3.setInt(2, event.getSelectedClass().getId());
                 System.out.println("prepared 3: " + preparedStatement3.toString());
                 preparedStatement3.executeUpdate();
                 getConnection().commit();
-                
-                
+
                 // Close all statements and connection
                 preparedStatement1.close();
                 preparedStatement2.close();
                 preparedStatement3.close();
                 releaseConnection();
-                
+
                 // Reset all form fields
                 event.getTitle().setValue("");
                 event.getRichTextArea().setValue("");
-                
+
                 // TODO Add proper notification
-                
-                
             } catch (SQLException ex) {
-                Logger.getLogger(LecturerDataInserter.class.getName())
+                Logger.getLogger(LecturerDataInserterImpl.class.getName())
                         .log(Level.SEVERE, null, ex);
                 NotificationUtil.showError(
-                    ErrorMsg.DATA_SEND_ERROR.getText(),
-                    ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                        ErrorMsg.DATA_SEND_ERROR.getText(),
+                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
             }
         } else {
             NotificationUtil.showError(

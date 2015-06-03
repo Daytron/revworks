@@ -16,6 +16,7 @@
 package com.github.daytron.revworks.service;
 
 /**
+ * Concrete implementation of {@link StudentDataProvider}.
  *
  * @author Ryan Gilera
  */

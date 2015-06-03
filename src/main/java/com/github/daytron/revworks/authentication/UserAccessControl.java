@@ -30,8 +30,8 @@ import com.github.daytron.revworks.data.LoginValidationNum;
 import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
-import com.github.daytron.revworks.service.LecturerDataInserter;
-import com.github.daytron.revworks.service.StudentDataInserter;
+import com.github.daytron.revworks.service.LecturerDataInserterImpl;
+import com.github.daytron.revworks.service.StudentDataInserterImpl;
 import com.github.daytron.revworks.ui.AdminDashboardScreen;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
 import com.github.daytron.revworks.util.NotificationUtil;
@@ -117,10 +117,10 @@ public class UserAccessControl implements AccessControl {
             MainUI.MainUIServlet.printSessions("user login");
 
             if (isUserALecturer()) {
-                AppEventBus.register(new LecturerDataInserter());
+                AppEventBus.register(new LecturerDataInserterImpl());
             } else {
                 // Student otherwise
-                AppEventBus.register(new StudentDataInserter());
+                AppEventBus.register(new StudentDataInserterImpl());
             }
             
             MainUI.get().showDashboardScreen();

@@ -23,7 +23,7 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
 
 /**
- * EventBus events used in the application as inner final classes
+ * Collection events for Guava's EventBus as inner classes
  *
  * @author Ryan Gilera
  */

@@ -16,9 +16,11 @@
 package com.github.daytron.revworks.service;
 
 /**
+ * The base template for all SQL data insertion and update exclusive to student
+ * users.
  *
  * @author Ryan Gilera
  */
-public class StudentDataInserter {
-    
+public interface StudentDataInserter {
+
 }

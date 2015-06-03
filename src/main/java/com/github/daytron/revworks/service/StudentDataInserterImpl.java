@@ -16,9 +16,10 @@
 package com.github.daytron.revworks.service;
 
 /**
+ * Concrete implementation of {@link StudentDataInserter}
  *
  * @author Ryan Gilera
  */
-public class StudentDataInserter {
+public class StudentDataInserterImpl {
     
 }

@@ -1,3 +1,7 @@
+package com.github.daytron.revworks.service;
+
+import com.github.daytron.revworks.event.AppEvent;
+
 /*
  * Copyright 2015 Ryan Gilera.
  *
@@ -13,13 +17,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.service;
-
 /**
- * The base template for all SQL data retrieval exclusive to student users.
+ * The base template for all SQL data insertion and update exclusive to lecturer
+ * users.
  *
  * @author Ryan Gilera
  */
-public interface StudentDataProvider {
+public interface LecturerDataInserter {
 
+    public void insertNewAnnouncement(final AppEvent.LecturerSubmitNewAnnouncementEvent event);
 }

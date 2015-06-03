@@ -16,9 +16,11 @@
 package com.github.daytron.revworks.service;
 
 /**
+ * Abstract class for implementing {@link DataInserter} interface for common
+ * data insertion and update query process.
  *
  * @author Ryan Gilera
  */
 public class DataInserterAbstract extends QueryManagerAbstract {
-    
+
 }

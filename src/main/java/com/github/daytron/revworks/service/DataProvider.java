@@ -22,7 +22,8 @@ import com.github.daytron.revworks.model.Announcement;
 import java.util.List;
 
 /**
- * The base interface for common SQL connection process for users.
+ * The base template for common SQL data retrieval process for
+ * users.
  *
  * @author Ryan Gilera
  */

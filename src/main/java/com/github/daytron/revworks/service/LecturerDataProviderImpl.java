@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Concrete implementation of {@link LecturerDataProvider}.
  *
  * @author Ryan Gilera
  */
@@ -38,7 +39,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
         implements LecturerDataProvider {
 
     private List<ClassTable> listOfClasses;
-    
+
     private LecturerDataProviderImpl() {
         super();
     }
@@ -59,9 +60,9 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
 
                 preparedStatement.setInt(1,
                         MainUI.get().getAccessControl().getUserId());
-                
+
                 ResultSet resultSet = preparedStatement.executeQuery();
-                
+
                 if (!resultSet.next()) {
                     Throwable throwable
                             = new SQLNoResultFoundException(
@@ -71,21 +72,21 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                     throw new SQLNoResultFoundException(
                             ExceptionMsg.SQL_NO_RESULT_FOUND.getMsg());
                 }
-                
+
                 resultSet.beforeFirst();
                 this.listOfClasses = new ArrayList<>();
-                
+
                 while (resultSet.next()) {
-                    this.listOfClasses.add(new ClassTable(resultSet.getInt(1), 
-                                resultSet.getString(2), 
-                                resultSet.getString(3)));
+                    this.listOfClasses.add(new ClassTable(resultSet.getInt(1),
+                            resultSet.getString(2),
+                            resultSet.getString(3)));
                 }
-                
+
                 preparedStatement.close();
                 getConnectionPool().releaseConnection(getConnection());
-                
+
                 return this.listOfClasses;
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(LecturerDataProviderImpl.class.getName())
                         .log(Level.SEVERE, null, ex);

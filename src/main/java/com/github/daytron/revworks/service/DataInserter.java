@@ -15,20 +15,11 @@
  */
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.exception.SQLErrorQueryException;
-import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
-import java.util.List;
-import com.github.daytron.revworks.model.ClassTable;
-
 /**
- * The base template for all SQL data retrieval exclusive to lecturer users.
+ * The base template for common SQL data insertion and update process for users.
  *
  * @author Ryan Gilera
  */
-public interface LecturerDataProvider {
+public interface DataInserter {
 
-    public List<ClassTable> extractClassData()
-            throws SQLErrorRetrievingConnectionAndPoolException,
-            SQLErrorQueryException, SQLNoResultFoundException;
 }

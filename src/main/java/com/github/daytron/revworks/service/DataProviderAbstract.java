@@ -35,6 +35,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Abstract class for implementing {@link DataProvider} interface for common
+ * data retrieval query process.
  *
  * @author Ryan Gilera
  */

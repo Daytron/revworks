@@ -17,7 +17,6 @@ package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.model.Announcement;
-import com.github.daytron.revworks.service.DataProviderAbstract;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
@@ -37,6 +36,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
+ * The default view of the navigator and dashboard screen. Displays all the
+ * relevant announcements in the past 7 days.
  *
  * @author Ryan Gilera
  */
@@ -59,47 +60,46 @@ public class HomeView extends VerticalLayout implements View {
         wrapperItem.setWidth("100%");
         wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
 
-        wrapperItem.addComponent(createPanelHeader(announcement.getTitle(), 
+        wrapperItem.addComponent(createPanelHeader(announcement.getTitle(),
                 announcement.getDateTimeSubmitted()));
-        
+
         VerticalLayout contentLayout = new VerticalLayout();
         contentLayout.setSizeFull();
         contentLayout.setMargin(true);
         contentLayout.setSpacing(true);
-        
+
         HorizontalLayout contentMetaDataBar = new HorizontalLayout();
         contentMetaDataBar.setWidth("100%");
         contentMetaDataBar.setSpacing(true);
-        
+
         Label sourceAuthor = new Label(announcement.getAnnouncementSource());
         sourceAuthor.setSizeFull();
         sourceAuthor.setStyleName(ValoTheme.LABEL_SMALL);
-        
+
         contentMetaDataBar.addComponent(sourceAuthor);
-        
-        
+
         if (announcement.isClassWideAnnouncement()) {
-            
+
             Label moduleIdLabel = new Label(announcement.getModuleId());
             moduleIdLabel.setStyleName(ValoTheme.LABEL_SMALL);
             moduleIdLabel.setSizeUndefined();
             contentMetaDataBar.addComponent(moduleIdLabel);
-            
+
             Label moduleNameLabel = new Label(announcement.getModulename());
             moduleNameLabel.setStyleName(ValoTheme.LABEL_SMALL);
             moduleNameLabel.setSizeUndefined();
             contentMetaDataBar.addComponent(moduleNameLabel);
         }
-        
+
         contentMetaDataBar.setExpandRatio(sourceAuthor, 1);
-        
+
         contentLayout.addComponent(contentMetaDataBar);
 
         Label message = new Label(announcement.getMessage(), ContentMode.HTML);
         contentLayout.addComponent(message);
-        
+
         contentLayout.setExpandRatio(message, 1);
-        
+
         wrapperItem.addComponent(contentLayout);
 
         return wrapperItem;
@@ -115,7 +115,6 @@ public class HomeView extends VerticalLayout implements View {
         titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
         titleLabel.setSizeFull();
         layoutHeader.addComponent(titleLabel);
-        
 
         DateTimeFormatter dateTimeFormatter
                 = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
@@ -133,7 +132,7 @@ public class HomeView extends VerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!initialised) {
             try {
-                
+
                 // Does not matter if lecturer or student's data provider
                 // They share the common method
                 this.listOfAnnouncements

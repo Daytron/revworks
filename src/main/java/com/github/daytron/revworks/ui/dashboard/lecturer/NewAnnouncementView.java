@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * The view class for creating new announcement for lecturers.
  *
  * @author Ryan Gilera
  */
@@ -144,7 +145,7 @@ public class NewAnnouncementView extends VerticalLayout implements View {
 
                 AppEventBus.post(
                         new AppEvent.LecturerSubmitNewAnnouncementEvent(
-                                selectedClass, titleTextField, 
+                                selectedClass, titleTextField,
                                 richTextArea));
             }
         });

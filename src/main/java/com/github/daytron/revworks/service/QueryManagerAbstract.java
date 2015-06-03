@@ -22,13 +22,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * The top level abstract class for common SQL reserving connection process for
+ * both data insertion and retrieval.
  *
  * @author Ryan Gilera
  */
 public class QueryManagerAbstract {
+
     private JDBCConnectionPool connectionPool;
     private Connection connection;
-    
+
     boolean reserveConnectionPool() {
         try {
             this.connectionPool = SQLConnectionManager.get().connect();
@@ -41,7 +44,7 @@ public class QueryManagerAbstract {
             return false;
         }
     }
-    
+
     void releaseConnection() {
         this.connectionPool.releaseConnection(connection);
     }
@@ -53,6 +56,5 @@ public class QueryManagerAbstract {
     JDBCConnectionPool getConnectionPool() {
         return connectionPool;
     }
-    
-    
+
 }

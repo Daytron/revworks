@@ -20,6 +20,7 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * The screen when a user tried to navigate to a view that does not exist.
@@ -36,6 +37,7 @@ public class ErrorView extends VerticalLayout implements View {
 
         Label headerErrorLabel = new Label("The view could not be found!");
         headerErrorLabel.addStyleName(Reindeer.LABEL_H1);
+        headerErrorLabel.addStyleName(ValoTheme.LABEL_FAILURE);
 
         addComponent(headerErrorLabel);
 

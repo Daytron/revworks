@@ -91,14 +91,19 @@
             <version>5.1.35</version>
         </dependency>
         <dependency>
-            <groupId>org.vaadin.addons</groupId>
-            <artifactId>fontawesomelabel</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>org.apache.poi.xwpf.converter.xhtml</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>org.odftoolkit.odfdom.converter.xhtml</artifactId>
+            <version>1.0.5</version>
         </dependency>
     </dependencies>
 

@@ -126,7 +126,7 @@ public class UserAccessControl implements AccessControl {
             
             MainUI.get().showDashboardScreen();
             
-            NotificationUtil.showProcessDone(
+            NotificationUtil.showInformation(
                     FontAwesomeIcon.THUMBS_O_UP.getLgSize(),
                     "Welcome " + getFirstName() + "!", "");
             

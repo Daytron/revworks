@@ -45,7 +45,7 @@ import java.util.logging.Logger;
  *
  * @author Ryan Gilera
  */
-public class NewAnnouncementView extends VerticalLayout implements View {
+public class LecturerSubmitAnnouncementView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "NewAnnouncementView";
     public static final String VIEW_CAPTION = "New Announcement";
@@ -54,7 +54,7 @@ public class NewAnnouncementView extends VerticalLayout implements View {
     private boolean initialised = false;
     private List<ClassTable> listOfClasses;
 
-    public NewAnnouncementView() {
+    public LecturerSubmitAnnouncementView() {
     }
 
     @Override
@@ -65,7 +65,7 @@ public class NewAnnouncementView extends VerticalLayout implements View {
                 initView();
                 initialised = true;
             } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException | SQLNoResultFoundException ex) {
-                Logger.getLogger(NewAnnouncementView.class.getName())
+                Logger.getLogger(LecturerSubmitAnnouncementView.class.getName())
                         .log(Level.SEVERE, null, ex);
                 NotificationUtil.showError(
                         ErrorMsg.DATA_FETCH_ERROR.getText(),

@@ -16,8 +16,10 @@
 package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.MainUI;
-import com.github.daytron.revworks.ui.dashboard.lecturer.NewAnnouncementView;
+import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerSubmitAnnouncementView;
 import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkModuleView;
+import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkSucessView;
+import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkView;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
@@ -50,16 +52,25 @@ public class DashboardScreen extends VerticalLayout {
             menu.addView(HomeView.class,
                     HomeView.VIEW_NAME,
                     HomeView.VIEW_CAPTION, FontAwesome.HOME);
+            menu.addView(StudentSubmitCourseworkView.class, 
+                    StudentSubmitCourseworkView.VIEW_NAME, 
+                    StudentSubmitCourseworkView.VIEW_CAPTION, 
+                    FontAwesome.CLOUD_UPLOAD);
             menu.addView(StudentCourseworkModuleView.class,
                     StudentCourseworkModuleView.VIEW_NAME,
-                    StudentCourseworkModuleView.VIEW_CAPTION, FontAwesome.FOLDER);
+                    StudentCourseworkModuleView.VIEW_CAPTION, 
+                    FontAwesome.FOLDER);
+            
+            // Extra views 
+            navigator.addView(StudentSubmitCourseworkSucessView.VIEW_NAME, 
+                    StudentSubmitCourseworkSucessView.class);
         } else if (mainUI.getAccessControl().isUserALecturer()) {
             menu.addView(HomeView.class,
                     HomeView.VIEW_NAME,
                     HomeView.VIEW_CAPTION, FontAwesome.HOME);
-            menu.addView(NewAnnouncementView.class,
-                    NewAnnouncementView.VIEW_NAME,
-                    NewAnnouncementView.VIEW_CAPTION, FontAwesome.BULLHORN);
+            menu.addView(LecturerSubmitAnnouncementView.class,
+                    LecturerSubmitAnnouncementView.VIEW_NAME,
+                    LecturerSubmitAnnouncementView.VIEW_CAPTION, FontAwesome.BULLHORN);
         } else {
 
         }

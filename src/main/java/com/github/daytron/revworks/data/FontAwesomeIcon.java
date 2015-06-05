@@ -23,6 +23,8 @@ package com.github.daytron.revworks.data;
 public enum FontAwesomeIcon {
 
     CHECK_CIRCLE_O("<i class=\"fa fa-check-circle-o "),
+    CLOUD_UPLOAD("<i class=\"fa fa-cloud-upload "),
+    INFO_CIRCLE("<i class=\"fa fa-info-circle "),
     THUMBS_O_UP("<i class=\"fa fa-thumbs-o-up ");
 
     private final String code;

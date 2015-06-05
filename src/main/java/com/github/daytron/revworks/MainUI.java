@@ -21,6 +21,7 @@ import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.ui.LoginScreen;
 import com.github.daytron.revworks.ui.dashboard.DashboardScreen;
+import com.vaadin.annotations.Push;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -42,6 +43,7 @@ import javax.servlet.ServletException;
 /**
  * The main class to launch the web application.
  */
+@Push
 @Theme("mytheme")
 @SuppressWarnings("serial")
 @Widgetset("com.github.daytron.revworks.MyAppWidgetset")

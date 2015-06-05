@@ -15,6 +15,8 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.event.AppEvent;
+
 /**
  * The base template for all SQL data insertion and update exclusive to student
  * users.
@@ -22,5 +24,7 @@ package com.github.daytron.revworks.service;
  * @author Ryan Gilera
  */
 public interface StudentDataInserter {
-
+    
+    public void insertNewCoursework(
+            final AppEvent.StudentSubmitCourseworkEvent event);
 }

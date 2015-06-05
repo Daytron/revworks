@@ -15,11 +15,71 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.data.PreparedQueryStatement;
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkSucessView;
+import com.google.common.eventbus.Subscribe;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Concrete implementation of {@link StudentDataInserter}
  *
  * @author Ryan Gilera
  */
-public class StudentDataInserterImpl {
+public class StudentDataInserterImpl extends  DataInserterAbstract implements StudentDataInserter {
+
+    @Subscribe
+    @Override
+    public void insertNewCoursework(AppEvent.StudentSubmitCourseworkEvent event) {
+        
+        if (reserveConnectionPool()) {
+            try {
+                PreparedStatement preparedStatement = getConnection()
+                        .prepareStatement(PreparedQueryStatement.STUDENT_INSERT_NEW_COURSEWORK.getQuery());
+                
+                preparedStatement.setString(1, event.getTitle());
+                preparedStatement.setInt(3, MainUI.get().getAccessControl().getUserId());
+                preparedStatement.setInt(4, event.getClassTable().getId());
+                
+                // Prepare pdf file to be inserted to the database
+                byte[] pdfByte = new byte[(int)event.getCourseworkFile().length()];
+                DataInputStream dataInputStream = new DataInputStream((new FileInputStream(event.getCourseworkFile())));
+                // Read data into byte array
+                dataInputStream.read(pdfByte);
+                dataInputStream.close();
+                
+                preparedStatement.setBytes(2, pdfByte);
+                
+                // Execute query
+                preparedStatement.executeUpdate();
+                getConnection().commit();
+                
+                preparedStatement.close();
+                releaseConnection();
+                
+                // switch view to success page
+                MainUI.get().getNavigator()
+                        .navigateTo(StudentSubmitCourseworkSucessView.VIEW_NAME);
+                
+                
+            } catch (SQLException | FileNotFoundException ex) {
+                Logger.getLogger(StudentDataInserterImpl.class.getName()).log(Level.SEVERE, null, ex);
+                notifyDataSendError();
+            } catch (IOException ex) {
+                Logger.getLogger(StudentDataInserterImpl.class.getName()).log(Level.SEVERE, null, ex);
+                notifyDataSendError();
+            }
+        } else {
+            notifyDataSendError();
+        }
+    }
     
 }

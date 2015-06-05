@@ -15,7 +15,6 @@
  */
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.event.AppEvent;
@@ -84,20 +83,16 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
                 event.getTitle().setValue("");
                 event.getRichTextArea().setValue("");
 
-                NotificationUtil.showProcessDone(
+                NotificationUtil.showInformation(
                         FontAwesomeIcon.CHECK_CIRCLE_O.getLgSize(),
                         "Sent!", "Your announcement is saved.");
             } catch (SQLException ex) {
                 Logger.getLogger(LecturerDataInserterImpl.class.getName())
                         .log(Level.SEVERE, null, ex);
-                NotificationUtil.showError(
-                        ErrorMsg.DATA_SEND_ERROR.getText(),
-                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                notifyDataSendError();
             }
         } else {
-            NotificationUtil.showError(
-                    ErrorMsg.DATA_SEND_ERROR.getText(),
-                    ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+            notifyDataSendError();
         }
     }
 

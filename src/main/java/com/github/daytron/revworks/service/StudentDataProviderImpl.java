@@ -15,6 +15,21 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.data.ExceptionMsg;
+import com.github.daytron.revworks.data.PreparedQueryStatement;
+import com.github.daytron.revworks.exception.SQLErrorQueryException;
+import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
+import com.github.daytron.revworks.exception.SQLNoResultFoundException;
+import com.github.daytron.revworks.model.ClassTable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Concrete implementation of {@link StudentDataProvider}.
  *
@@ -23,15 +38,68 @@ package com.github.daytron.revworks.service;
 public class StudentDataProviderImpl extends DataProviderAbstract
         implements StudentDataProvider {
 
-    private StudentDataProviderImpl() {
+    private List<ClassTable> listOfClasses;
+
+    public StudentDataProviderImpl() {
+        super();
     }
 
     public static StudentDataProviderImpl get() {
         return StudentDataProviderHolder.INSTANCE;
     }
 
+    @Override
+    public List<ClassTable> extractClassData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, SQLNoResultFoundException {
+        if (reserveConnectionPool()) {
+            try {
+                final PreparedStatement preparedStatement = getConnection()
+                        .prepareStatement(
+                                PreparedQueryStatement.STUDENT_CLASS_SELECT_QUERY.getQuery());
+
+                preparedStatement.setInt(1,
+                        MainUI.get().getAccessControl().getUserId());
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (!resultSet.next()) {
+                    Throwable throwable
+                            = new SQLNoResultFoundException(
+                                    ExceptionMsg.EMPTY_SQL_RESULT.getMsg());
+                    Logger.getLogger(StudentDataProviderImpl.class.getName())
+                            .log(Level.SEVERE, null, throwable);
+                    throw new SQLNoResultFoundException(
+                            ExceptionMsg.SQL_NO_RESULT_FOUND.getMsg());
+                }
+
+                resultSet.beforeFirst();
+                this.listOfClasses = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    this.listOfClasses.add(new ClassTable(resultSet.getInt(1),
+                            resultSet.getString(2),
+                            resultSet.getString(3)));
+                }
+
+                preparedStatement.close();
+                getConnectionPool().releaseConnection(getConnection());
+
+                return this.listOfClasses;
+
+            } catch (SQLException ex) {
+                Logger.getLogger(StudentDataProviderImpl.class.getName())
+                        .log(Level.SEVERE, null, ex);
+                throw new SQLErrorQueryException(
+                        ExceptionMsg.SQL_ERROR_QUERY.getMsg());
+            }
+        } else {
+            throw new SQLErrorRetrievingConnectionAndPoolException(
+                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
+        }
+    }
+
     private static class StudentDataProviderHolder {
 
         private static final StudentDataProviderImpl INSTANCE = new StudentDataProviderImpl();
     }
+
 }

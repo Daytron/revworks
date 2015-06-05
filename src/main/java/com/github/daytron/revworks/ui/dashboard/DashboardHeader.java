@@ -27,7 +27,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * Ui widget component for dashboard header.
- * 
+ *
  * @author Ryan Gilera
  */
 public class DashboardHeader extends HorizontalLayout {
@@ -35,7 +35,7 @@ public class DashboardHeader extends HorizontalLayout {
     public DashboardHeader() {
         setSpacing(true);
         addStyleName("view-dashboard-header");
-        
+
         Label titleLabel = new Label("RevWorks");
         titleLabel.setSizeUndefined();
         titleLabel.addStyleName(ValoTheme.LABEL_H2);
@@ -43,15 +43,15 @@ public class DashboardHeader extends HorizontalLayout {
         titleLabel.addStyleName(ValoTheme.LABEL_BOLD);
         addComponent(titleLabel);
 
-        Label welcomeUserLabel = new Label("Welcome " +
-                    MainUI.get().getAccessControl().getFullName());
+        Label welcomeUserLabel = new Label("Welcome "
+                + MainUI.get().getAccessControl().getFullName());
         welcomeUserLabel.setStyleName("welcome-text");
-        
-        Button notificatioButton = new Button();
+
+        final Button notificatioButton = new Button();
         notificatioButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         notificatioButton.setStyleName(ValoTheme.BUTTON_SMALL);
         notificatioButton.setIcon(FontAwesome.BELL);
-        
+
         Button logOutButton = new Button();
         logOutButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         logOutButton.setStyleName(ValoTheme.BUTTON_SMALL);
@@ -63,14 +63,14 @@ public class DashboardHeader extends HorizontalLayout {
                 AppEventBus.post(new AppEvent.UserLogoutRequestEvent());
             }
         });
-        
-        HorizontalLayout toolbar = new HorizontalLayout(welcomeUserLabel, 
-        notificatioButton, logOutButton);
+
+        HorizontalLayout toolbar = new HorizontalLayout(welcomeUserLabel,
+                notificatioButton, logOutButton);
         toolbar.setSpacing(true);
         toolbar.setStyleName("dashboard-toolbar");
         toolbar.setComponentAlignment(welcomeUserLabel, Alignment.BOTTOM_LEFT);
-        
+
         addComponent(toolbar);
+
     }
-    
 }

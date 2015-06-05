@@ -26,8 +26,18 @@ public enum ErrorMsg {
     INVALID_INPUT_CAPTION("Invalid input!"),
     SIGNIN_FAILED_CAPTION("Sign-In failed!"),
     NO_USER_SIGNIN("No login user found. The session has been reset. "),
-    DATA_FETCH_ERROR("Could not retrieve user data."),
-    DATA_SEND_ERROR("Could not send data.");
+    DATA_FETCH_ERROR("Failed retrieving user data."),
+    DATA_SEND_ERROR("Failed sending data."),
+    
+    // For coursework upload
+    STUDENT_FAILED_UPLOAD_COURSEWORK("Failed uploading the file."),
+    STUDENT_REACHED_MAX_FILE_SIZE("Your file must not exceed 10 MB."),
+    STUDENT_WRONG_FILE_TYPE_UPLOAD("Invalid filetype. Only accepts docx, odf "
+            + "and odt file extensions."),
+    EMPTY_TITLE_FIELD("Empty title field."),
+    FILE_IS_NOT_YET_UPLOADED("Your file is not yet uploaded."),
+    TERMS_NOT_ACCEPTED("Please accept the terms and condition by ticking the "
+            + "tick box.");
 
     private final String text;
 

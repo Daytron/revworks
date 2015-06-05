@@ -47,12 +47,13 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
     private final ProgressBar progressbar;
     private File fileUploaded;
     private Upload uploader;
-    private String extension;
     private boolean isUploaded;
+    private boolean isCustomeError;
 
     public FileUploadReceiver(ProgressBar progressBar) {
         this.progressbar = progressBar;
         this.isUploaded = false;
+        this.isCustomeError = false;
     }
 
     public void setUploader(Upload upload) {
@@ -77,36 +78,38 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
 
     @Override
     public void updateProgress(long readBytes, long contentLength) {
-        float progressValue = readBytes / (float) contentLength;
-        progressbar.setValue(progressValue);
+
+        if (contentLength == -1) {
+            progressbar.setIndeterminate(true);
+        } else {
+            progressbar.setIndeterminate(false);
+            float progressValue = readBytes / (float) contentLength;
+            progressbar.setValue(progressValue);
+        }
+
     }
 
     @Override
     public void uploadStarted(Upload.StartedEvent event) {
+        // Set progressbar visiblity
+        this.progressbar.setValue(0.0f);
+        this.progressbar.setVisible(true);
+
         // Detect if the user has the right file extension
-        boolean validFileType = false;
         int dotIndex = event.getFilename().lastIndexOf('.');
         String fileExt = event.getFilename().substring(dotIndex + 1);
 
-        if (fileExt.equalsIgnoreCase(DOCX_EXTENSION)) {
-            extension = DOCX_EXTENSION;
-            validFileType = true;
-        } else if (fileExt.equalsIgnoreCase(ODF_EXTENSION)) {
-            extension = ODF_EXTENSION;
-            validFileType = true;
-        } else if (fileExt.equalsIgnoreCase(ODT_EXTENSION)) {
-            extension = ODT_EXTENSION;
-            validFileType = true;
-        }
+        if (!(fileExt.equalsIgnoreCase(DOCX_EXTENSION)
+                || fileExt.equalsIgnoreCase(ODF_EXTENSION)
+                || fileExt.equalsIgnoreCase(ODT_EXTENSION))) {
 
-        if (!validFileType) {
             NotificationUtil.showError(
                     ErrorMsg.STUDENT_FAILED_UPLOAD_COURSEWORK.getText(),
                     ErrorMsg.STUDENT_WRONG_FILE_TYPE_UPLOAD.getText()
                     + " Yours was " + fileExt);
             this.uploader.interruptUpload();
             this.isUploaded = false;
-            tryDeleteFile();
+            this.isCustomeError = true;
             return;
         }
 
@@ -116,8 +119,7 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
         if (event.getContentLength() > MAX_SIZE_FILE_ALLOWED) {
             this.uploader.interruptUpload();
             this.isUploaded = false;
-            tryDeleteFile();
-
+            this.isCustomeError = true;
             NotificationUtil.showError(
                     ErrorMsg.STUDENT_FAILED_UPLOAD_COURSEWORK.getText(),
                     ErrorMsg.STUDENT_REACHED_MAX_FILE_SIZE.getText());
@@ -132,10 +134,17 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
     @Override
     public void uploadFailed(Upload.FailedEvent event) {
         this.isUploaded = false;
+
         tryDeleteFile();
-        NotificationUtil.showError(
-                ErrorMsg.STUDENT_FAILED_UPLOAD_COURSEWORK.getText(),
-                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+        this.progressbar.setValue(0.0f);
+        this.progressbar.setVisible(false);
+
+        if (!isCustomeError) {
+            NotificationUtil.showError(
+                    ErrorMsg.STUDENT_FAILED_UPLOAD_COURSEWORK.getText(),
+                    ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+            this.isCustomeError = false;
+        }
     }
 
     @Override
@@ -144,6 +153,14 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
                 FontAwesomeIcon.CLOUD_UPLOAD.getLgSize(),
                 "File upload finished.", null);
         this.isUploaded = true;
+
+        // Just to be sure. A user may submit another file
+        // so the counter must be reset
+        this.isCustomeError = false;
+
+        // Save reference of file to the current session to be cleanup after
+        // the session ended
+        CurrentUserSession.saveFileToBin(fileUploaded);
 
     }
 

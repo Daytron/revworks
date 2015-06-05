@@ -35,9 +35,11 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
+import java.io.File;
 import java.security.Principal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javax.servlet.ServletException;
 
 /**
@@ -96,6 +98,8 @@ public class MainUI extends UI {
             SessionDestroyListener {
 
         private static final ConcurrentHashMap<String, VaadinSession> listOfUserSessions = new ConcurrentHashMap<>();
+        public static final String TRASH_CAN_FOR_FILES_KEY
+            = "Trashcan";
 
         /**
          * Saves the new login session to the collection member,
@@ -178,10 +182,20 @@ public class MainUI extends UI {
                 final String KEY = CurrentUserSession.class.getCanonicalName();
                 Principal user = (Principal) event.getSession()
                         .getAttribute(KEY);
+                CopyOnWriteArrayList<File> listOfFilesToDelete 
+                        = (CopyOnWriteArrayList<File>) event.getSession()
+                        .getAttribute(TRASH_CAN_FOR_FILES_KEY);
+                
                 if (user == null) {
                     System.out.println("User in session is null!!");
                 } else {
                     listOfUserSessions.remove(user.getName());
+                    
+                    // Clean uploaded data through deletion
+                    for (File file : listOfFilesToDelete) {
+                        file.delete();
+                    }
+                    
                     printSessions("Session destroyed with session");
                 }
             }

@@ -16,7 +16,9 @@
 package com.github.daytron.revworks.service;
 
 import com.vaadin.server.VaadinSession;
+import java.io.File;
 import java.security.Principal;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A static class for handling user in a session.
@@ -30,6 +32,8 @@ public class CurrentUserSession {
      */
     public static final String CURRENT_USER_SESSION_ATTRIBUTE_KEY
             = CurrentUserSession.class.getCanonicalName();
+    public static final String TRASH_CAN_FOR_FILES_KEY
+            = "Trashcan";
 
     private CurrentUserSession() {
     }
@@ -46,9 +50,23 @@ public class CurrentUserSession {
             VaadinSession.getCurrent().getLockInstance().lock();
             VaadinSession.getCurrent().setAttribute(
                     CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
+            
+            CopyOnWriteArrayList<File> listOfFilesToBeDeleted = new CopyOnWriteArrayList<>();
+            VaadinSession.getCurrent().setAttribute(TRASH_CAN_FOR_FILES_KEY, listOfFilesToBeDeleted);
         } finally {
             VaadinSession.getCurrent().getLockInstance().unlock();
         }
+    }
+
+    public static void saveFileToBin(File fileToBeDeletedLater) {
+        getFileTrashBin().add(fileToBeDeletedLater);
+    }
+    
+    public static CopyOnWriteArrayList<File> getFileTrashBin() {
+        CopyOnWriteArrayList<File> listOFiles = (CopyOnWriteArrayList)
+                VaadinSession.getCurrent()
+                .getAttribute(TRASH_CAN_FOR_FILES_KEY);
+        return (listOFiles == null) ? null : listOFiles;
     }
 
     /**

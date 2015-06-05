@@ -137,6 +137,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         // Upload area
         ProgressBar progressBar = new ProgressBar(0.0f);
         progressBar.setWidth("50%");
+        progressBar.setVisible(false);
         final FileUploadReceiver fileUploadReceiver
                 = new FileUploadReceiver(progressBar);
         Upload fileUploader = new Upload("Upload your coursework",
@@ -146,6 +147,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         fileUploader.addFinishedListener(fileUploadReceiver);
         fileUploader.addStartedListener(fileUploadReceiver);
         fileUploader.addSucceededListener(fileUploadReceiver);
+        fileUploader.addFailedListener(fileUploadReceiver);
         contentFormLayout.addComponent(fileUploader);
         contentFormLayout.addComponent(progressBar);
 

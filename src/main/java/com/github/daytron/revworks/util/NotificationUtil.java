@@ -88,11 +88,11 @@ public class NotificationUtil {
         errorNotification.show(Page.getCurrent());
     }
     
-    public static void showProcessDone(String title, String message) {
-        showProcessDone("", title, message);
+    public static void showInformation(String title, String message) {
+        showInformation("", title, message);
     }
     
-    public static void showProcessDone(String fontAwesomeIcon, String title, 
+    public static void showInformation(String fontAwesomeIcon, String title, 
             String message) {
         if (!fontAwesomeIcon.isEmpty()) {
             title = fontAwesomeIcon + title;

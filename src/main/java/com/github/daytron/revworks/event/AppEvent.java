@@ -21,6 +21,7 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
+import java.io.File;
 
 /**
  * Collection events for Guava's EventBus as inner classes
@@ -131,9 +132,36 @@ public abstract class AppEvent {
         public TextField getTitle() {
             return title;
         }
-        
+
         public RichTextArea getRichTextArea() {
             return richTextArea;
+        }
+
+    }
+
+    public static final class StudentSubmitCourseworkEvent {
+
+        private final File courseworkFile;
+        private final ClassTable classTable;
+        private final String title;
+
+        public StudentSubmitCourseworkEvent(File courseworkFile,
+                ClassTable classTable, String title) {
+            this.courseworkFile = courseworkFile;
+            this.classTable = classTable;
+            this.title = title;
+        }
+
+        public File getCourseworkFile() {
+            return courseworkFile;
+        }
+
+        public ClassTable getClassTable() {
+            return classTable;
+        }
+
+        public String getTitle() {
+            return title;
         }
 
     }

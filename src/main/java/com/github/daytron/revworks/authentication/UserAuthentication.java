@@ -42,7 +42,6 @@ import java.util.logging.Logger;
 @SuppressWarnings("serial")
 public class UserAuthentication {
 
-
     private UserAuthentication() {
     }
 
@@ -133,6 +132,45 @@ public class UserAuthentication {
         } catch (SQLException ex) {
             Logger.getLogger(UserAuthentication.class.getName()).log(Level.SEVERE, null, ex);
 
+            throw new AuthenticationException(
+                    ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
+        }
+
+    }
+
+    /**
+     * Retrieve the current semester id based on date it was accessed. Returns
+     * an empty String if accessed outside the semester date range.
+     *
+     * @return The semester id
+     * @throws AuthenticationException If the connection to database fails
+     */
+    String verifyCurrentDateWithinASemester() throws AuthenticationException {
+        JDBCConnectionPool connectionPool;
+
+        try {
+            // Create a pool of SQL connections
+            connectionPool = SQLConnectionManager.get().connect();
+            // Reserve a new connection
+            Connection connection = connectionPool.reserveConnection();
+
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement(
+                            PreparedQueryStatement.SELECT_CURRENT_SEMESTER
+                                    .getQuery());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (!resultSet.next()) {
+                return "";
+            } else {
+                resultSet.first();
+                return resultSet.getString(1);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserAuthentication.class.getName())
+                    .log(Level.SEVERE, null, ex);
             throw new AuthenticationException(
                     ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
         }

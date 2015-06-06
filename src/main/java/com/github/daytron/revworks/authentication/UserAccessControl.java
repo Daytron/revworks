@@ -104,9 +104,21 @@ public class UserAccessControl implements AccessControl {
 
         Principal user;
         try {
+            String semesterID = UserAuthentication.getInstance()
+                    .verifyCurrentDateWithinASemester();
+            
+            // In an event the student or lecturer signin on date 
+            // outside of semester dates will block access to the application
+            if (semesterID.isEmpty()) {
+                NotificationUtil.showError(
+                        ErrorMsg.NO_CURRENT_SEMESTER.getText(), 
+                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                return;
+            }
+            
             user = UserAuthentication.getInstance()
                     .authenticate(userType, userName, password);
-            CurrentUserSession.set(user);
+            CurrentUserSession.set(user, semesterID);
 
             // Verifies if this is the only login session for the current user
             // If this is second login session made by the user,
@@ -179,9 +191,16 @@ public class UserAccessControl implements AccessControl {
         Principal adminUser;
 
         try {
+            String semesterID = UserAuthentication.getInstance().verifyCurrentDateWithinASemester();
+            
             adminUser = UserAuthentication.getInstance()
                     .authenticate(userType, userName, password);
-            CurrentUserSession.set(adminUser);
+            
+            // Note that for admin access, if sign-in on a date 
+            // that there is no ongoing semester the semesterID 
+            // variable is empty String.
+            // This allows all year round access for administrators
+            CurrentUserSession.set(adminUser, semesterID);
 
             // Verifies if this is the only login session for the current user
             // If this is second login session made by the user,

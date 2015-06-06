@@ -32,8 +32,16 @@ public class CurrentUserSession {
      */
     public static final String CURRENT_USER_SESSION_ATTRIBUTE_KEY
             = CurrentUserSession.class.getCanonicalName();
+    /**
+     * The attribute key used to store the List for files
+     */
     public static final String TRASH_CAN_FOR_FILES_KEY
             = "Trashcan";
+    /**
+     * The attribute key used to store the current semester id
+     */
+    public static final String CURRENT_SEMESTER
+            = "Current Semester";
 
     private CurrentUserSession() {
     }
@@ -41,16 +49,24 @@ public class CurrentUserSession {
     /**
      * Sets the name of the current user and stores it in the current session.
      * Using a {@code null} username will remove the username from the session.
+     * It also stores a list for generated files mark for deletion later on and
+     * the current semester through semester id.
      *
      * @param currentUser The current user
      * @throws IllegalStateException if the current session cannot be accessed.
      */
-    public static void set(Principal currentUser) {
+    public static void set(Principal currentUser, String semesterID) {
         try {
             VaadinSession.getCurrent().getLockInstance().lock();
+
+            // For user
             VaadinSession.getCurrent().setAttribute(
                     CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
-            
+
+            // For current semester
+            VaadinSession.getCurrent().setAttribute(CURRENT_SEMESTER, semesterID);
+
+            // For file trash bin
             CopyOnWriteArrayList<File> listOfFilesToBeDeleted = new CopyOnWriteArrayList<>();
             VaadinSession.getCurrent().setAttribute(TRASH_CAN_FOR_FILES_KEY, listOfFilesToBeDeleted);
         } finally {
@@ -58,20 +74,29 @@ public class CurrentUserSession {
         }
     }
 
+    /**
+     * Saves a file for deletion later on when the session closes.
+     *
+     * @param fileToBeDeletedLater A File object marked to be deleted
+     */
     public static void saveFileToBin(File fileToBeDeletedLater) {
         getFileTrashBin().add(fileToBeDeletedLater);
     }
-    
+
+    /**
+     * Returns the list of trash can file collection for deletion.
+     *
+     * @return The CopyOnWriteArrayList object
+     */
     public static CopyOnWriteArrayList<File> getFileTrashBin() {
-        CopyOnWriteArrayList<File> listOFiles = (CopyOnWriteArrayList)
-                VaadinSession.getCurrent()
+        CopyOnWriteArrayList<File> listOFiles = (CopyOnWriteArrayList) VaadinSession.getCurrent()
                 .getAttribute(TRASH_CAN_FOR_FILES_KEY);
         return (listOFiles == null) ? null : listOFiles;
     }
 
     /**
-     * Returns the name of the current user stored in the current session, or an
-     * empty string if no user name is stored.
+     * Returns the name of the current user stored in the current session, or
+     * null if no user name is stored.
      *
      * @return The user object
      * @throws IllegalStateException if the current session cannot be accessed.
@@ -80,6 +105,17 @@ public class CurrentUserSession {
         Principal currentUser = (Principal) VaadinSession.getCurrent()
                 .getAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY);
         return (currentUser == null) ? null : currentUser;
+    }
+
+    /**
+     * Returns the current semester id based on the current date.
+     *
+     * @return The semester id
+     */
+    public static String getCurrentSemester() {
+        String currentSemester = (String) VaadinSession.getCurrent()
+                .getAttribute(CURRENT_SEMESTER);
+        return (currentSemester == null) ? null : currentSemester;
     }
 
     /**

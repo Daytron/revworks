@@ -18,6 +18,7 @@ package com.github.daytron.revworks.service;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.util.NotificationUtil;
+import com.google.gwt.thirdparty.guava.common.io.Files;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Upload;
 import java.io.File;
@@ -96,17 +97,15 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
         this.progressbar.setVisible(true);
 
         // Detect if the user has the right file extension
-        int dotIndex = event.getFilename().lastIndexOf('.');
-        String fileExt = event.getFilename().substring(dotIndex + 1);
-
-        if (!(fileExt.equalsIgnoreCase(DOCX_EXTENSION)
-                || fileExt.equalsIgnoreCase(ODF_EXTENSION)
-                || fileExt.equalsIgnoreCase(ODT_EXTENSION))) {
+        String fileExtension = Files.getFileExtension(event.getFilename()).toLowerCase();
+        if (!(fileExtension.equalsIgnoreCase(DOCX_EXTENSION)
+                || fileExtension.equalsIgnoreCase(ODF_EXTENSION)
+                || fileExtension.equalsIgnoreCase(ODT_EXTENSION))) {
 
             NotificationUtil.showError(
                     ErrorMsg.STUDENT_FAILED_UPLOAD_COURSEWORK.getText(),
                     ErrorMsg.STUDENT_WRONG_FILE_TYPE_UPLOAD.getText()
-                    + " Yours was " + fileExt);
+                    + " Yours was " + fileExtension);
             this.uploader.interruptUpload();
             this.isUploaded = false;
             this.isCustomeError = true;

@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.util;
 
+import com.github.daytron.revworks.data.FilePath;
 import com.vaadin.server.VaadinService;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,28 +40,27 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  * @author Ryan Gilera
  */
 public class DocxToHtmlConverter {
-    private static final String relativePathToStore = "/VAADIN/themes/mytheme/";
-    private static final String tempIdentifier = "convertedWork";
     private static final String htmlExtension = ".html";
-    private static final String folderName = "pictures/";
     
     
     public static List<File> convert(File fileToConvert) throws FileNotFoundException, IOException {
         String basePath = VaadinService.getCurrent()
                     .getBaseDirectory().getAbsolutePath()+
-                relativePathToStore;
+                FilePath.TEMP_FILE_HOLDER.getPath();
         List<File> listOfFiles = new ArrayList<>();
         
         try {
-            File htmlFile = new File(tempIdentifier + htmlExtension);
+            File htmlFile = new File(
+                    FilePath.HTML_OUTPUT_NAME.getPath() + htmlExtension);
             
             InputStream inputFileStream = new FileInputStream(fileToConvert);
             XWPFDocument document = new XWPFDocument(inputFileStream);
             
             XHTMLOptions options = XHTMLOptions.create();
             
-            File locaFolderLocal = new File(basePath + folderName
-                    + tempIdentifier);
+            File locaFolderLocal = new File(basePath + 
+                    FilePath.TEMP_PICTURE_FOLDER.getPath()
+                    + FilePath.HTML_OUTPUT_NAME.getPath());
             options.setExtractor(new FileImageExtractor(locaFolderLocal));
             
             FileURIResolver fileURIResolver = new FileURIResolver(locaFolderLocal);

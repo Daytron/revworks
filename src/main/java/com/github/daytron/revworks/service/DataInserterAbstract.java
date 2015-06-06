@@ -24,9 +24,10 @@ import com.github.daytron.revworks.util.NotificationUtil;
  *
  * @author Ryan Gilera
  */
-public class DataInserterAbstract extends QueryManagerAbstract {
+public class DataInserterAbstract extends QueryManagerAbstract implements DataInserter {
 
-    void notifyDataSendError() {
+    @Override
+    public void notifyDataSendError() {
         NotificationUtil.showError(
                 ErrorMsg.DATA_SEND_ERROR.getText(),
                 ErrorMsg.CONSULT_YOUR_ADMIN.getText());

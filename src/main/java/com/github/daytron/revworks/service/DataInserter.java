@@ -21,5 +21,5 @@ package com.github.daytron.revworks.service;
  * @author Ryan Gilera
  */
 public interface DataInserter {
-
+    public void notifyDataSendError();
 }

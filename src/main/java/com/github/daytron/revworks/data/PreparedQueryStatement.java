@@ -64,7 +64,7 @@ public enum PreparedQueryStatement {
             + "INNER JOIN ClassWideAnnouncement  "
             + "ON ClassWideAnnouncement.class_id = Class.id "
             + "INNER JOIN Module ON Module.id = Class.module_id "
-            + "INNER JOIN Lecturer ON Lecturer.user_id = Class.lecturer_id "
+            + "INNER JOIN Lecturer ON Lecturer.user_id = Class.lecturer_user_id "
             + "INNER JOIN User ON User.id = Lecturer.user_id "
             + "INNER JOIN Semester ON Semester.id = Class.semester_id "
             + "INNER JOIN StudentClass ON StudentClass.class_id = Class.id "
@@ -88,13 +88,13 @@ public enum PreparedQueryStatement {
             + "ON Announcement.id = ClassWideAnnouncement.id "
             + "LEFT JOIN "
             + "(SELECT Class.id AS class_id, Module.id as module_id, "
-            + "Module.name AS module_name, Class.lecturer_id AS user_id "
+            + "Module.name AS module_name, Class.lecturer_user_id AS user_id "
             + "FROM Module "
             + "INNER JOIN Class ON Class.module_id = Module.id "
             + "INNER JOIN Semester ON Semester.id = Class.semester_id "
             + "WHERE curdate() "
             + "BETWEEN Semester.startDate AND Semester.endDate "
-            + "AND Class.lecturer_id = ?) AS CustomTable "
+            + "AND Class.lecturer_user_id = ?) AS CustomTable "
             + "ON CustomTable.class_id = ClassWideAnnouncement.class_id "
             + "WHERE (Announcement.announcement_type_id = 1 OR "
             + "CustomTable.user_id = ?) AND "
@@ -106,7 +106,7 @@ public enum PreparedQueryStatement {
             + "FROM Class "
             + "INNER JOIN Module ON Module.id = Class.module_id "
             + "INNER JOIN Semester ON Semester.id = Class.semester_id "
-            + "WHERE Class.lecturer_id = ? AND "
+            + "WHERE Class.lecturer_user_id = ? AND "
             + "curdate() BETWEEN Semester.startDate AND Semester.endDate;"),
     STUDENT_CLASS_SELECT_QUERY("SELECT Class.id AS id, " 
             + "Class.module_id AS moduleId, " 
@@ -124,7 +124,7 @@ public enum PreparedQueryStatement {
             + "ClassWideAnnouncement VALUES (?,?);"),
     SELECT_LASTROW_ANNOUNCEMENT("SELECT id FROM Announcement ORDER BY id DESC LIMIT 1;"),
     STUDENT_INSERT_NEW_COURSEWORK("INSERT INTO Coursework "
-            + "(title,date_submitted,file,student_id,class_id) "
+            + "(title,date_submitted,file,student_user_id,class_id) "
             + "VALUES (?,now(),?,?,?);");
 
     private final String query;

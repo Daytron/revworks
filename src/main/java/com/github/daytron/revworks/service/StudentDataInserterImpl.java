@@ -20,6 +20,7 @@ import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkSucessView;
 import com.google.common.eventbus.Subscribe;
+import com.google.common.io.Files;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,8 +47,13 @@ public class StudentDataInserterImpl extends  DataInserterAbstract implements St
                         .prepareStatement(PreparedQueryStatement.STUDENT_INSERT_NEW_COURSEWORK.getQuery());
                 
                 preparedStatement.setString(1, event.getTitle());
-                preparedStatement.setInt(3, MainUI.get().getAccessControl().getUserId());
-                preparedStatement.setInt(4, event.getClassTable().getId());
+                
+                String fileExtension = Files.getFileExtension(event.getCourseworkFile().getAbsolutePath());
+                fileExtension = fileExtension.toLowerCase();
+                preparedStatement.setString(3, fileExtension);
+                
+                preparedStatement.setInt(4, MainUI.get().getAccessControl().getUserId());
+                preparedStatement.setInt(5, event.getClassTable().getId());
                 
                 // Prepare pdf file to be inserted to the database
                 byte[] pdfByte = new byte[(int)event.getCourseworkFile().length()];

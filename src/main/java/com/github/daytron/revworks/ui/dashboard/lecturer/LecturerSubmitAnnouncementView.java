@@ -51,7 +51,7 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
     public static final String VIEW_CAPTION = "New Announcement";
     public static final String VIEW_TITLE = "Create Announcement";
 
-    private boolean initialised = false;
+    private boolean isInitialised = false;
     private List<ClassTable> listOfClasses;
 
     public LecturerSubmitAnnouncementView() {
@@ -59,11 +59,11 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-        if (!initialised) {
+        if (!isInitialised) {
             try {
                 this.listOfClasses = LecturerDataProviderImpl.get().extractClassData();
                 initView();
-                initialised = true;
+                isInitialised = true;
             } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException | SQLNoResultFoundException ex) {
                 Logger.getLogger(LecturerSubmitAnnouncementView.class.getName())
                         .log(Level.SEVERE, null, ex);

@@ -57,16 +57,16 @@ public class StudentSubmitCourseworkView extends VerticalLayout
     public static final String VIEW_CAPTION = "Submit Coursework";
     public static final String VIEW_TITLE = "Submit Coursework";
 
-    private boolean initialised = false;
+    private boolean isInitialised = false;
     private List<ClassTable> listOfClasses;
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-        if (!initialised) {
+        if (!isInitialised) {
             try {
                 this.listOfClasses = StudentDataProviderImpl.get().extractClassData();
                 initView();
-                initialised = true;
+                isInitialised = true;
             } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException | SQLNoResultFoundException ex) {
                 Logger.getLogger(StudentSubmitCourseworkView.class.getName())
                         .log(Level.SEVERE, null, ex);

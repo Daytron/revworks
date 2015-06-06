@@ -122,7 +122,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         final TextField titleTextField = new TextField("Title");
         titleTextField.setWidth(25, UNITS_EM);
         // As define in database constraints
-        titleTextField.setMaxLength(45);
+        titleTextField.setMaxLength(150);
         contentFormLayout.addComponent(titleTextField);
 
         Label spacerLabel = new Label("");

@@ -15,6 +15,9 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.util.NotificationUtil;
+
 /**
  * Abstract class for implementing {@link DataInserter} interface for common
  * data insertion and update query process.
@@ -23,4 +26,9 @@ package com.github.daytron.revworks.service;
  */
 public class DataInserterAbstract extends QueryManagerAbstract {
 
+    void notifyDataSendError() {
+        NotificationUtil.showError(
+                ErrorMsg.DATA_SEND_ERROR.getText(),
+                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+    }
 }

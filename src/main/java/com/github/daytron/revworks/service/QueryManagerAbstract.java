@@ -59,10 +59,5 @@ public class QueryManagerAbstract {
         return connectionPool;
     }
 
-    void notifyDataSendError() {
-        NotificationUtil.showError(
-                ErrorMsg.DATA_SEND_ERROR.getText(),
-                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
-    }
 
 }

@@ -22,7 +22,8 @@ package com.github.daytron.revworks.data;
  */
 public enum ErrorMsg {
 
-    CONSULT_YOUR_ADMIN("Please consult your administrator for help."),
+    NO_CURRENT_SEMESTER("There is no ongoing semester."),
+    CONSULT_YOUR_ADMIN("Please consult your administrator for more information."),
     INVALID_INPUT_CAPTION("Invalid input!"),
     SIGNIN_FAILED_CAPTION("Sign-In failed!"),
     NO_USER_SIGNIN("No login user found. The session has been reset. "),

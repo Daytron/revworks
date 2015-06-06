@@ -43,6 +43,9 @@ public enum PreparedQueryStatement {
             + "ON Admin.user_id = User.id "
             + "WHERE Admin.email = ? and "
             + "? = Admin.password;"),
+    SELECT_CURRENT_SEMESTER("SELECT Semester.id FROM Semester "
+            + "WHERE (curdate() BETWEEN Semester.startDate "
+            + "AND Semester.endDate);"),
     STUDENT_ANNOUNCEMENT_SELECT_QUERY("SELECT Announcement.id AS id, "
             + "Announcement.title AS title, "
             + "Announcement.message AS message,  "
@@ -124,8 +127,27 @@ public enum PreparedQueryStatement {
             + "ClassWideAnnouncement VALUES (?,?);"),
     SELECT_LASTROW_ANNOUNCEMENT("SELECT id FROM Announcement ORDER BY id DESC LIMIT 1;"),
     STUDENT_INSERT_NEW_COURSEWORK("INSERT INTO Coursework "
-            + "(title,date_submitted,file,student_user_id,class_id) "
-            + "VALUES (?,now(),?,?,?);");
+            + "(title,date_submitted,file,file_extension,student_user_id,"
+            + "class_id) VALUES (?,now(),?,?,?,?);"),
+    STUDENT_SELECT_COURSEWORK("SELECT Coursework.id AS coursework_id, "
+            + "Coursework.title AS title, "
+            + "Coursework.date_submitted AS date_submitted, "
+            + "Coursework.file AS file, "
+            + "Coursework.file_extension AS file_extension, "
+            + "Coursework.class_id AS class_id, "
+            + "Class.module_id AS module_id, "
+            + "Module.name AS module_name, "
+            + "User.id AS lecturer_id, "
+            + "Lecturer.email AS lecturer_email, "
+            + "User.first_name AS lecturer_firstname, "
+            + "User.last_name AS lecturer_lastname "
+            + "FROM Coursework "
+            + "INNER JOIN Class ON Class.id = Coursework.class_id "
+            + "INNER JOIN Module ON Module.id = Class.module_id "
+            + "INNER JOIN Lecturer ON Lecturer.user_id = Class.lecturer_user_id "
+            + "INNER JOIN User ON User.id = Lecturer.user_id "
+            + "WHERE Class.semester_id = ? AND "
+            + "Coursework.student_user_id = ?;");
 
     private final String query;
 

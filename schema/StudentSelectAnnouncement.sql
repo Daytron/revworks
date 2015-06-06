@@ -18,7 +18,7 @@ FROM Class
 INNER JOIN ClassWideAnnouncement  
 ON ClassWideAnnouncement.class_id = Class.id  
 INNER JOIN Module ON Module.id = Class.module_id
-INNER JOIN Lecturer ON Lecturer.user_id = Class.lecturer_id 
+INNER JOIN Lecturer ON Lecturer.user_id = Class.lecturer_user_id 
 INNER JOIN User ON User.id = Lecturer.user_id 
 INNER JOIN Semester ON Semester.id = Class.semester_id
 INNER JOIN StudentClass ON StudentClass.class_id = Class.id 

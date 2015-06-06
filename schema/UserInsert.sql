@@ -252,69 +252,69 @@ INSERT INTO `appschema`.`Course` (`name`) VALUES ('Executive MSc Leading and Man
 INSERT INTO `appschema`.`Course` (`name`) VALUES ('Diploma in Procurement and Supply');
 
 # Module table
-INSERT INTO `appschema`.`Module` VALUES ('PC107_332_C15','Programming 1');
-INSERT INTO `appschema`.`Module` VALUES ('PC108_333_C15','Information Technology & Professional Skills');
-INSERT INTO `appschema`.`Module` VALUES ('PC109_334_C15','Computer Systems');
-INSERT INTO `appschema`.`Module` VALUES ('PC110_335_C15','Programming 2');
-INSERT INTO `appschema`.`Module` VALUES ('PC111_336_C15','Quantitative Methods for Computing');
-INSERT INTO `appschema`.`Module` VALUES ('PC112_337_C15','Software Engineering and Human Computer Interaction');
-INSERT INTO `appschema`.`Module` VALUES ('PC206_339_C15','Database Management Systems');
-INSERT INTO `appschema`.`Module` VALUES ('PC209_340_C15','Systems Analysis & Design');
-INSERT INTO `appschema`.`Module` VALUES ('PC210_341_C15','Artificial Intelligence');
-INSERT INTO `appschema`.`Module` VALUES ('PC205_338_C15','Computer Graphics');
-INSERT INTO `appschema`.`Module` VALUES ('PI207_312_C15','Internet Development: Coding and Programming');
-INSERT INTO `appschema`.`Module` VALUES ('PI208_313_C15','Telecommunications and Networking');
-INSERT INTO `appschema`.`Module` VALUES ('PC302_343_C15','Mobile Devices and Applications');
-INSERT INTO `appschema`.`Module` VALUES ('PC303_344_C15','E-Commerce');
-INSERT INTO `appschema`.`Module` VALUES ('PC304_345_C15','Software Development');
-INSERT INTO `appschema`.`Module` VALUES ('PI306_321_C15','C++ Programming');
-INSERT INTO `appschema`.`Module` VALUES ('PM302_317_C15','Project');
-INSERT INTO `appschema`.`Module` VALUES ('PM302A_583_C15','Financial Research Project');
+INSERT INTO `appschema`.`Module` VALUES ('PC107','Programming 1');
+INSERT INTO `appschema`.`Module` VALUES ('PC108','Information Technology & Professional Skills');
+INSERT INTO `appschema`.`Module` VALUES ('PC109','Computer Systems');
+INSERT INTO `appschema`.`Module` VALUES ('PC110','Programming 2');
+INSERT INTO `appschema`.`Module` VALUES ('PC111','Quantitative Methods for Computing');
+INSERT INTO `appschema`.`Module` VALUES ('PC112','Software Engineering and Human Computer Interaction');
+INSERT INTO `appschema`.`Module` VALUES ('PC206','Database Management Systems');
+INSERT INTO `appschema`.`Module` VALUES ('PC209','Systems Analysis & Design');
+INSERT INTO `appschema`.`Module` VALUES ('PC210','Artificial Intelligence');
+INSERT INTO `appschema`.`Module` VALUES ('PC205','Computer Graphics');
+INSERT INTO `appschema`.`Module` VALUES ('PI207','Internet Development: Coding and Programming');
+INSERT INTO `appschema`.`Module` VALUES ('PI208','Telecommunications and Networking');
+INSERT INTO `appschema`.`Module` VALUES ('PC302','Mobile Devices and Applications');
+INSERT INTO `appschema`.`Module` VALUES ('PC303','E-Commerce');
+INSERT INTO `appschema`.`Module` VALUES ('PC304','Software Development');
+INSERT INTO `appschema`.`Module` VALUES ('PI306','C++ Programming');
+INSERT INTO `appschema`.`Module` VALUES ('PM302','Project');
+INSERT INTO `appschema`.`Module` VALUES ('PM302A','Financial Research Project');
 
 # CourseModule table
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC107_332_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC107_332_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC108_333_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC108_333_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC109_334_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC109_334_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC110_335_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC110_335_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC111_336_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC111_336_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC112_337_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC112_337_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC206_339_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC206_339_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC209_340_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC209_340_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC210_341_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC210_341_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC107');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC107');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC108');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC108');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC109');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC109');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC110');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC110');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC111');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC111');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC112');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC112');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC206');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC206');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC209');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC209');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC210');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC210');
 
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC205_338_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC205');
 
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PI207_312_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PI207_312_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (4,'PI207_312_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PI207');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PI207');
+INSERT INTO `appschema`.`CourseModule` VALUES (4,'PI207');
 
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PI208_313_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PI208_313_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (3,'PI208_313_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (4,'PI208_313_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PI208');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PI208');
+INSERT INTO `appschema`.`CourseModule` VALUES (3,'PI208');
+INSERT INTO `appschema`.`CourseModule` VALUES (4,'PI208');
 
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC302_343_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC302');
 
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC303_344_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC303_344_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC303');
+INSERT INTO `appschema`.`CourseModule` VALUES (2,'PC303');
 
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC304_345_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PC304');
 
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PI306_321_C15');
-INSERT INTO `appschema`.`CourseModule` VALUES (4,'PI306_321_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PI306');
+INSERT INTO `appschema`.`CourseModule` VALUES (4,'PI306');
 
-INSERT INTO `appschema`.`CourseModule` VALUES (1,'PM302_317_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (1,'PM302');
 
-INSERT INTO `appschema`.`CourseModule` VALUES (6,'PM302A_583_C15');
+INSERT INTO `appschema`.`CourseModule` VALUES (6,'PM302A');
 
 # Semester table
 INSERT INTO `appschema`.`Semester` VALUES('C15','2015-06-08','2015-09-28');
@@ -322,12 +322,29 @@ INSERT INTO `appschema`.`Semester` VALUES('E15','2015-10-05','2016-02-05');
 INSERT INTO `appschema`.`Semester` VALUES('A16','2016-02-08','2016-06-03');
 
 # Class table
+# For C++ class
 #1
-INSERT INTO `appschema`.`Class` (`module_id`,`lecturer_id`,`semester_id`) 
-VALUES ('PI306_321_C15',47,'C15');
+INSERT INTO `appschema`.`Class` (`module_id`,`lecturer_user_id`,`semester_id`) 
+VALUES ('PI306',47,'C15');
+# Software Development
 #2
-INSERT INTO `appschema`.`Class` (`module_id`,`lecturer_id`,`semester_id`) 
-VALUES ('PC304_345_C15',49,'C15');
+INSERT INTO `appschema`.`Class` (`module_id`,`lecturer_user_id`,`semester_id`) 
+VALUES ('PC304',49,'C15');
+# For Mobile Devices
+#3
+INSERT INTO `appschema`.`Class` (`module_id`,`lecturer_user_id`,`semester_id`) 
+VALUES ('PC302',47,'C15');
+#4
+INSERT INTO `appschema`.`Class` (`module_id`,`lecturer_user_id`,`semester_id`) 
+VALUES ('PC302',50,'C15');
+# For E-commerce
+#5
+INSERT INTO `appschema`.`Class` (`module_id`,`lecturer_user_id`,`semester_id`) 
+VALUES ('PC303',48,'C15');
+#6
+INSERT INTO `appschema`.`Class` (`module_id`,`lecturer_user_id`,`semester_id`) 
+VALUES ('PC303',45,'C15');
+
 
 # StudentClass table
 INSERT INTO `appschema`.`StudentClass` VALUES (1, 1);
@@ -335,6 +352,27 @@ INSERT INTO `appschema`.`StudentClass` VALUES (2, 1);
 INSERT INTO `appschema`.`StudentClass` VALUES (3, 1);
 INSERT INTO `appschema`.`StudentClass` VALUES (4, 1);
 INSERT INTO `appschema`.`StudentClass` VALUES (5, 1);
+
+INSERT INTO `appschema`.`StudentClass` VALUES (1, 2);
+INSERT INTO `appschema`.`StudentClass` VALUES (6, 2);
+INSERT INTO `appschema`.`StudentClass` VALUES (7, 2);
+INSERT INTO `appschema`.`StudentClass` VALUES (8, 2);
+INSERT INTO `appschema`.`StudentClass` VALUES (9, 2);
+INSERT INTO `appschema`.`StudentClass` VALUES (10, 2);
+
+INSERT INTO `appschema`.`StudentClass` VALUES (1, 3);
+INSERT INTO `appschema`.`StudentClass` VALUES (6, 3);
+INSERT INTO `appschema`.`StudentClass` VALUES (7, 3);
+INSERT INTO `appschema`.`StudentClass` VALUES (8, 4);
+INSERT INTO `appschema`.`StudentClass` VALUES (9, 4);
+INSERT INTO `appschema`.`StudentClass` VALUES (10, 4);
+
+INSERT INTO `appschema`.`StudentClass` VALUES (1, 5);
+INSERT INTO `appschema`.`StudentClass` VALUES (6, 5);
+INSERT INTO `appschema`.`StudentClass` VALUES (7, 5);
+INSERT INTO `appschema`.`StudentClass` VALUES (8, 6);
+INSERT INTO `appschema`.`StudentClass` VALUES (9, 6);
+INSERT INTO `appschema`.`StudentClass` VALUES (10, 6);
 
 # Announcement type table
 INSERT INTO `appschema`.`AnnouncementType` VALUES (1,'SystemWide');

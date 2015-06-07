@@ -81,6 +81,7 @@ public class DashboardScreen extends VerticalLayout {
         addComponent(headerLayout);
         addComponent(menu);
         addComponent(viewContainer);
+        addComponent(new DashboardFooter());
         setExpandRatio(viewContainer, 1);
         setWidth("100%");
         navigator.navigateTo(HomeView.VIEW_NAME);

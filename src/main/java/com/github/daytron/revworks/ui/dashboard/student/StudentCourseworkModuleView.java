@@ -146,7 +146,7 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
                 new boolean[]{true,true});
         
         courseworksTable.setColumnWidth("id", 50);
-        courseworksTable.setPageLength(6);
+        courseworksTable.setPageLength(8);
       
         return courseworksTable;
         

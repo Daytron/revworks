@@ -166,19 +166,30 @@ $header-height: round($v-unit-size / 1.1) !default;
             > .v-spacing {
                 height: round($v-unit-size / 4);
             }
-            
+
             .v-label.welcome-text { font-size: 0.8rem }
         }
     }
-    
+
     .v-Notification.custom-tray-notifications {
         background:rgba(19,47,99,0.7);
         font-size: 0.8rem;
         color: #fff;
         border-radius: 5px;
-        
+
         h1 {
             color: #fff;
+        }
+    }
+
+    .dashboard-footer {
+        font-size: $login-footer-font-size;
+        width: 100%;
+        padding-top: 30px;
+
+        a {
+            color: #000;
+            text-decoration:none !important;
         }
     }
 

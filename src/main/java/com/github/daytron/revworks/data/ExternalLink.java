@@ -22,10 +22,18 @@ package com.github.daytron.revworks.data;
  */
 public enum ExternalLink {
 
+    GSM_LONDON("GSM London",
+            "https://www.gsm.org.uk/"),
     STUDENT_PORTAL("Student Portal", 
             "https://www.gsomportal.com/student/login.aspx"),
     LECTURER_PORTAL("Lecturer Portal", 
-            "https://www.gsomportal.com/lecturer/login.aspx");
+            "https://www.gsomportal.com/lecturer/login.aspx"),
+    GSM_LEARN("GSM Learn",
+            "https://learn.gsm.org.uk/"),
+    MY_GITHUB_PAGE("Github",
+            "https://github.com/Daytron"),
+    MY_LINKEDIN_PAGE("LinkedIn",
+            "https://uk.linkedin.com/in/ryangilera");
 
     private final String name;
     private final String link;

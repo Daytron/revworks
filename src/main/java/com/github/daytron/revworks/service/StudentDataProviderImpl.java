@@ -72,7 +72,7 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                         MainUI.get().getAccessControl().getUserId());
                 preparedStatement.setString(2, 
                         CurrentUserSession.getCurrentSemester());
-                System.out.println("query: " + preparedStatement.toString());
+                
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (!resultSet.next()) {

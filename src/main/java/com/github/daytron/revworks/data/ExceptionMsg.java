@@ -29,7 +29,8 @@ public enum ExceptionMsg {
     EMPTY_SQL_RESULT("Empty SQL query result."),
     SQL_ERROR_CONNECTION("SQL: Related connection service failed."),
     SQL_NO_RESULT_FOUND("SQL: The last query resulted to empty set."),
-    SQL_ERROR_QUERY("SQL: Error query action.");
+    SQL_ERROR_QUERY("SQL: Error query action."),
+    NO_CLASS_ATTACHED_TO_LECTURER("No class found for lecturer user.");
     private final String msg;
 
     private ExceptionMsg(String msg) {

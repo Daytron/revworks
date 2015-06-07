@@ -16,24 +16,24 @@
 package com.github.daytron.revworks.exception;
 
 /**
- * A custom exception when executing {@link User} methods without any user
- * attached to the session.
+ * A custom exception when executing select class query for lecturer returns 
+ * no result.
  *
  * @author Ryan Gilera
  */
-public class NoCurrentUserException extends Exception {
+public class NoClassAttachedToLecturerException extends Exception {
 
-    public NoCurrentUserException(String msg, Throwable t) {
+    public NoClassAttachedToLecturerException(String msg, Throwable t) {
 
         super(msg, t);
     }
 
-    public NoCurrentUserException(String msg) {
+    public NoClassAttachedToLecturerException(String msg) {
 
         super(msg);
     }
 
-    public NoCurrentUserException(Throwable t) {
+    public NoClassAttachedToLecturerException(Throwable t) {
 
         super(t);
     }

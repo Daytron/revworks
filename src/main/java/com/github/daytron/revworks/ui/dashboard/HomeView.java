@@ -41,6 +41,7 @@ import java.util.List;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class HomeView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "HomeView";

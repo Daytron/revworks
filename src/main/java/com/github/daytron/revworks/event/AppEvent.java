@@ -28,6 +28,7 @@ import java.io.File;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public abstract class AppEvent {
 
     public static final class UserLoginRequestEvent {

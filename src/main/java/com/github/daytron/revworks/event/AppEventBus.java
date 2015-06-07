@@ -28,6 +28,7 @@ import java.util.logging.Logger;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class AppEventBus implements SubscriberExceptionHandler {
 
     private final EventBus eventBus = new EventBus(this);

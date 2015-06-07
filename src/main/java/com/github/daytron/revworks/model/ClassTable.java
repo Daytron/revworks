@@ -20,6 +20,7 @@ package com.github.daytron.revworks.model;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class ClassTable {
 
     private final int id;

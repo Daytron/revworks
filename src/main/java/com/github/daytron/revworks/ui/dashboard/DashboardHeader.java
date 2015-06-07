@@ -30,6 +30,7 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class DashboardHeader extends HorizontalLayout {
 
     public DashboardHeader() {

@@ -35,6 +35,7 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public final class AdminLoginPopup extends Window {
     private static final long serialVersionUID = 1L;
     private TextField userField;

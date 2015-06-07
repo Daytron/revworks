@@ -23,6 +23,7 @@ import java.security.Principal;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public abstract class User implements Principal {
 
     private final int id;

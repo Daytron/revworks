@@ -45,6 +45,7 @@ import java.util.logging.Logger;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class LecturerSubmitAnnouncementView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "NewAnnouncementView";

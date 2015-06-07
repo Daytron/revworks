@@ -19,6 +19,7 @@ package com.github.daytron.revworks.ui.dashboard.student;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class StudentCourseworkView {
     
 }

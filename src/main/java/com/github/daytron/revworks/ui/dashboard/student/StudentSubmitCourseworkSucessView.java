@@ -26,6 +26,7 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class StudentSubmitCourseworkSucessView extends VerticalLayout
         implements View {
 

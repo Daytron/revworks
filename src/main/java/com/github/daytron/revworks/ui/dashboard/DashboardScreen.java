@@ -31,6 +31,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class DashboardScreen extends VerticalLayout {
 
     private final NavigationMenu menu;

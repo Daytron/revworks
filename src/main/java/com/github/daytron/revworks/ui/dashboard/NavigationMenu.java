@@ -29,6 +29,7 @@ import com.vaadin.ui.MenuBar.Command;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class NavigationMenu extends HorizontalLayout {
 
     private final Navigator navigator;

@@ -21,6 +21,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class AdminDashboardScreen extends VerticalLayout {
     
 }

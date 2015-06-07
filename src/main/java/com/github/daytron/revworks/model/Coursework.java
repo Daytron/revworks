@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class Coursework {
 
     private final int id;

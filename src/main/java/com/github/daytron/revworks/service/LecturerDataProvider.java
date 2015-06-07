@@ -15,10 +15,12 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import java.util.List;
 import com.github.daytron.revworks.model.ClassTable;
+import com.vaadin.data.util.BeanItemContainer;
 
 /**
  * The base template for all SQL data retrieval exclusive to lecturer users.
@@ -30,4 +32,8 @@ public interface LecturerDataProvider {
     public List<ClassTable> extractClassData()
             throws SQLErrorRetrievingConnectionAndPoolException,
             SQLErrorQueryException;
+    
+    public List<BeanItemContainer> extractCourseworkData() throws 
+            SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, 
+            NoClassAttachedToLecturerException;
 }

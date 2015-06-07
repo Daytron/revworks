@@ -26,6 +26,9 @@ import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.LecturerUser;
 import com.google.common.io.Files;
+import com.vaadin.data.Container;
+import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinService;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -109,7 +112,7 @@ public class StudentDataProviderImpl extends DataProviderAbstract
     }
 
     @Override
-    public List<Coursework> extractCourseworkData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, SQLNoResultFoundException, FileNotFoundException, IOException {
+    public BeanItemContainer<Coursework> extractCourseworkData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, SQLNoResultFoundException, FileNotFoundException, IOException {
         if (reserveConnectionPool()) {
             try {
 
@@ -127,7 +130,7 @@ public class StudentDataProviderImpl extends DataProviderAbstract
 
                 // Return an empty list if no courseworks found
                 if (!resultSet.next()) {
-                    return new ArrayList<>();
+                    return new BeanItemContainer<>(Coursework.class);
                 }
 
                 resultSet.beforeFirst();
@@ -192,7 +195,11 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                 preparedStatement.close();
                 getConnectionPool().releaseConnection(getConnection());
 
-                return listOfCourseworks;
+                BeanItemContainer<Coursework> courseworksContainer = 
+                        new BeanItemContainer<>(Coursework.class);
+                courseworksContainer.addAll(listOfCourseworks);
+                
+                return courseworksContainer;
 
             } catch (SQLException ex) {
                 Logger.getLogger(StudentDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);

@@ -20,6 +20,7 @@ import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPool
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
+import com.vaadin.data.util.BeanItemContainer;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +36,7 @@ public interface StudentDataProvider {
             throws SQLErrorRetrievingConnectionAndPoolException,
             SQLErrorQueryException, SQLNoResultFoundException;
     
-    public List<Coursework> extractCourseworkData()
+    public BeanItemContainer<Coursework> extractCourseworkData()
             throws SQLErrorRetrievingConnectionAndPoolException,
             SQLErrorQueryException, SQLNoResultFoundException,
             FileNotFoundException, IOException;

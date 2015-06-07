@@ -295,48 +295,48 @@ public class UserAccessControl implements AccessControl {
 
     @Override
     public boolean isUserSignedIn() {
-        return CurrentUserSession.get() != null;
+        return CurrentUserSession.getPrincipal() != null;
     }
 
     @Override
     public boolean isUserAStudent() {
-        return ((User) CurrentUserSession.get()).isStudentUser();
+        return ((User) CurrentUserSession.getPrincipal()).isStudentUser();
     }
 
     @Override
     public boolean isUserALecturer() {
-        return ((User) CurrentUserSession.get()).isLecturerUser();
+        return ((User) CurrentUserSession.getPrincipal()).isLecturerUser();
     }
 
     @Override
     public boolean isUserAdmin() {
-        return ((User) CurrentUserSession.get()).isAdminUser();
+        return ((User) CurrentUserSession.getPrincipal()).isAdminUser();
     }
 
     @Override
     public String getPrincipalName() {
-        return CurrentUserSession.get().getName();
+        return CurrentUserSession.getPrincipal().getName();
     }
 
     @Override
     public String getFirstName() {
-        return ((User) CurrentUserSession.get()).getFirstName();
+        return ((User) CurrentUserSession.getPrincipal()).getFirstName();
     }
 
     @Override
     public String getLastName() {
-        return ((User) CurrentUserSession.get()).getLastName();
+        return ((User) CurrentUserSession.getPrincipal()).getLastName();
     }
 
     @Override
     public String getFullName() {
-        return ((User) CurrentUserSession.get()).getFullName();
+        return ((User) CurrentUserSession.getPrincipal()).getFullName();
     }
 
     @Override
     public String getLecturerEmail() throws WrongCurrentUserTypeException {
-        if (((User) CurrentUserSession.get()).isLecturerUser()) {
-            return ((LecturerUser) (CurrentUserSession.get())).getEmail();
+        if (((User) CurrentUserSession.getPrincipal()).isLecturerUser()) {
+            return ((LecturerUser) (CurrentUserSession.getPrincipal())).getEmail();
         } else {
             throw new WrongCurrentUserTypeException(
                     ExceptionMsg.WRONG_CURRENT_USER_TYPE_EXCEPTION.getMsg());
@@ -345,8 +345,8 @@ public class UserAccessControl implements AccessControl {
 
     @Override
     public String getStudentID() throws WrongCurrentUserTypeException {
-        if (((User) CurrentUserSession.get()).isLecturerUser()) {
-            return ((StudentUser) (CurrentUserSession.get())).getStudentID();
+        if (((User) CurrentUserSession.getPrincipal()).isLecturerUser()) {
+            return ((StudentUser) (CurrentUserSession.getPrincipal())).getStudentID();
         } else {
             throw new WrongCurrentUserTypeException(
                     ExceptionMsg.WRONG_CURRENT_USER_TYPE_EXCEPTION.getMsg());
@@ -364,17 +364,17 @@ public class UserAccessControl implements AccessControl {
 
     @Override
     public String getUserTypeString() {
-        return ((User) CurrentUserSession.get()).getUserType().getText();
+        return ((User) CurrentUserSession.getPrincipal()).getUserType().getText();
     }
 
     @Override
     public UserType getUserType() {
-        return ((User) CurrentUserSession.get()).getUserType();
+        return ((User) CurrentUserSession.getPrincipal()).getUserType();
     }
 
     @Override
     public int getUserId() {
-        return ((User) CurrentUserSession.get()).getId();
+        return ((User) CurrentUserSession.getPrincipal()).getId();
     }
 
 }

@@ -101,7 +101,7 @@ public class CurrentUserSession {
      * @return The user object
      * @throws IllegalStateException if the current session cannot be accessed.
      */
-    public static Principal get() {
+    public static Principal getPrincipal() {
         Principal currentUser = (Principal) VaadinSession.getCurrent()
                 .getAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY);
         return (currentUser == null) ? null : currentUser;

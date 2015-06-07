@@ -17,7 +17,6 @@ package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import java.util.List;
 import com.github.daytron.revworks.model.ClassTable;
 
@@ -30,5 +29,5 @@ public interface LecturerDataProvider {
 
     public List<ClassTable> extractClassData()
             throws SQLErrorRetrievingConnectionAndPoolException,
-            SQLErrorQueryException, SQLNoResultFoundException;
+            SQLErrorQueryException;
 }

@@ -71,7 +71,7 @@ public enum PreparedQueryStatement {
             + "INNER JOIN User ON User.id = Lecturer.user_id "
             + "INNER JOIN Semester ON Semester.id = Class.semester_id "
             + "INNER JOIN StudentClass ON StudentClass.class_id = Class.id "
-            + "WHERE (curdate() BETWEEN Semester.startDate AND Semester.endDate) "
+            + "WHERE Class.semester_id = ? "
             + "AND "
             + "StudentClass.user_id = ?) AS CustomTable "
             + "ON CustomTable.csId = Announcement.id "
@@ -95,8 +95,7 @@ public enum PreparedQueryStatement {
             + "FROM Module "
             + "INNER JOIN Class ON Class.module_id = Module.id "
             + "INNER JOIN Semester ON Semester.id = Class.semester_id "
-            + "WHERE curdate() "
-            + "BETWEEN Semester.startDate AND Semester.endDate "
+            + "WHERE Class.semester_id = ? "
             + "AND Class.lecturer_user_id = ?) AS CustomTable "
             + "ON CustomTable.class_id = ClassWideAnnouncement.class_id "
             + "WHERE (Announcement.announcement_type_id = 1 OR "
@@ -110,7 +109,7 @@ public enum PreparedQueryStatement {
             + "INNER JOIN Module ON Module.id = Class.module_id "
             + "INNER JOIN Semester ON Semester.id = Class.semester_id "
             + "WHERE Class.lecturer_user_id = ? AND "
-            + "curdate() BETWEEN Semester.startDate AND Semester.endDate;"),
+            + "Class.semester_id = ?;"),
     STUDENT_CLASS_SELECT_QUERY("SELECT Class.id AS id, " 
             + "Class.module_id AS moduleId, " 
             + "Module.name AS moduldeName " 
@@ -119,7 +118,7 @@ public enum PreparedQueryStatement {
             + "INNER JOIN Semester ON Semester.id = Class.semester_id " 
             + "INNER JOIN StudentClass ON StudentClass.class_id = Class.id " 
             + "WHERE StudentClass.user_id = ? AND " 
-            + "curdate() BETWEEN Semester.startDate AND Semester.endDate;"),
+            + "Class.semester_id = ?;"),
     LECTURER_INSERT_NEW_ANNOUNCEMENT("INSERT INTO Announcement "
             + "(title,message,date_submitted,announcement_type_id) "
             + "VALUES (?,?,now(),2);"),

@@ -22,10 +22,10 @@ INNER JOIN Lecturer ON Lecturer.user_id = Class.lecturer_user_id
 INNER JOIN User ON User.id = Lecturer.user_id 
 INNER JOIN Semester ON Semester.id = Class.semester_id
 INNER JOIN StudentClass ON StudentClass.class_id = Class.id 
-WHERE (curdate() BETWEEN Semester.startDate AND Semester.endDate) AND
-StudentClass.user_id = 12) AS CustomTable 
+WHERE Class.semester_id = 'C15' AND
+StudentClass.user_id = 1) AS CustomTable 
 ON CustomTable.csId = Announcement.id 
 
-WHERE (Announcement.announcement_type_id = 1 OR CustomTable.user_id = 12) AND
+WHERE (Announcement.announcement_type_id = 1 OR CustomTable.user_id = 1) AND
 DATE(Announcement.date_submitted)  >= (NOW() - INTERVAL 7 DAY)  
 ORDER BY date_submitted DESC;

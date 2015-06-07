@@ -70,9 +70,11 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                             .getQuery());
                 }
 
-                preparedStatement.setInt(1,
-                        MainUI.get().getAccessControl().getUserId());
+                preparedStatement.setString(1, 
+                        CurrentUserSession.getCurrentSemester());
                 preparedStatement.setInt(2,
+                        MainUI.get().getAccessControl().getUserId());
+                preparedStatement.setInt(3,
                         MainUI.get().getAccessControl().getUserId());
 
                 ResultSet resultSet = preparedStatement.executeQuery();

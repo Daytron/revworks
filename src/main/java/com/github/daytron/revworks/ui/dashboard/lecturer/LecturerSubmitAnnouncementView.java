@@ -65,7 +65,7 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
                 this.listOfClasses = LecturerDataProviderImpl.get().extractClassData();
                 initView();
                 isInitialised = true;
-            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException | SQLNoResultFoundException ex) {
+            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException ex) {
                 Logger.getLogger(LecturerSubmitAnnouncementView.class.getName())
                         .log(Level.SEVERE, null, ex);
                 NotificationUtil.showError(
@@ -108,11 +108,20 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
 
         // Module selection
         moduleComboBox.setTextInputAllowed(false);
-        moduleComboBox.select(this.listOfClasses.get(0).getModuleName());
+
+        
         moduleComboBox.setNullSelectionAllowed(false);
         moduleComboBox.focus();
 
         contentLayout.addComponent(moduleComboBox);
+        
+        if (!listOfClasses.isEmpty()) {
+            moduleComboBox.select(this.listOfClasses.get(0).getModuleName());
+        } else {
+            Label warningNoClassLabel = new Label("No class found.");
+            warningNoClassLabel.addStyleName(ValoTheme.LABEL_FAILURE);
+            contentLayout.addComponent(warningNoClassLabel);
+        }
 
         // Title area
         final TextField titleTextField = new TextField("Title");
@@ -136,12 +145,35 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                if (moduleComboBox.getValue() == null) {
+                    NotificationUtil.showError("No class selected");
+                    return;
+                }
+
+                if (titleTextField.getValue() == null
+                        || titleTextField.getValue().isEmpty()) {
+                    NotificationUtil.showError("Empty title field.");
+                    return;
+                }
+
+                if (richTextArea.getValue() == null
+                        || richTextArea.getValue().isEmpty()) {
+                    NotificationUtil.showError("Empty message field.");
+                    return;
+                }
+
                 ClassTable selectedClass = null;
                 for (ClassTable classTable : copyOfClassTables) {
                     if (classTable.getModuleName().equalsIgnoreCase(
                             (String) moduleComboBox.getValue())) {
                         selectedClass = classTable;
                     }
+                }
+
+                if (selectedClass == null) {
+                    NotificationUtil.showError("Something went wrong.",
+                            "Could not find matching class.");
+                    return;
                 }
 
                 AppEventBus.post(

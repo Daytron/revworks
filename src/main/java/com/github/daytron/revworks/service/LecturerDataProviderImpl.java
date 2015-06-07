@@ -20,7 +20,6 @@ import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -51,7 +50,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
     @Override
     public List<ClassTable> extractClassData()
             throws SQLErrorRetrievingConnectionAndPoolException,
-            SQLErrorQueryException, SQLNoResultFoundException {
+            SQLErrorQueryException {
         if (reserveConnectionPool()) {
             try {
                 final PreparedStatement preparedStatement = getConnection()
@@ -60,17 +59,13 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
 
                 preparedStatement.setInt(1,
                         MainUI.get().getAccessControl().getUserId());
+                preparedStatement.setString(2, 
+                        CurrentUserSession.getCurrentSemester());
 
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (!resultSet.next()) {
-                    Throwable throwable
-                            = new SQLNoResultFoundException(
-                                    ExceptionMsg.EMPTY_SQL_RESULT.getMsg());
-                    Logger.getLogger(LecturerDataProviderImpl.class.getName())
-                            .log(Level.SEVERE, null, throwable);
-                    throw new SQLNoResultFoundException(
-                            ExceptionMsg.SQL_NO_RESULT_FOUND.getMsg());
+                    return new ArrayList<>();
                 }
 
                 resultSet.beforeFirst();

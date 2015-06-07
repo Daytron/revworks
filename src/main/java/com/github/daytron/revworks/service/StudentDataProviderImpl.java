@@ -26,9 +26,7 @@ import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.LecturerUser;
 import com.google.common.io.Files;
-import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinService;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,7 +70,9 @@ public class StudentDataProviderImpl extends DataProviderAbstract
 
                 preparedStatement.setInt(1,
                         MainUI.get().getAccessControl().getUserId());
-
+                preparedStatement.setString(2, 
+                        CurrentUserSession.getCurrentSemester());
+                System.out.println("query: " + preparedStatement.toString());
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (!resultSet.next()) {
@@ -139,7 +139,7 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                 // Cycle through the SQL query result
                 while (resultSet.next()) {
 
-                    // get the bytes data from the resultset
+                    // getPrincipal the bytes data from the resultset
                     byte[] pdfData = resultSet.getBytes(4);
 
                     // Retrieve file extension

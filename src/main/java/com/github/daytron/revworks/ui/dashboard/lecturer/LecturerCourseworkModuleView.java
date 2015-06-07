@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.dashboard.student;
+package com.github.daytron.revworks.ui.dashboard.lecturer;
 
+import com.github.daytron.revworks.ui.dashboard.student.*;
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.presenter.LecturerNameColumnGenerator;
 import com.github.daytron.revworks.presenter.LocalDateTimeColumnGenerator;
+import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.util.BeanItemContainer;
@@ -36,6 +39,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,113 +48,120 @@ import java.util.logging.Logger;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class StudentCourseworkModuleView extends VerticalLayout implements View {
+public class LecturerCourseworkModuleView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "CourseworkModuleView";
-    public static final String VIEW_CAPTION = "My Courseworks";
-    public static final String VIEW_TITLE = "My Submitted Courseworks";
+    public static final String VIEW_CAPTION = "View Courseworks";
+    public static final String VIEW_TITLE = "Students Submitted Courseworks";
 
     private boolean isInitialised = false;
-    private BeanItemContainer<Coursework> courseworksContainer;
+    private List<BeanItemContainer> listOfNBeanItemContainers;
 
-    public StudentCourseworkModuleView() {
+    public LecturerCourseworkModuleView() {
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
             try {
-                this.courseworksContainer = StudentDataProviderImpl.get()
-                        .extractCourseworkData();
-                initView();
+                this.listOfNBeanItemContainers = 
+                        LecturerDataProviderImpl.get().extractCourseworkData();
+                // Add initView here
                 isInitialised = true;
-            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException | SQLNoResultFoundException | IOException ex) {
-                Logger.getLogger(StudentCourseworkModuleView.class.getName()).log(Level.SEVERE, null, ex);
+            
+                
+            } catch (NoClassAttachedToLecturerException ex) {
+                Logger.getLogger(LecturerCourseworkModuleView.class.getName()).log(Level.SEVERE, null, ex);
+                NotificationUtil.showError(
+                        ErrorMsg.LECTURER_NO_CLASS_FOUND.getText(),
+                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException ex) {
+                Logger.getLogger(LecturerCourseworkModuleView.class.getName()).log(Level.SEVERE, null, ex);
                 NotificationUtil.showError(
                         ErrorMsg.DATA_FETCH_ERROR.getText(),
                         ErrorMsg.CONSULT_YOUR_ADMIN.getText());
-            }
+            } 
         }
     }
 
-    private void initView() {
-        setWidth("100%");
-        setMargin(true);
-        setSpacing(true);
-        
-        final CssLayout wrapperItem = new CssLayout();
-        wrapperItem.setWidth("100%");
-        wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
-        wrapperItem.addComponent(createPanelHeader());
-        
-        VerticalLayout contentLayout = new VerticalLayout();
-        contentLayout.setSizeFull();
-        contentLayout.setMargin(true);
-        contentLayout.setSpacing(true);
-        
-        Table assignmentTable = createSubmittedCourseworkTable();
-        contentLayout.addComponent(assignmentTable);
-        Label footerTableLabel = new Label();
-        
-        int items = courseworksContainer.size();
-        if (items < 1) {
-            footerTableLabel.setValue("No coursework submitted yet.");
-        } else {
-            if (items == 1) {
-                footerTableLabel.setValue(courseworksContainer.size() + " item found.");
-            } else {
-                footerTableLabel.setValue(courseworksContainer.size() + " items found.");
-            }
-        }
-        
-        contentLayout.addComponent(footerTableLabel);
-        contentLayout.setExpandRatio(assignmentTable, 1);
-        wrapperItem.addComponent(contentLayout);
-        
-        addComponent(wrapperItem);
-        
-        // Set default table item selection to the first row if not empty
-        assignmentTable.select(assignmentTable.firstItemId());
-        
-    }
+//    private void initView() {
+//        setWidth("100%");
+//        setMargin(true);
+//        setSpacing(true);
+//        
+//        final CssLayout wrapperItem = new CssLayout();
+//        wrapperItem.setWidth("100%");
+//        wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
+//        wrapperItem.addComponent(createPanelHeader());
+//        
+//        VerticalLayout contentLayout = new VerticalLayout();
+//        contentLayout.setSizeFull();
+//        contentLayout.setMargin(true);
+//        contentLayout.setSpacing(true);
+//        
+//        Table assignmentTable = createSubmittedCourseworkTable();
+//        contentLayout.addComponent(assignmentTable);
+//        Label footerTableLabel = new Label();
+//        
+//        int items = listOfNBeanItemContainers.size();
+//        if (items < 1) {
+//            footerTableLabel.setValue("No coursework submitted yet.");
+//        } else {
+//            if (items == 1) {
+//                footerTableLabel.setValue(listOfNBeanItemContainers.size() + " item found.");
+//            } else {
+//                footerTableLabel.setValue(listOfNBeanItemContainers.size() + " items found.");
+//            }
+//        }
+//        
+//        contentLayout.addComponent(footerTableLabel);
+//        contentLayout.setExpandRatio(assignmentTable, 1);
+//        wrapperItem.addComponent(contentLayout);
+//        
+//        addComponent(wrapperItem);
+//        
+//        // Set default table item selection to the first row if not empty
+//        assignmentTable.select(assignmentTable.firstItemId());
+//        
+//    }
     
-    public Table createSubmittedCourseworkTable() {
-        final Table courseworksTable = new Table("",courseworksContainer);
-        courseworksTable.setEditable(false);
-        courseworksTable.setSelectable(true);
-        courseworksTable.setWidth("100%");
-        
-        // Set column data properties and names
-        courseworksTable.setColumnHeader("id", "ID");
-        courseworksTable.setColumnHeader("title", "Title");
-        courseworksTable.addGeneratedColumn("dateSubmitted", 
-                new LocalDateTimeColumnGenerator());
-        courseworksTable.setColumnHeader("dateSubmitted", "Date Submitted");
-        courseworksTable.setColumnHeader("moduleId", "Module ID");
-        courseworksTable.setColumnHeader("moduleName", "Module");
-        courseworksTable.addGeneratedColumn("lecturer", 
-                new LecturerNameColumnGenerator());
-        courseworksTable.setColumnHeader("lecturer", "Lecturer");
-        
-        // Arrange columns order
-        courseworksTable.setVisibleColumns((Object[]) new String[]{"id", 
-            "title","dateSubmitted","moduleId", "moduleName","lecturer"});
-        // Set column alignment
-        courseworksTable.setColumnAlignments(new Table.Align[] {Table.ALIGN_LEFT, 
-            Table.Align.CENTER, Table.Align.CENTER, Table.Align.CENTER, 
-            Table.Align.CENTER, Table.Align.CENTER});
-        
-        // Sort by date and module id
-        courseworksTable.setSortEnabled(true);
-        courseworksTable.sort(new String[]{"dateSubmitted","moduleId"},
-                new boolean[]{true,true});
-        
-        courseworksTable.setColumnWidth("id", 50);
-        courseworksTable.setPageLength(8);
-      
-        return courseworksTable;
-        
-    }
+//    public Table createSubmittedCourseworkTable() {
+//        final Table courseworksTable = new Table("",listOfNBeanItemContainers);
+//        courseworksTable.setEditable(false);
+//        courseworksTable.setSelectable(true);
+//        courseworksTable.setWidth("100%");
+//        
+//        // Set column data properties and names
+//        courseworksTable.setColumnHeader("id", "ID");
+//        courseworksTable.setColumnHeader("title", "Title");
+//        courseworksTable.addGeneratedColumn("dateSubmitted", 
+//                new LocalDateTimeColumnGenerator());
+//        courseworksTable.setColumnHeader("dateSubmitted", "Date Submitted");
+//        courseworksTable.setColumnHeader("moduleId", "Module ID");
+//        courseworksTable.setColumnHeader("moduleName", "Module");
+//        courseworksTable.addGeneratedColumn("lecturer", 
+//                new LecturerNameColumnGenerator());
+//        courseworksTable.setColumnHeader("lecturer", "Lecturer");
+//        
+//        // Arrange columns order
+//        courseworksTable.setVisibleColumns((Object[]) new String[]{"id", 
+//            "title","dateSubmitted","moduleId", "moduleName","lecturer"});
+//        // Set column alignment
+//        courseworksTable.setColumnAlignments(new Table.Align[] {Table.ALIGN_LEFT, 
+//            Table.Align.CENTER, Table.Align.CENTER, Table.Align.CENTER, 
+//            Table.Align.CENTER, Table.Align.CENTER});
+//        
+//        // Sort by date and module id
+//        courseworksTable.setSortEnabled(true);
+//        courseworksTable.sort(new String[]{"dateSubmitted","moduleId"},
+//                new boolean[]{true,true});
+//        
+//        courseworksTable.setColumnWidth("id", 50);
+//        courseworksTable.setPageLength(8);
+//      
+//        return courseworksTable;
+//        
+//    }
     
 
     public HorizontalLayout createPanelHeader() {

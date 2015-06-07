@@ -16,6 +16,7 @@
 package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkModuleView;
 import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerSubmitAnnouncementView;
 import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkModuleView;
 import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkSucessView;
@@ -60,7 +61,7 @@ public class DashboardScreen extends VerticalLayout {
             menu.addView(StudentCourseworkModuleView.class,
                     StudentCourseworkModuleView.VIEW_NAME,
                     StudentCourseworkModuleView.VIEW_CAPTION, 
-                    FontAwesome.FOLDER);
+                    FontAwesome.FOLDER_OPEN);
             
             // Extra views 
             navigator.addView(StudentSubmitCourseworkSucessView.VIEW_NAME, 
@@ -69,6 +70,10 @@ public class DashboardScreen extends VerticalLayout {
             menu.addView(HomeView.class,
                     HomeView.VIEW_NAME,
                     HomeView.VIEW_CAPTION, FontAwesome.HOME);
+            menu.addView(LecturerCourseworkModuleView.class, 
+                    LecturerCourseworkModuleView.VIEW_NAME, 
+                    LecturerCourseworkModuleView.VIEW_CAPTION, 
+                    FontAwesome.FOLDER_OPEN);
             menu.addView(LecturerSubmitAnnouncementView.class,
                     LecturerSubmitAnnouncementView.VIEW_NAME,
                     LecturerSubmitAnnouncementView.VIEW_CAPTION, FontAwesome.BULLHORN);

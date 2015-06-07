@@ -25,9 +25,11 @@ import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.LecturerUser;
+import com.github.daytron.revworks.model.StudentUser;
 import com.google.common.io.Files;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -189,11 +191,12 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                             resultSet.getInt(6),
                             resultSet.getString(7),
                             resultSet.getString(8),
-                            lecturer));
+                            lecturer,
+                            (StudentUser)CurrentUserSession.getPrincipal()));
                 }
 
                 preparedStatement.close();
-                getConnectionPool().releaseConnection(getConnection());
+                releaseConnection();
 
                 BeanItemContainer<Coursework> courseworksContainer = 
                         new BeanItemContainer<>(Coursework.class);

@@ -56,6 +56,9 @@ public class MainUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+        // Set max session timeout after 10 minutes
+        VaadinSession.getCurrent().getSession().setMaxInactiveInterval(600);
+        
         Responsive.makeResponsive(this);
         setLocale(vaadinRequest.getLocale());
 

@@ -35,10 +35,10 @@ public class Coursework {
     private final String moduleId;
     private final String moduleName;
     private final LecturerUser lecturer;
+    private final StudentUser studentUser;
 
     public Coursework(int id, String title, LocalDateTime dateSubmitted,
-            File courseworkFile, String fileExtension, int classId, String moduleId, String moduleName,
-            LecturerUser lecturer) {
+            File courseworkFile, String fileExtension, int classId, String moduleId, String moduleName, LecturerUser lecturer, StudentUser studentUser) {
         this.id = id;
         this.title = title;
         this.dateSubmitted = dateSubmitted;
@@ -48,6 +48,7 @@ public class Coursework {
         this.moduleId = moduleId;
         this.moduleName = moduleName;
         this.lecturer = lecturer;
+        this.studentUser = studentUser;
     }
 
     public int getId() {
@@ -72,6 +73,10 @@ public class Coursework {
 
     public LecturerUser getLecturer() {
         return lecturer;
+    }
+
+    public StudentUser getStudentUser() {
+        return studentUser;
     }
 
     public int getClassId() {

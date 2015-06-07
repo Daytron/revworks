@@ -38,7 +38,11 @@ public enum ErrorMsg {
     EMPTY_TITLE_FIELD("Empty title field."),
     FILE_IS_NOT_YET_UPLOADED("Your file is not yet uploaded."),
     TERMS_NOT_ACCEPTED("Please accept the terms and condition by ticking the "
-            + "tick box.");
+            + "tick box."),
+    
+    // For lecturer coursework module view
+    LECTURER_NO_CLASS_FOUND("No class found.")
+    ;
 
     private final String text;
 

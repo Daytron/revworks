@@ -21,7 +21,9 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
 
 /**
- *
+ * Custom column data for module id. This is use to extract
+ * nested ClassTable object from Coursework object.
+ * 
  * @author Ryan Gilera
  */
 public class ModuleIDColumnGenerator implements Table.ColumnGenerator {

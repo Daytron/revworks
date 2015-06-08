@@ -21,6 +21,8 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
 
 /**
+ * Custom column data for module name. This is use to extract
+ * nested ClassTable object from Coursework object.
  *
  * @author Ryan Gilera
  */
@@ -30,13 +32,13 @@ public class ModuleNameColumnGenerator implements Table.ColumnGenerator {
     public Object generateCell(Table source, Object itemId, Object columnId) {
         // First retrieve the item which is the row item 
         Item cellItem = source.getItem(itemId);
-        
+
         // Retrieve ClassTable object
-        Property<ClassTable> classTableProperty = 
-                cellItem.getItemProperty("classTable");
+        Property<ClassTable> classTableProperty
+                = cellItem.getItemProperty("classTable");
         ClassTable classTable = classTableProperty.getValue();
-        
+
         return classTable.getModuleName();
     }
-    
+
 }

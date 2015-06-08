@@ -22,7 +22,7 @@ import com.vaadin.ui.Table;
 
 /**
  * Custom column data for lecturer's complete name. This is use to extract
- * nested LecturerUser object from Coursework object.
+ * nested LecturerUser object from ClassTable object from Coursework object.
  *
  * @author Ryan Gilera
  */

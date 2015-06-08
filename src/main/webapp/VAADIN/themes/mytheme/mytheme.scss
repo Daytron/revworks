@@ -1,0 +1,197 @@
+// Global variable overrides. Must be declared before importing Valo.
+
+// Defines the plaintext font size, weight and family. Font size affects general component sizing.
+//$v-font-size: 16px;
+//$v-font-weight: 300;
+//$v-font-family: "Open Sans", sans-serif;
+
+// Defines the border used by all components.
+//$v-border: 1px solid (v-shade 0.7);
+//$v-border-radius: 4px;
+
+// Affects the color of some component elements, e.g Button, Panel title, etc
+//$v-background-color: hsl(210, 0%, 98%);
+// Affects the color of content areas, e.g  Panel and Window content, TextField input etc
+//$v-app-background-color: $v-background-color;
+
+// Affects the visual appearance of all components
+//$v-gradient: v-linear 8%;
+//$v-bevel-depth: 30%;
+//$v-shadow-opacity: 5%;
+
+// Defines colors for indicating status (focus, success, failure)
+//$v-focus-color: valo-focus-color(); // Calculates a suitable color automatically
+//$v-friendly-color: #2c9720;
+//$v-error-indicator-color: #ed473b;
+
+// For more information, see: https://vaadin.com/book/-/page/themes.valo.html
+// Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
+
+// Custom text under spinner
+$v-app-loading-text: "Loading components...";
+
+$login-background-color: #2C59A9 !default;
+$login-background-opacity: 0.7 !default;
+
+$login-info-width: 300px !default;
+
+$logo-text-font-size: 4rem;
+$logo-text-color: #000;
+
+$login-footer-height: 40px !default;
+$login-footer-background-color: #132F63 !default;
+$login-footer-font-color: #fff !default;
+$login-footer-font-size: 0.8rem;
+
+$v-focus-color: rgb(96, 160, 234) !default;
+$v-error-indicator-color: #eb2977 !default;
+$v-friendly-color: rgb(54, 185, 85);
+
+$v-font-size: 15px !default;
+$v-font-weight: 400 !default;
+$v-unit-size: 32px !default;
+
+$v-layout-margin-top: round($v-unit-size / 1.5) !default;
+$v-layout-margin-right: $v-layout-margin-top !default;
+$v-layout-margin-bottom: $v-layout-margin-top !default;
+$v-layout-margin-left: $v-layout-margin-top !default;
+
+$view-padding: round($v-unit-size / 1.1) !default;
+$header-height: round($v-unit-size / 1.1) !default;
+
+@import "../valo/valo.scss";
+@import "views/announcement-view.scss";
+
+@mixin mytheme {
+    @include valo;
+    @include announcement-view;
+
+    // Login Screen
+    .login-screen {
+        background: $login-background-color;
+
+        .main-panel {
+            @include valo-panel-style;
+            border: none;
+            padding-top: $v-layout-margin-top;
+            padding-left: $v-layout-margin-left;
+            padding-bottom: $v-layout-margin-bottom;
+            padding-right: $v-layout-margin-right;
+            @include animation(valo-animate-in-fade 1s 1s backwards);
+
+
+            .logo-main {
+                padding-bottom: 5px;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: $logo-text-font-size;
+                color: $logo-text-color;
+                text-align: center;
+            }
+        }
+
+        width: 100%;
+        height: 100%;
+
+        .centering-layout {
+            display: block;
+            width: 100%;
+            height: 100%;
+
+            .v-slot {
+                height: 100%;
+            }
+        }
+
+        .login-footer {
+            display: inline-block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            font-size: $login-footer-font-size;
+            width: 100%;
+            color: $login-footer-font-color;
+            background-color: $login-footer-background-color;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            @include animation(valo-animate-in-slide-up 1s 1s backwards);
+        }
+
+        /* Lay the options horizontally */
+        .v-select-optiongroup-horizontal .v-select-option {
+            display: inline-block;
+        }
+
+        /* Avoid wrapping if the layout is too tight */
+        .v-select-optiongroup-horizontal {
+            white-space: nowrap;
+        }
+
+        /* Some extra spacing is needed */
+        .v-select-optiongroup-horizontal
+        .v-select-option.v-radiobutton {
+            padding-right: 10px;
+        }
+
+        /* Removes padding for button as link in ValoTheme */
+        .v-button-link {
+            height: auto;
+            padding: 0;
+        }
+
+
+
+    }
+
+    .view-dashboard-header {
+        padding-bottom: $view-padding;
+        width: 100%;
+        height: $header-height;
+        text-align: right;
+        white-space: normal;
+
+        .v-slot-h2 {
+            float: left;
+        }
+
+        .h1 {
+            white-space: normal;
+        }
+
+        .dashboard-toolbar {
+            white-space: normal;
+
+            > .v-spacing {
+                height: round($v-unit-size / 4);
+            }
+
+            .v-label.welcome-text { font-size: 0.8rem }
+        }
+    }
+
+    .v-Notification.custom-tray-notifications {
+        background:rgba(19,47,99,0.7);
+        font-size: 0.8rem;
+        color: #fff;
+        border-radius: 5px;
+
+        h1 {
+            color: #fff;
+        }
+    }
+
+    .dashboard-footer {
+        font-size: $login-footer-font-size;
+        width: 100%;
+        padding-top: 30px;
+
+        a {
+            color: #000;
+            text-decoration:none !important;
+        }
+    }
+
+
+}

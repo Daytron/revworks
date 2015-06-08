@@ -24,7 +24,7 @@ public enum FilePath {
 
     TEMP_FILE_HOLDER("/VAADIN/tempFileHolder/"),
     HTML_OUTPUT_NAME("convertedWork"),
-    PDF_OUTPUT_NAME("pdfFile"),
+    FILE_OUTPUT_NAME("pdfFile"),
     TEMP_PICTURE_FOLDER("pictures/");
     private final String path;
 

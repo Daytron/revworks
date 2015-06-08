@@ -16,7 +16,7 @@
 package com.github.daytron.revworks.model;
 
 /**
- * Class model class for Class table.
+ * A model class for Class table.
  *
  * @author Ryan Gilera
  */

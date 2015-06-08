@@ -18,8 +18,9 @@ package com.github.daytron.revworks.service;
 import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import java.util.List;
+import com.github.daytron.revworks.model.ClassTable;
 import com.vaadin.data.util.BeanItemContainer;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The base template for all SQL data retrieval exclusive to lecturer users.
@@ -29,7 +30,8 @@ import com.vaadin.data.util.BeanItemContainer;
 public interface LecturerDataProvider {
 
     
-    public List<BeanItemContainer> extractCourseworkData() throws 
+    public ConcurrentHashMap<ClassTable,BeanItemContainer> extractCourseworkData() 
+            throws 
             SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, 
             NoClassAttachedToLecturerException;
 }

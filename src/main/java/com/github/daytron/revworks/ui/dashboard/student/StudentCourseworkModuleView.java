@@ -176,7 +176,7 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         Button openFileButton = new Button("View Coursework");
         openFileButton.setStyleName(ValoTheme.BUTTON_SMALL);
         layoutHeader.addComponent(openFileButton);
-
+        
         Button submitButton = new Button("Submit Coursework");
         submitButton.setStyleName(ValoTheme.BUTTON_SMALL);
         submitButton.addClickListener(new Button.ClickListener() {
@@ -184,11 +184,11 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 MainUI.get().getNavigator().navigateTo(
-                    StudentSubmitCourseworkView.VIEW_NAME);
+                        StudentSubmitCourseworkView.VIEW_NAME);
             }
         });
         layoutHeader.addComponent(submitButton);
-
+        
         layoutHeader.setExpandRatio(titleLabel, 1);
         return layoutHeader;
     }

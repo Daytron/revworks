@@ -23,7 +23,6 @@ import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
-import com.github.daytron.revworks.model.LecturerUser;
 import com.github.daytron.revworks.model.StudentUser;
 import com.google.common.io.Files;
 import com.vaadin.data.util.BeanItemContainer;
@@ -35,9 +34,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,13 +57,13 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
     }
 
     @Override
-    public List<BeanItemContainer> extractCourseworkData() throws
+    public ConcurrentHashMap<ClassTable,BeanItemContainer> extractCourseworkData() throws
             SQLErrorRetrievingConnectionAndPoolException,
             SQLErrorQueryException, NoClassAttachedToLecturerException {
         CopyOnWriteArrayList<ClassTable> listOfClassTables = 
                 CurrentUserSession.getCurrentClassTables();
         if (listOfClassTables.isEmpty()) {
-            return new ArrayList<>();
+            return new ConcurrentHashMap<>();
         }
         
         if (reserveConnectionPool()) {
@@ -75,8 +73,8 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                 // Pull courseworks for each class resulting
                 // to a BeanItemContainer and save it to a List object
                 // Then pass those opbjects to BeanItemContainer
-                final List<BeanItemContainer> listOfBeanItemContainers
-                        = new ArrayList<>();
+                final ConcurrentHashMap<ClassTable,BeanItemContainer> 
+                        listOfBeanItemContainers = new ConcurrentHashMap<>();
 
                 for (ClassTable classTable : listOfClassTables) {
                     final PreparedStatement preparedStatementCoursework
@@ -96,14 +94,14 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                         preparedStatementCoursework.close();
                         resultSetCoursework.close();
                         
-                        listOfBeanItemContainers.add(
+                        listOfBeanItemContainers.put(classTable,
                                 new BeanItemContainer(Coursework.class));
                         continue;
                     }
 
                     resultSetCoursework.beforeFirst();
-                    final List<Coursework> listOfCourseworks = new ArrayList<>();
-
+                    BeanItemContainer<Coursework> beanItemContainer = 
+                            new BeanItemContainer<>(Coursework.class);
                     while (resultSetCoursework.next()) {
                         // getPrincipal the bytes data from the resultset
                         byte[] pdfData = resultSetCoursework.getBytes(4);
@@ -155,7 +153,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                                 resultSetCoursework.getString(8),
                                 resultSetCoursework.getString(9));
 
-                        listOfCourseworks.add(new Coursework(
+                        beanItemContainer.addBean(new Coursework(
                                 resultSetCoursework.getInt(1),
                                 resultSetCoursework.getString(2),
                                 dateSubmitted,
@@ -164,15 +162,12 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                                 studentUser));
 
                     }
+                    
+                    listOfBeanItemContainers.put(classTable, beanItemContainer);
 
                     preparedStatementCoursework.close();
                     resultSetCoursework.close();
 
-                    BeanItemContainer<Coursework> courseworksContainer
-                            = new BeanItemContainer<>(Coursework.class);
-                    courseworksContainer.addAll(listOfCourseworks);
-
-                    listOfBeanItemContainers.add(courseworksContainer);
                 }
 
                 releaseConnection();

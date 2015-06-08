@@ -142,7 +142,7 @@ public class HomeView extends VerticalLayout implements View {
                 initView();
                 initialised = true;
 
-            } catch (SQLErrorQueryException | SQLNoResultFoundException |
+            } catch (SQLErrorQueryException |
                     SQLErrorRetrievingConnectionAndPoolException ex) {
                 NotificationUtil.showError(
                         ErrorMsg.DATA_FETCH_ERROR.getText(),
@@ -157,7 +157,13 @@ public class HomeView extends VerticalLayout implements View {
         setMargin(true);
         setSpacing(true);
 
-        Label whatsNewLabel = new Label(VIEW_TITLE);
+        Label whatsNewLabel;
+        if (this.listOfAnnouncements.isEmpty()) {
+            whatsNewLabel = new Label("No announcement for this week.");
+        } else {
+            whatsNewLabel = new Label(VIEW_TITLE);
+        }
+        
         whatsNewLabel.setStyleName(ValoTheme.LABEL_H3);
         whatsNewLabel.setStyleName(ValoTheme.LABEL_BOLD);
         VerticalLayout contentLayout = new VerticalLayout();

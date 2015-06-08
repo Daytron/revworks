@@ -23,6 +23,8 @@ import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.presenter.LecturerNameColumnGenerator;
 import com.github.daytron.revworks.presenter.LocalDateTimeColumnGenerator;
+import com.github.daytron.revworks.presenter.ModuleIDColumnGenerator;
+import com.github.daytron.revworks.presenter.ModuleNameColumnGenerator;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.util.BeanItemContainer;
@@ -126,8 +128,15 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         courseworksTable.addGeneratedColumn("dateSubmitted", 
                 new LocalDateTimeColumnGenerator());
         courseworksTable.setColumnHeader("dateSubmitted", "Date Submitted");
+        
+        courseworksTable.addGeneratedColumn("moduleId", 
+                new ModuleIDColumnGenerator());
         courseworksTable.setColumnHeader("moduleId", "Module ID");
+        
+        courseworksTable.addGeneratedColumn("moduleName", 
+                new ModuleNameColumnGenerator());
         courseworksTable.setColumnHeader("moduleName", "Module");
+        
         courseworksTable.addGeneratedColumn("lecturer", 
                 new LecturerNameColumnGenerator());
         courseworksTable.setColumnHeader("lecturer", "Lecturer");

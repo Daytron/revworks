@@ -15,7 +15,6 @@
  */
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.FilePath;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
@@ -39,6 +38,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,8 +50,6 @@ import java.util.logging.Logger;
 public class LecturerDataProviderImpl extends DataProviderAbstract
         implements LecturerDataProvider {
 
-    private List<ClassTable> listOfClasses;
-
     private LecturerDataProviderImpl() {
         super();
     }
@@ -61,96 +59,26 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
     }
 
     @Override
-    public List<ClassTable> extractClassData()
-            throws SQLErrorRetrievingConnectionAndPoolException,
-            SQLErrorQueryException {
-        if (reserveConnectionPool()) {
-            try {
-                final PreparedStatement preparedStatement = getConnection()
-                        .prepareStatement(
-                                PreparedQueryStatement.LECTURER_CLASS_SELECT_QUERY.getQuery());
-
-                preparedStatement.setInt(1,
-                        MainUI.get().getAccessControl().getUserId());
-                preparedStatement.setString(2,
-                        CurrentUserSession.getCurrentSemester());
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                if (!resultSet.next()) {
-                    return new ArrayList<>();
-                }
-
-                resultSet.beforeFirst();
-                this.listOfClasses = new ArrayList<>();
-
-                while (resultSet.next()) {
-                    this.listOfClasses.add(new ClassTable(resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3)));
-                }
-
-                preparedStatement.close();
-                getConnectionPool().releaseConnection(getConnection());
-
-                return this.listOfClasses;
-
-            } catch (SQLException ex) {
-                Logger.getLogger(LecturerDataProviderImpl.class.getName())
-                        .log(Level.SEVERE, null, ex);
-                throw new SQLErrorQueryException(
-                        ExceptionMsg.SQL_ERROR_QUERY.getMsg());
-            }
-        } else {
-            throw new SQLErrorRetrievingConnectionAndPoolException(
-                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
-        }
-    }
-
-    @Override
     public List<BeanItemContainer> extractCourseworkData() throws
             SQLErrorRetrievingConnectionAndPoolException,
             SQLErrorQueryException, NoClassAttachedToLecturerException {
+        CopyOnWriteArrayList<ClassTable> listOfClassTables = 
+                CurrentUserSession.getCurrentClassTables();
+        if (listOfClassTables.isEmpty()) {
+            return new ArrayList<>();
+        }
+        
         if (reserveConnectionPool()) {
 
             try {
-                // First step is to list all classes that lecturer has
-                // and save it to List
-                final PreparedStatement preparedStatementClassId
-                        = getConnection().prepareStatement(
-                                PreparedQueryStatement.LECTURER_CLASS_SELECT_QUERY.getQuery());
-                preparedStatementClassId.setInt(1, MainUI.get()
-                        .getAccessControl().getUserId());
-                preparedStatementClassId.setString(2,
-                        CurrentUserSession.getCurrentSemester());
-
-                ResultSet resultSetClass = preparedStatementClassId.executeQuery();
-
-                if (!resultSetClass.next()) {
-                    throw new NoClassAttachedToLecturerException(
-                            ExceptionMsg.NO_CLASS_ATTACHED_TO_LECTURER.getMsg());
-                }
-
-                final ArrayList<ClassTable> listOfClasses = new ArrayList<>();
-                resultSetClass.beforeFirst();
-
-                while (resultSetClass.next()) {
-                    listOfClasses.add(new ClassTable(
-                            resultSetClass.getInt(1),
-                            resultSetClass.getString(2),
-                            resultSetClass.getString(3)));
-                }
-
-                preparedStatementClassId.close();
-                resultSetClass.close();
-
-                // Next step is to pull courseworks for each class resulting
+                
+                // Pull courseworks for each class resulting
                 // to a BeanItemContainer and save it to a List object
                 // Then pass those opbjects to BeanItemContainer
                 final List<BeanItemContainer> listOfBeanItemContainers
                         = new ArrayList<>();
 
-                for (ClassTable classTable : listOfClasses) {
+                for (ClassTable classTable : listOfClassTables) {
                     final PreparedStatement preparedStatementCoursework
                             = getConnection().prepareStatement(
                                     PreparedQueryStatement.LECTURER_SELECT_COURSEWORK
@@ -162,8 +90,12 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                             = preparedStatementCoursework.executeQuery();
 
                     // If no courseworks found for a particular class
-                    // add an empty BeanItemContainer object
+                    // add an empty BeanItemContainer object and
+                    // close statement and resultset
                     if (!resultSetCoursework.next()) {
+                        preparedStatementCoursework.close();
+                        resultSetCoursework.close();
+                        
                         listOfBeanItemContainers.add(
                                 new BeanItemContainer(Coursework.class));
                         continue;
@@ -189,7 +121,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                         String randomStringForFilename = UUID.randomUUID().toString();
 
                         String pdfFilename = basePath
-                                + FilePath.PDF_OUTPUT_NAME.getPath()
+                                + FilePath.FILE_OUTPUT_NAME.getPath()
                                 + "/" + randomStringForFilename + "."
                                 + fileExtension;
 
@@ -228,10 +160,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                                 resultSetCoursework.getString(2),
                                 dateSubmitted,
                                 pdfFile, fileExtension,
-                                classTable.getId(),
-                                classTable.getModuleId(),
-                                classTable.getModuleName(),
-                                (LecturerUser) CurrentUserSession.getPrincipal(),
+                                classTable,
                                 studentUser));
 
                     }
@@ -251,6 +180,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
 
             } catch (SQLException ex) {
                 Logger.getLogger(LecturerDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
+                releaseConnection();
                 throw new SQLErrorQueryException(
                         ExceptionMsg.SQL_ERROR_QUERY.getMsg());
             }

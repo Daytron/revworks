@@ -15,9 +15,11 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.model.ClassTable;
 import com.vaadin.server.VaadinSession;
 import java.io.File;
 import java.security.Principal;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -43,6 +45,13 @@ public class CurrentUserSession {
     public static final String CURRENT_SEMESTER
             = "Current Semester";
 
+    /**
+     * The attribute key used to store the current classes associated with the
+     * current user
+     */
+    public static final String CURRENT_CLASSES
+            = "Current Classes";
+
     private CurrentUserSession() {
     }
 
@@ -53,22 +62,29 @@ public class CurrentUserSession {
      * the current semester through semester id.
      *
      * @param currentUser The current user
+     * @param listOfClassTables The list of classes associated with the user
      * @throws IllegalStateException if the current session cannot be accessed.
      */
-    public static void set(Principal currentUser, String semesterID) {
+    public static void set(Principal currentUser, String semesterID,
+            CopyOnWriteArrayList<ClassTable> listOfClassTables) {
         try {
-            VaadinSession.getCurrent().getLockInstance().lock();
+            VaadinSession vaadinSession = VaadinSession.getCurrent();
+
+            vaadinSession.getLockInstance().lock();
 
             // For user
-            VaadinSession.getCurrent().setAttribute(
+            vaadinSession.setAttribute(
                     CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
 
             // For current semester
-            VaadinSession.getCurrent().setAttribute(CURRENT_SEMESTER, semesterID);
+            vaadinSession.setAttribute(CURRENT_SEMESTER, semesterID);
+
+            // For list of classes
+            vaadinSession.setAttribute(CURRENT_CLASSES, listOfClassTables);
 
             // For file trash bin
             CopyOnWriteArrayList<File> listOfFilesToBeDeleted = new CopyOnWriteArrayList<>();
-            VaadinSession.getCurrent().setAttribute(TRASH_CAN_FOR_FILES_KEY, listOfFilesToBeDeleted);
+            vaadinSession.setAttribute(TRASH_CAN_FOR_FILES_KEY, listOfFilesToBeDeleted);
         } finally {
             VaadinSession.getCurrent().getLockInstance().unlock();
         }
@@ -116,6 +132,19 @@ public class CurrentUserSession {
         String currentSemester = (String) VaadinSession.getCurrent()
                 .getAttribute(CURRENT_SEMESTER);
         return (currentSemester == null) ? null : currentSemester;
+    }
+
+    /**
+     * Return list of classes associated with the current user. For admin user
+     * the list is empty by default.
+     *
+     * @return
+     */
+    public static CopyOnWriteArrayList<ClassTable> getCurrentClassTables() {
+        CopyOnWriteArrayList<ClassTable> listOfClasses
+                = (CopyOnWriteArrayList<ClassTable>) VaadinSession.getCurrent()
+                .getAttribute(CURRENT_CLASSES);
+        return (listOfClasses == null) ? null : listOfClasses;
     }
 
     /**

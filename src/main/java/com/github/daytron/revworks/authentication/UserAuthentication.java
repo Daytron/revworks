@@ -19,16 +19,19 @@ import com.github.daytron.revworks.exception.AuthenticationException;
 import com.github.daytron.revworks.model.LecturerUser;
 import com.github.daytron.revworks.model.StudentUser;
 import com.github.daytron.revworks.model.AdminUser;
-import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.data.UserType;
-import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.github.daytron.revworks.exception.SQLErrorQueryException;
+import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
+import com.github.daytron.revworks.model.ClassTable;
+import com.github.daytron.revworks.model.User;
+import com.github.daytron.revworks.service.QueryManagerAbstract;
 import java.security.Principal;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +43,7 @@ import java.util.logging.Logger;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class UserAuthentication {
+public class UserAuthentication extends QueryManagerAbstract {
 
     private UserAuthentication() {
     }
@@ -50,7 +53,7 @@ public class UserAuthentication {
      *
      * @return The UserAuthentication object
      */
-    public static UserAuthentication getInstance() {
+    public static UserAuthentication get() {
         return UserAuthenticationServiceHolder.INSTANCE;
     }
 
@@ -64,78 +67,209 @@ public class UserAuthentication {
      * successful, otherwise returns null.
      */
     Principal authenticate(UserType userType, String userfield,
-            String password) throws AuthenticationException {
-        // Try to connect and make query to the database
+            String password) throws AuthenticationException, SQLErrorRetrievingConnectionAndPoolException {
 
-        JDBCConnectionPool connectionPool;
+        if (reserveConnectionPool()) {
 
-        try {
-            // Create a pool of SQL connections
-            connectionPool = SQLConnectionManager.get().connect();
-            // Reserve a new connection
-            Connection connection = connectionPool.reserveConnection();
+            try {
+                // Begin user credentials verification
+                PreparedStatement preparedStatementUser;
 
-            PreparedStatement preparedStatement;
+                if (userType == UserType.STUDENT) {
+                    preparedStatementUser = getConnection().prepareStatement(
+                            PreparedQueryStatement.LOGIN_USER_STUDENT.getQuery());
 
-            if (userType == UserType.STUDENT) {
-                preparedStatement = connection.prepareStatement(
-                        PreparedQueryStatement.LOGIN_USER_STUDENT.getQuery());
+                } else if (userType == UserType.LECTURER) {
+                    preparedStatementUser = getConnection().prepareStatement(
+                            PreparedQueryStatement.LOGIN_USER_LECTURER.getQuery());
+                } else {
+                    preparedStatementUser = getConnection().prepareStatement(
+                            PreparedQueryStatement.LOGIN_USER_ADMIN.getQuery());
+                }
 
-            } else if (userType == UserType.LECTURER) {
-                preparedStatement = connection.prepareStatement(
-                        PreparedQueryStatement.LOGIN_USER_LECTURER.getQuery());
-            } else {
-                preparedStatement = connection.prepareStatement(
-                        PreparedQueryStatement.LOGIN_USER_ADMIN.getQuery());
-            }
+                // Apply username and password to the query statement
+                preparedStatementUser.setString(1, userfield);
+                preparedStatementUser.setString(2, password);
 
-            // Apply username and password to the query statement
-            preparedStatement.setString(1, userfield);
-            preparedStatement.setString(2, password);
+                // Execute statement and save it to ResultSet object
+                ResultSet resultSetUser = preparedStatementUser.executeQuery();
 
-            // Execute statement and save it to ResultSet object
-            ResultSet resultSet = preparedStatement.executeQuery();
+                // If there is no user retrieved with the given username and password,
+                // throw new AuthenticationException
+                if (!resultSetUser.next()) {
+                    preparedStatementUser.close();
+                    resultSetUser.close();
+                    releaseConnection();
+                    
+                    throw new AuthenticationException(
+                            ExceptionMsg.AUTHENTICATION_EXCEPTION_NO_USER.getMsg());
+                }
 
-            // If there is no user retrieved with the given username and password,
-            // throw new AuthenticationException
-            if (!resultSet.next()) {
+                // Move "cursor" to the first row of resulting query table
+                resultSetUser.first();
+
+                // Retrieve user data from the result row table
+                int userID = resultSetUser.getInt(1);
+                String firstName = resultSetUser.getString(3);
+                String lastName = resultSetUser.getString(4);
+
+                // Then select the classes associated with it
+                // Create appropriate user
+                Principal user;
+                if (userType == UserType.STUDENT) {
+                    user = new StudentUser(userID, userfield, firstName, lastName);
+
+                } else if (userType == UserType.LECTURER) {
+                    user = new LecturerUser(userID, userfield,
+                            firstName, lastName);
+                } else {
+                    user = new AdminUser(userID, userfield, firstName,
+                            lastName);
+                }
+
+                // Close the statement after using it, to free up memory
+                preparedStatementUser.close();
+                resultSetUser.close();
+                // Then release the connection to free idle SQL connection
+                releaseConnection();
+
+                return user;
+            } catch (SQLException ex) {
+                Logger.getLogger(UserAuthentication.class.getName()).log(Level.SEVERE, null, ex);
+                releaseConnection();
                 throw new AuthenticationException(
-                        ExceptionMsg.AUTHENTICATION_EXCEPTION_NO_USER.getMsg());
-            }
+                        ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
+            } 
 
-            // Move "cursor" to the first row of resulting query table
-            resultSet.first();
-
-            // Retrieve user data from the result row table
-            int userID = resultSet.getInt(1);
-            String firstName = resultSet.getString(3);
-            String lastName = resultSet.getString(4);
-
-            // Create appropriate user
-            Principal user;
-            if (userType == UserType.STUDENT) {
-                user = new StudentUser(userID, userfield, firstName, lastName);
-            } else if (userType == UserType.LECTURER) {
-                user = new LecturerUser(userID, userfield,
-                        firstName, lastName);
-            } else {
-                user = new AdminUser(userID, userfield, firstName,
-                        lastName);
-            }
-
-            // Close the statement after using it, to free up memory
-            preparedStatement.close();
-            // Then release the connection to free idle SQL connection
-            connectionPool.releaseConnection(connection);
-
-            return user;
-        } catch (SQLException ex) {
-            Logger.getLogger(UserAuthentication.class.getName()).log(Level.SEVERE, null, ex);
-
-            throw new AuthenticationException(
-                    ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
+        } else {
+            throw new SQLErrorRetrievingConnectionAndPoolException(
+                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
         }
 
+    }
+
+    /**
+     * Retrieve Retrieve current classes associated with the current user within 
+     * the current semester. Returns empty list of no class found.
+     * 
+     * @param userType A UserType object
+     * @param user Principal object
+     * @param semesterID current semesterID
+     * @return
+     * @throws SQLErrorRetrievingConnectionAndPoolException
+     * @throws SQLErrorQueryException 
+     */
+    CopyOnWriteArrayList<ClassTable> extractClassTables(UserType userType, Principal user, String semesterID) throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
+        if (userType == UserType.ADMIN) {
+            return new CopyOnWriteArrayList<>();
+        }
+        
+        if (semesterID.isEmpty()) {
+            return new CopyOnWriteArrayList<>();
+        }
+
+        if (reserveConnectionPool()) {
+            try {
+
+                if (userType == UserType.STUDENT) {
+                    PreparedStatement preparedStatementClass
+                            = getConnection().prepareStatement(
+                                    PreparedQueryStatement.STUDENT_SELECT_CLASS.getQuery());
+                    User studentUser = (User) user;
+                    System.out.println("Student user ID" + studentUser.getId());
+                                    
+                    preparedStatementClass.setInt(1,studentUser.getId());
+                    preparedStatementClass.setString(2, semesterID);
+
+                    ResultSet resultSetStudentClass = preparedStatementClass.executeQuery();
+
+                    // If no registered class give empty list of classes
+                    if (!resultSetStudentClass.next()) {
+                        preparedStatementClass.close();
+                        resultSetStudentClass.close();
+                        releaseConnection();
+
+                        return new CopyOnWriteArrayList<>();
+                    }
+
+                    CopyOnWriteArrayList<ClassTable> listOfClassTables
+                            = new CopyOnWriteArrayList<>();
+                    resultSetStudentClass.beforeFirst();
+
+                    while (resultSetStudentClass.next()) {
+                        listOfClassTables.add(
+                                new ClassTable(
+                                        resultSetStudentClass.getInt(1),
+                                        resultSetStudentClass.getString(2),
+                                        resultSetStudentClass.getString(3),
+                                        new LecturerUser(
+                                                resultSetStudentClass.getInt(4),
+                                                resultSetStudentClass.getString(5),
+                                                resultSetStudentClass.getString(6),
+                                                resultSetStudentClass.getString(7))));
+                    }
+
+                    preparedStatementClass.close();
+                    resultSetStudentClass.close();
+                    releaseConnection();
+
+                    return listOfClassTables;
+
+                // Otherwise it's a lecturer user
+                    // Note: admin user are filtered on top
+                } else {
+                    PreparedStatement preparedStatementLecturerClass
+                            = getConnection().prepareStatement(
+                                    PreparedQueryStatement.LECTURER_SELECT_CLASS.getQuery());
+                    LecturerUser lecturerUser = (LecturerUser) user;
+                    User userUser = (User) user;
+                    preparedStatementLecturerClass
+                            .setInt(1, userUser.getId());
+                    preparedStatementLecturerClass.setString(2, semesterID);
+
+                    ResultSet resultSetLecturerClass
+                            = preparedStatementLecturerClass.executeQuery();
+
+                    if (!resultSetLecturerClass.next()) {
+                        preparedStatementLecturerClass.close();
+                        resultSetLecturerClass.close();
+                        releaseConnection();
+
+                        return new CopyOnWriteArrayList<>();
+                    }
+
+                    CopyOnWriteArrayList<ClassTable> listOfClassTables
+                            = new CopyOnWriteArrayList<>();
+                    resultSetLecturerClass.beforeFirst();
+
+                    while (resultSetLecturerClass.next()) {
+                        listOfClassTables.add(
+                                new ClassTable(resultSetLecturerClass.getInt(1),
+                                        resultSetLecturerClass.getString(2),
+                                        resultSetLecturerClass.getString(3),
+                                        lecturerUser));
+                    }
+
+                    preparedStatementLecturerClass.close();
+                    resultSetLecturerClass.close();
+                    releaseConnection();
+
+                    return listOfClassTables;
+
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(UserAuthentication.class.getName())
+                        .log(Level.SEVERE, null, ex);
+                releaseConnection();
+                throw new SQLErrorQueryException(
+                        ExceptionMsg.SQL_ERROR_QUERY.getMsg());
+            }
+
+        } else {
+            throw new SQLErrorRetrievingConnectionAndPoolException(
+                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
+        }
     }
 
     /**
@@ -145,34 +279,46 @@ public class UserAuthentication {
      * @return The semester id
      * @throws AuthenticationException If the connection to database fails
      */
-    String verifyCurrentDateWithinASemester() throws AuthenticationException {
-        JDBCConnectionPool connectionPool;
+    String verifyCurrentDateWithinASemester() throws AuthenticationException, SQLErrorRetrievingConnectionAndPoolException {
 
-        try {
-            // Create a pool of SQL connections
-            connectionPool = SQLConnectionManager.get().connect();
-            // Reserve a new connection
-            Connection connection = connectionPool.reserveConnection();
+        if (reserveConnectionPool()) {
+            try {
 
-            PreparedStatement preparedStatement = connection
-                    .prepareStatement(
-                            PreparedQueryStatement.SELECT_CURRENT_SEMESTER
-                                    .getQuery());
+                // Select the current semester firsl
+                PreparedStatement preparedStatementSemester = getConnection()
+                        .prepareStatement(
+                                PreparedQueryStatement.SELECT_CURRENT_SEMESTER
+                                .getQuery());
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+                ResultSet resultSetSemester = preparedStatementSemester.executeQuery();
 
-            if (!resultSet.next()) {
-                return "";
-            } else {
-                resultSet.first();
-                return resultSet.getString(1);
+                if (!resultSetSemester.next()) {
+                    preparedStatementSemester.close();
+                    resultSetSemester.close();
+                    releaseConnection();
+
+                    return "";
+                } else {
+                    resultSetSemester.first();
+                    String semesterID = resultSetSemester.getString(1).toUpperCase();
+                    
+                    preparedStatementSemester.close();
+                    resultSetSemester.close();
+                    releaseConnection();
+                    
+                    return semesterID;
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(UserAuthentication.class.getName())
+                        .log(Level.SEVERE, null, ex);
+                releaseConnection();
+                throw new AuthenticationException(
+                        ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
             }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(UserAuthentication.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            throw new AuthenticationException(
-                    ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
+        } else {
+            throw new SQLErrorRetrievingConnectionAndPoolException(
+                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
         }
 
     }

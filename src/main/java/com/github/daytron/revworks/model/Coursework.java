@@ -30,25 +30,24 @@ public class Coursework {
     private final String title;
     private final LocalDateTime dateSubmitted;
     private final String fileExtension;
-    private final int classId;
     private final File courseworkFile;
-    private final String moduleId;
-    private final String moduleName;
-    private final LecturerUser lecturer;
+    private final ClassTable classTable;
     private final StudentUser studentUser;
 
     public Coursework(int id, String title, LocalDateTime dateSubmitted,
-            File courseworkFile, String fileExtension, int classId, String moduleId, String moduleName, LecturerUser lecturer, StudentUser studentUser) {
+            File courseworkFile, String fileExtension, ClassTable classTable, 
+            StudentUser studentUser) {
         this.id = id;
         this.title = title;
         this.dateSubmitted = dateSubmitted;
         this.fileExtension = fileExtension;
-        this.classId = classId;
         this.courseworkFile = courseworkFile;
-        this.moduleId = moduleId;
-        this.moduleName = moduleName;
-        this.lecturer = lecturer;
+        this.classTable = classTable;
         this.studentUser = studentUser;
+    }
+
+    public ClassTable getClassTable() {
+        return classTable;
     }
 
     public int getId() {
@@ -63,24 +62,8 @@ public class Coursework {
         return dateSubmitted;
     }
 
-    public String getModuleId() {
-        return moduleId;
-    }
-
-    public String getModuleName() {
-        return moduleName;
-    }
-
-    public LecturerUser getLecturer() {
-        return lecturer;
-    }
-
     public StudentUser getStudentUser() {
         return studentUser;
-    }
-
-    public int getClassId() {
-        return classId;
     }
 
     public File getCourseworkFile() {

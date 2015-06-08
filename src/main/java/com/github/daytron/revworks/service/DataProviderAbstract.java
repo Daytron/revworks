@@ -24,6 +24,7 @@ import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.model.Announcement;
+import com.github.daytron.revworks.model.ClassTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,6 +32,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,7 +55,7 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
 
     @Override
     public List<Announcement> populateHomeViewWithData() throws
-            SQLErrorQueryException, SQLNoResultFoundException,
+            SQLErrorQueryException, 
             SQLErrorRetrievingConnectionAndPoolException {
 
         if (reserveConnectionPool()) {
@@ -60,33 +63,28 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                 PreparedStatement preparedStatement;
                 if (MainUI.get().getAccessControl().isUserAStudent()) {
                     preparedStatement = getConnection().prepareStatement(
-                            PreparedQueryStatement.STUDENT_ANNOUNCEMENT_SELECT_QUERY
+                            PreparedQueryStatement.STUDENT_SELECT_ANNOUNCEMENT
                             .getQuery());
 
                 } else {
                     // Otherwise it's a lecturer
                     preparedStatement = getConnection().prepareStatement(
-                            PreparedQueryStatement.LECTURER_ANNOUNCEMENT_SELECT_QUERY
+                            PreparedQueryStatement.LECTURER_SELECT_ANNOUNCEMENT
                             .getQuery());
                 }
 
-                preparedStatement.setString(1, 
-                        CurrentUserSession.getCurrentSemester());
-                preparedStatement.setInt(2,
-                        MainUI.get().getAccessControl().getUserId());
-                preparedStatement.setInt(3,
+                preparedStatement.setInt(1,
                         MainUI.get().getAccessControl().getUserId());
 
                 ResultSet resultSet = preparedStatement.executeQuery();
 
+                // Return empty list if no result
                 if (!resultSet.next()) {
-                    Throwable throwable
-                            = new SQLNoResultFoundException(
-                                    ExceptionMsg.EMPTY_SQL_RESULT.getMsg());
-                    Logger.getLogger(DataProviderAbstract.class.getName())
-                            .log(Level.SEVERE, null, throwable);
-                    throw new SQLNoResultFoundException(
-                            ExceptionMsg.SQL_NO_RESULT_FOUND.getMsg());
+                    preparedStatement.close();
+                    resultSet.close();
+                    releaseConnection();
+                    
+                    return new ArrayList<>();
                 }
 
                 resultSet.beforeFirst();
@@ -101,16 +99,31 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                     String announcementSource;
                     Announcement announcement;
 
+                    CopyOnWriteArrayList<ClassTable> listOfClassTables 
+                            = CurrentUserSession.getCurrentClassTables();
+                    
                     if (resultSet.getInt(5) == 2) {
-                        String moduleId = resultSet.getString(6);
-                        String moduleName = resultSet.getString(7);
+                        int classId = resultSet.getInt(6);
+                        
+                        ClassTable selectedClassTable = null;
+                        for (ClassTable classTable : listOfClassTables) {
+                            if (classTable.getId() == classId) {
+                                selectedClassTable = classTable;
+                                break;
+                            }
+                        }
+                        
+                        String moduleId = selectedClassTable.getModuleId();
+                        String moduleName = selectedClassTable.getModuleName();
 
                         announcementType = AnnouncementType.CLASS_WIDE;
 
                         if (MainUI.get().getAccessControl().getUserType()
                                 == UserType.STUDENT) {
-                            announcementSource = resultSet.getString(8)
-                                    + " " + resultSet.getString(9);
+                            announcementSource = selectedClassTable.getLecturerUser()
+                                    .getFirstName()
+                                    + " " + selectedClassTable.getLecturerUser()
+                                    .getLastName();
                         } else {
                             announcementSource
                                     = MainUI.get().getAccessControl().getFullName();
@@ -142,6 +155,7 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                 }
 
                 preparedStatement.close();
+                resultSet.close();
                 releaseConnection();
 
                 return listOfAnnouncements;
@@ -149,6 +163,7 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
             } catch (SQLException ex) {
                 Logger.getLogger(DataProviderAbstract.class.getName())
                         .log(Level.SEVERE, null, ex);
+                releaseConnection();
                 throw new SQLErrorQueryException(
                         ExceptionMsg.SQL_ERROR_QUERY.getMsg());
             }

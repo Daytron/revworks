@@ -22,6 +22,7 @@ import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
+import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.FileUploadReceiver;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
@@ -41,6 +42,7 @@ import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,22 +60,14 @@ public class StudentSubmitCourseworkView extends VerticalLayout
     public static final String VIEW_TITLE = "Submit Coursework";
 
     private boolean isInitialised = false;
-    private List<ClassTable> listOfClasses;
+    private CopyOnWriteArrayList<ClassTable> listOfClasses;
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
-            try {
-                this.listOfClasses = StudentDataProviderImpl.get().extractClassData();
-                initView();
-                isInitialised = true;
-            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException | SQLNoResultFoundException ex) {
-                Logger.getLogger(StudentSubmitCourseworkView.class.getName())
-                        .log(Level.SEVERE, null, ex);
-                NotificationUtil.showError(
-                        ErrorMsg.DATA_FETCH_ERROR.getText(),
-                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
-            }
+            this.listOfClasses = CurrentUserSession.getCurrentClassTables();
+            initView();
+            isInitialised = true;
         }
     }
 

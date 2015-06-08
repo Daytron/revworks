@@ -50,5 +50,4 @@ public class LecturerUser extends User {
     public String getEmail() {
         return email;
     }
-
 }

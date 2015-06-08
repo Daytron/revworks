@@ -15,8 +15,6 @@
  */
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.data.ErrorMsg;
-import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,7 +32,7 @@ public class QueryManagerAbstract {
     private JDBCConnectionPool connectionPool;
     private Connection connection;
 
-    boolean reserveConnectionPool() {
+    public boolean reserveConnectionPool() {
         try {
             this.connectionPool = SQLConnectionManager.get().connect();
             this.connection = connectionPool.reserveConnection();
@@ -47,15 +45,15 @@ public class QueryManagerAbstract {
         }
     }
 
-    void releaseConnection() {
+    public void releaseConnection() {
         this.connectionPool.releaseConnection(connection);
     }
 
-    Connection getConnection() {
+    public Connection getConnection() {
         return connection;
     }
 
-    JDBCConnectionPool getConnectionPool() {
+    public JDBCConnectionPool getConnectionPool() {
         return connectionPool;
     }
 

@@ -20,8 +20,8 @@ import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
+import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.navigator.View;
@@ -37,6 +37,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +54,7 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
     public static final String VIEW_TITLE = "Create Announcement";
 
     private boolean isInitialised = false;
-    private List<ClassTable> listOfClasses;
+    private CopyOnWriteArrayList<ClassTable> listOfClassTables;
 
     public LecturerSubmitAnnouncementView() {
     }
@@ -61,17 +62,9 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
-            try {
-                this.listOfClasses = LecturerDataProviderImpl.get().extractClassData();
-                initView();
-                isInitialised = true;
-            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException ex) {
-                Logger.getLogger(LecturerSubmitAnnouncementView.class.getName())
-                        .log(Level.SEVERE, null, ex);
-                NotificationUtil.showError(
-                        ErrorMsg.DATA_FETCH_ERROR.getText(),
-                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
-            }
+            this.listOfClassTables = CurrentUserSession.getCurrentClassTables();
+            initView();
+            isInitialised = true;
         }
     }
 
@@ -102,21 +95,20 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
         final ComboBox moduleComboBox = new ComboBox("Select class");
         moduleComboBox.setWidth(25, UNITS_EM);
 
-        for (ClassTable classItem : this.listOfClasses) {
+        for (ClassTable classItem : this.listOfClassTables) {
             moduleComboBox.addItem(classItem.getModuleName());
         }
 
         // Module selection
         moduleComboBox.setTextInputAllowed(false);
 
-        
         moduleComboBox.setNullSelectionAllowed(false);
         moduleComboBox.focus();
 
         contentLayout.addComponent(moduleComboBox);
-        
-        if (!listOfClasses.isEmpty()) {
-            moduleComboBox.select(this.listOfClasses.get(0).getModuleName());
+
+        if (!this.listOfClassTables.isEmpty()) {
+            moduleComboBox.select(this.listOfClassTables.get(0).getModuleName());
         } else {
             Label warningNoClassLabel = new Label("No class found.");
             warningNoClassLabel.addStyleName(ValoTheme.LABEL_FAILURE);
@@ -140,7 +132,7 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
         Button submitButton = new Button("Submit");
         Button resetButton = new Button("Reset");
 
-        final List<ClassTable> copyOfClassTables = this.listOfClasses;
+        final List<ClassTable> copyOfClassTables = this.listOfClassTables;
         submitButton.addClickListener(new Button.ClickListener() {
 
             @Override

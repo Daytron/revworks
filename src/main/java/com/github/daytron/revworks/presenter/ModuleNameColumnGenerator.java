@@ -21,26 +21,22 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
 
 /**
- * Custom column data for lecturer's complete name. This is use to extract
- * nested LecturerUser object from Coursework object.
  *
  * @author Ryan Gilera
  */
-@SuppressWarnings("serial")
-public class LecturerNameColumnGenerator implements Table.ColumnGenerator {
+public class ModuleNameColumnGenerator implements Table.ColumnGenerator {
 
     @Override
-    @SuppressWarnings("Unchecked")
     public Object generateCell(Table source, Object itemId, Object columnId) {
         // First retrieve the item which is the row item 
         Item cellItem = source.getItem(itemId);
         
-        // Extract the ClassTable object from it
+        // Retrieve ClassTable object
         Property<ClassTable> classTableProperty = 
                 cellItem.getItemProperty("classTable");
         ClassTable classTable = classTableProperty.getValue();
         
-        return classTable.getLecturerUser().getFullName();
+        return classTable.getModuleName();
     }
-
+    
 }

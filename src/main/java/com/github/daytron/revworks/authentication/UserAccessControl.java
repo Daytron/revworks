@@ -31,6 +31,9 @@ import com.github.daytron.revworks.data.LoginValidationNum;
 import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
+import com.github.daytron.revworks.exception.SQLErrorQueryException;
+import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
+import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.service.LecturerDataInserterImpl;
 import com.github.daytron.revworks.service.StudentDataInserterImpl;
 import com.github.daytron.revworks.ui.AdminDashboardScreen;
@@ -44,6 +47,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import java.security.Principal;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -104,21 +108,23 @@ public class UserAccessControl implements AccessControl {
 
         Principal user;
         try {
-            String semesterID = UserAuthentication.getInstance()
+            String semesterID = UserAuthentication.get()
                     .verifyCurrentDateWithinASemester();
             
-            // In an event the student or lecturer signin on date 
-            // outside of semester dates will block access to the application
-            if (semesterID.isEmpty()) {
-                NotificationUtil.showError(
-                        ErrorMsg.NO_CURRENT_SEMESTER.getText(), 
-                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
-                return;
-            }
             
-            user = UserAuthentication.getInstance()
+            user = UserAuthentication.get()
                     .authenticate(userType, userName, password);
-            CurrentUserSession.set(user, semesterID);
+                     
+            CopyOnWriteArrayList<ClassTable> listOfClassTable =
+                    UserAuthentication.get().extractClassTables(userType, user,
+                            semesterID);
+            
+            // Saves data to the current session
+            // if sign-in on a date 
+            // that there is no ongoing semester the semesterID 
+            // variable is empty String.
+            // if no class found, listOfClassTable is empty too
+            CurrentUserSession.set(user, semesterID, listOfClassTable);
 
             // Verifies if this is the only login session for the current user
             // If this is second login session made by the user,
@@ -142,7 +148,7 @@ public class UserAccessControl implements AccessControl {
                     FontAwesomeIcon.THUMBS_O_UP.getLgSize(),
                     "Welcome " + getFirstName() + "!", "");
             
-        } catch (AuthenticationException ex) {
+        } catch (AuthenticationException | SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException ex) {
             Logger.getLogger(UserAccessControl.class.getName()).log(Level.SEVERE, null, ex);
             NotificationUtil.showError(
                     ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
@@ -191,16 +197,18 @@ public class UserAccessControl implements AccessControl {
         Principal adminUser;
 
         try {
-            String semesterID = UserAuthentication.getInstance().verifyCurrentDateWithinASemester();
+            String semesterID = UserAuthentication.get().verifyCurrentDateWithinASemester();
             
-            adminUser = UserAuthentication.getInstance()
+            adminUser = UserAuthentication.get()
                     .authenticate(userType, userName, password);
             
+            // Saves data to the current session
             // Note that for admin access, if sign-in on a date 
             // that there is no ongoing semester the semesterID 
             // variable is empty String.
-            // This allows all year round access for administrators
-            CurrentUserSession.set(adminUser, semesterID);
+            // Default list of classes is empty as well
+            CurrentUserSession.set(adminUser, semesterID, 
+                    new CopyOnWriteArrayList<>());
 
             // Verifies if this is the only login session for the current user
             // If this is second login session made by the user,
@@ -221,7 +229,7 @@ public class UserAccessControl implements AccessControl {
                     + getFirstName()
                     + "!",
                     Notification.Type.TRAY_NOTIFICATION);
-        } catch (AuthenticationException ex) {
+        } catch (AuthenticationException | SQLErrorRetrievingConnectionAndPoolException ex) {
             Logger.getLogger(UserAccessControl.class.getName())
                     .log(Level.SEVERE, null, ex);
             NotificationUtil.showError(

@@ -18,12 +18,10 @@ package com.github.daytron.revworks.service;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
-import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.vaadin.data.util.BeanItemContainer;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * The base template for all SQL data retrieval exclusive to student users.
@@ -31,11 +29,7 @@ import java.util.List;
  * @author Ryan Gilera
  */
 public interface StudentDataProvider {
-    
-    public List<ClassTable> extractClassData()
-            throws SQLErrorRetrievingConnectionAndPoolException,
-            SQLErrorQueryException, SQLNoResultFoundException;
-    
+
     public BeanItemContainer<Coursework> extractCourseworkData()
             throws SQLErrorRetrievingConnectionAndPoolException,
             SQLErrorQueryException, SQLNoResultFoundException,

@@ -26,11 +26,18 @@ public class ClassTable {
     private final int id;
     private final String moduleId;
     private final String moduleName;
+    private final LecturerUser lecturerUser;
 
-    public ClassTable(int id, String moduleId, String moduleName) {
+    public ClassTable(int id, String moduleId, String moduleName, 
+            LecturerUser lecturerUser) {
         this.id = id;
         this.moduleId = moduleId;
         this.moduleName = moduleName;
+        this.lecturerUser = lecturerUser;
+    }
+
+    public LecturerUser getLecturerUser() {
+        return lecturerUser;
     }
 
     public int getId() {

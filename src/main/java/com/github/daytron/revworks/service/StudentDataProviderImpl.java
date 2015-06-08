@@ -15,7 +15,6 @@
  */
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.FilePath;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
@@ -24,12 +23,10 @@ import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPool
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
-import com.github.daytron.revworks.model.LecturerUser;
 import com.github.daytron.revworks.model.StudentUser;
 import com.google.common.io.Files;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,6 +38,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -63,156 +61,110 @@ public class StudentDataProviderImpl extends DataProviderAbstract
     }
 
     @Override
-    public List<ClassTable> extractClassData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, SQLNoResultFoundException {
-        if (reserveConnectionPool()) {
-            try {
-                final PreparedStatement preparedStatement = getConnection()
-                        .prepareStatement(
-                                PreparedQueryStatement.STUDENT_CLASS_SELECT_QUERY.getQuery());
-
-                preparedStatement.setInt(1,
-                        MainUI.get().getAccessControl().getUserId());
-                preparedStatement.setString(2, 
-                        CurrentUserSession.getCurrentSemester());
-                
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                if (!resultSet.next()) {
-                    Throwable throwable
-                            = new SQLNoResultFoundException(
-                                    ExceptionMsg.EMPTY_SQL_RESULT.getMsg());
-                    Logger.getLogger(StudentDataProviderImpl.class.getName())
-                            .log(Level.SEVERE, null, throwable);
-                    throw new SQLNoResultFoundException(
-                            ExceptionMsg.SQL_NO_RESULT_FOUND.getMsg());
-                }
-
-                resultSet.beforeFirst();
-                this.listOfClasses = new ArrayList<>();
-
-                while (resultSet.next()) {
-                    this.listOfClasses.add(new ClassTable(resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3)));
-                }
-
-                preparedStatement.close();
-                getConnectionPool().releaseConnection(getConnection());
-
-                return this.listOfClasses;
-
-            } catch (SQLException ex) {
-                Logger.getLogger(StudentDataProviderImpl.class.getName())
-                        .log(Level.SEVERE, null, ex);
-                throw new SQLErrorQueryException(
-                        ExceptionMsg.SQL_ERROR_QUERY.getMsg());
-            }
-        } else {
-            throw new SQLErrorRetrievingConnectionAndPoolException(
-                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
-        }
-    }
-
-    @Override
     public BeanItemContainer<Coursework> extractCourseworkData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, SQLNoResultFoundException, FileNotFoundException, IOException {
+        CopyOnWriteArrayList<ClassTable> listOfClassTables
+                = CurrentUserSession.getCurrentClassTables();
+
+        if (listOfClassTables.isEmpty()) {
+            return new BeanItemContainer<>(Coursework.class);
+        }
+
         if (reserveConnectionPool()) {
             try {
-
-                final PreparedStatement preparedStatement
-                        = getConnection().prepareStatement(
-                                PreparedQueryStatement.STUDENT_SELECT_COURSEWORK
-                                .getQuery());
-
-                preparedStatement.setString(1,
-                        CurrentUserSession.getCurrentSemester());
-                preparedStatement.setInt(2,
-                        MainUI.get().getAccessControl().getUserId());
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                // Return an empty list if no courseworks found
-                if (!resultSet.next()) {
-                    return new BeanItemContainer<>(Coursework.class);
-                }
-
-                resultSet.beforeFirst();
                 final List<Coursework> listOfCourseworks = new ArrayList<>();
 
-                // Cycle through the SQL query result
-                while (resultSet.next()) {
+                for (ClassTable classTable : listOfClassTables) {
+                    final PreparedStatement preparedStatement
+                            = getConnection().prepareStatement(
+                                    PreparedQueryStatement.STUDENT_SELECT_COURSEWORK
+                                    .getQuery());
 
-                    // getPrincipal the bytes data from the resultset
-                    byte[] pdfData = resultSet.getBytes(4);
+                    preparedStatement.setInt(1, classTable.getId());
 
-                    // Retrieve file extension
-                    String fileExtension = resultSet.getString(5);
+                    ResultSet resultSet = preparedStatement.executeQuery();
 
-                    // Prepare destination path of the pdf file
-                    String basePath = VaadinService.getCurrent()
-                            .getBaseDirectory().getAbsolutePath()
-                            + FilePath.TEMP_FILE_HOLDER.getPath();
+                    // Skip to the next class if there are no coursework 
+                    // submitted for this class
+                    if (!resultSet.next()) {
+                        preparedStatement.close();
+                        resultSet.close();
 
-                    // Generate random filename
-                    // so it won't overwrite by the next retrieve file
-                    String randomStringForFilename = UUID.randomUUID().toString();
+                        continue;
+                    }
 
-                    String pdfFilename = basePath
-                            + FilePath.PDF_OUTPUT_NAME.getPath()
-                            + "/" + randomStringForFilename + "."
-                            + fileExtension;
+                    resultSet.beforeFirst();
 
-                    File pdfFile = new File(pdfFilename);
-                    pdfFile.getParentFile().mkdirs();
-                    pdfFile.createNewFile();
+                    // Cycle through the SQL query result
+                    while (resultSet.next()) {
 
-                    // Begin file write from the bytes retrieved to the newly 
-                    // created file with random UUID as filename
-                    Files.write(pdfData, pdfFile);
+                        // getPrincipal the bytes data from the resultset
+                        byte[] pdfData = resultSet.getBytes(4);
 
-                    // Add to trashbin for later file cleanup
-                    CurrentUserSession.getFileTrashBin().add(pdfFile);
+                        // Retrieve file extension
+                        String fileExtension = resultSet.getString(5);
 
-                    // Convert SQL DATETIME datatype to Java 8's LocalDateTime
-                    Timestamp timestamp = resultSet.getTimestamp(3);
-                    LocalDateTime dateSubmitted = timestamp.toLocalDateTime();
+                        // Prepare destination path of the pdf file
+                        String basePath = VaadinService.getCurrent()
+                                .getBaseDirectory().getAbsolutePath()
+                                + FilePath.TEMP_FILE_HOLDER.getPath();
 
-                    LecturerUser lecturer
-                            = new LecturerUser(
-                                    resultSet.getInt(9),
-                                    resultSet.getString(10),
-                                    resultSet.getString(11),
-                                    resultSet.getString(12));
+                        // Generate random filename
+                        // so it won't overwrite by the next retrieve file
+                        String randomStringForFilename = UUID.randomUUID().toString();
 
-                    listOfCourseworks.add(new Coursework(resultSet.getInt(1),
-                            resultSet.getString(2),
-                            dateSubmitted,
-                            pdfFile,
-                            fileExtension,
-                            resultSet.getInt(6),
-                            resultSet.getString(7),
-                            resultSet.getString(8),
-                            lecturer,
-                            (StudentUser)CurrentUserSession.getPrincipal()));
+                        String pdfFilename = basePath
+                                + FilePath.FILE_OUTPUT_NAME.getPath()
+                                + "/" + randomStringForFilename + "."
+                                + fileExtension;
+
+                        File pdfFile = new File(pdfFilename);
+                        pdfFile.getParentFile().mkdirs();
+                        pdfFile.createNewFile();
+
+                        // Begin file write from the bytes retrieved to the newly 
+                        // created file with random UUID as filename
+                        Files.write(pdfData, pdfFile);
+
+                        // Add to trashbin for later file cleanup
+                        CurrentUserSession.getFileTrashBin().add(pdfFile);
+
+                        // Convert SQL DATETIME datatype to Java 8's LocalDateTime
+                        Timestamp timestamp = resultSet.getTimestamp(3);
+                        LocalDateTime dateSubmitted = timestamp.toLocalDateTime();
+
+                        listOfCourseworks.add(new Coursework(resultSet.getInt(1),
+                                resultSet.getString(2),
+                                dateSubmitted,
+                                pdfFile,
+                                fileExtension,
+                                classTable,
+                                (StudentUser) CurrentUserSession.getPrincipal()));
+                    }
+
+                    preparedStatement.close();
+                    resultSet.close();
                 }
 
-                preparedStatement.close();
                 releaseConnection();
 
-                BeanItemContainer<Coursework> courseworksContainer = 
-                        new BeanItemContainer<>(Coursework.class);
+                BeanItemContainer<Coursework> courseworksContainer
+                        = new BeanItemContainer<>(Coursework.class);
                 courseworksContainer.addAll(listOfCourseworks);
-                
+
                 return courseworksContainer;
 
             } catch (SQLException ex) {
                 Logger.getLogger(StudentDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
+                releaseConnection();
                 throw new SQLErrorQueryException(
                         ExceptionMsg.SQL_ERROR_QUERY.getMsg());
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(StudentDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
+                releaseConnection();
                 throw ex;
             } catch (IOException ex) {
                 Logger.getLogger(StudentDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
+                releaseConnection();
                 throw ex;
             }
         } else {

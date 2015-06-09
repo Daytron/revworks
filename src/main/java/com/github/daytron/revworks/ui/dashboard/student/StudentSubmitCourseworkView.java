@@ -18,13 +18,9 @@ package com.github.daytron.revworks.ui.dashboard.student;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
-import com.github.daytron.revworks.exception.SQLErrorQueryException;
-import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.FileUploadReceiver;
-import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.github.daytron.revworks.util.StringUtil;
 import com.vaadin.navigator.View;
@@ -43,8 +39,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A view for submitting coursework for students.

@@ -16,6 +16,7 @@
 package com.github.daytron.revworks.event;
 
 import com.github.daytron.revworks.model.ClassTable;
+import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
@@ -165,6 +166,30 @@ public abstract class AppEvent {
             return title;
         }
 
+    }
+    
+    public static final class LecturerViewCourseworkEvent {
+        private final Coursework coursework;
+
+        public LecturerViewCourseworkEvent(Coursework coursework) {
+            this.coursework = coursework;
+        }
+
+        public Coursework getCoursework() {
+            return coursework;
+        }
+    }
+    
+    public static final class StudentViewCourseworkEvent {
+        private final Coursework coursework;
+
+        public StudentViewCourseworkEvent(Coursework coursework) {
+            this.coursework = coursework;
+        }
+
+        public Coursework getCoursework() {
+            return coursework;
+        }
     }
 
 }

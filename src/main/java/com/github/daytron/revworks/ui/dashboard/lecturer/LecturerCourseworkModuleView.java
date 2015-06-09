@@ -18,6 +18,8 @@ package com.github.daytron.revworks.ui.dashboard.lecturer;
 import com.github.daytron.revworks.ui.dashboard.student.*;
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
@@ -33,6 +35,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -103,118 +106,183 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
             addComponent(emptyNoticeLabel);
         } else {
             addComponent(tabSheet);
+            tabSheet.setStyleName(ValoTheme.TABSHEET_FRAMED);
 
-            for (Map.Entry<ClassTable, BeanItemContainer> entry : 
-                    this.listOfNBeanItemContainers.entrySet()) {
+            for (Map.Entry<ClassTable, BeanItemContainer> entry
+                    : this.listOfNBeanItemContainers.entrySet()) {
 
-                tabSheet.addTab(createNewTab(entry.getValue(),
-                        entry.getKey().getModuleName()),
+                final TabWidget tabWidget = new TabWidget(entry.getValue(),
+                        entry.getKey().getModuleName());
+
+                tabSheet.addTab(tabWidget.createNewTab(),
                         entry.getKey().getModuleId());
             }
         }
 
     }
 
-    public CssLayout createNewTab(BeanItemContainer beanItemContainer, String 
-            moduleNameAsTableName) {
-        final CssLayout wrapperItem = new CssLayout();
-        wrapperItem.setWidth("100%");
-        wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
-        wrapperItem.addComponent(createPanelHeader());
+    /**
+     * A tab view component for each module content in the {@link TabSheet}
+     * object.
+     */
+    final class TabWidget {
 
-        VerticalLayout contentLayout = new VerticalLayout();
-        contentLayout.setSizeFull();
-        contentLayout.setMargin(true);
-        contentLayout.setSpacing(true);
+        private final BeanItemContainer beanItemContainer;
+        private final String moduleNameAsTableName;
+        private final Table moduleTable;
+        private Coursework selectedCoursework;
 
-        Table assignmentTable = createSubmittedCourseworkTable(beanItemContainer, 
-                moduleNameAsTableName);
-        contentLayout.addComponent(assignmentTable);
-        Label footerTableLabel = new Label();
-
-        int items = beanItemContainer.size();
-        if (items < 1) {
-            footerTableLabel.setValue("No coursework submitted yet.");
-        } else {
-            if (items == 1) {
-                footerTableLabel.setValue(listOfNBeanItemContainers.size() + " item found.");
-            } else {
-                footerTableLabel.setValue(listOfNBeanItemContainers.size() + " items found.");
-            }
+        public TabWidget(BeanItemContainer beanItemContainer, String moduleNameAsTableName) {
+            this.beanItemContainer = beanItemContainer;
+            this.moduleNameAsTableName = moduleNameAsTableName;
+            this.moduleTable = new Table();
+            this.selectedCoursework = null;;
         }
 
-        // Set default table item selection to the first row if not empty
-        assignmentTable.select(assignmentTable.firstItemId());
+        public BeanItemContainer getBeanItemContainer() {
+            return beanItemContainer;
+        }
 
-        contentLayout.addComponent(footerTableLabel);
-        contentLayout.setExpandRatio(assignmentTable, 1);
-        wrapperItem.addComponent(contentLayout);
+        public String getModuleNameAsTableName() {
+            return moduleNameAsTableName;
+        }
 
-        return wrapperItem;
-    }
+        public CssLayout createNewTab() {
+            final CssLayout wrapperItem = new CssLayout();
+            wrapperItem.setWidth("100%");
+            wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
+            wrapperItem.addComponent(createPanelHeader());
 
-    public Table createSubmittedCourseworkTable(BeanItemContainer beanItemContainer, 
-            String moduleNameAsTableName) {
+            VerticalLayout contentLayout = new VerticalLayout();
+            contentLayout.setSizeFull();
+            contentLayout.setMargin(true);
+            contentLayout.setSpacing(true);
 
-        final Table courseworksTable
-                = new Table(moduleNameAsTableName, beanItemContainer);
-        courseworksTable.setEditable(false);
-        courseworksTable.setSelectable(true);
-        courseworksTable.setWidth("100%");
+            Table assignmentTable = createSubmittedCourseworkTable(beanItemContainer,
+                    moduleNameAsTableName);
+            contentLayout.addComponent(assignmentTable);
+            Label footerTableLabel = new Label();
 
-        // Set column data properties and names
-        courseworksTable.setColumnHeader("id", "ID");
+            int items = beanItemContainer.size();
+            if (items < 1) {
+                footerTableLabel.setValue("No coursework submitted yet.");
+            } else {
+                if (items == 1) {
+                    footerTableLabel.setValue(listOfNBeanItemContainers.size() 
+                            + " item found.");
+                } else {
+                    footerTableLabel.setValue(listOfNBeanItemContainers.size() 
+                            + " items found.");
+                }
 
-        courseworksTable.addGeneratedColumn("studentId",
-                new StudentIdColumnGenerator());
-        courseworksTable.setColumnHeader("studentId", "Student ID");
+                // Set default table item selection to the first row if not empty
+                assignmentTable.select(assignmentTable.firstItemId());
+                // Extract the bean (Coursework) and save it
+                BeanItem<Coursework> item1 = (BeanItem) assignmentTable
+                        .getItem(assignmentTable.getValue());
+                Coursework selectedBean = item1.getBean();
+                selectedCoursework = selectedBean;
+            }
 
-        courseworksTable.addGeneratedColumn("studentName",
-                new StudentNameColumnGenerator());
-        courseworksTable.setColumnHeader("studentName", "Student");
+            contentLayout.addComponent(footerTableLabel);
+            contentLayout.setExpandRatio(assignmentTable, 1);
+            wrapperItem.addComponent(contentLayout);
 
-        courseworksTable.setColumnHeader("title", "Title");
-        courseworksTable.addGeneratedColumn("dateSubmitted",
-                new LocalDateTimeColumnGenerator());
-        courseworksTable.setColumnHeader("dateSubmitted", "Date Submitted");
+            return wrapperItem;
+        }
 
-        // Arrange columns order
-        courseworksTable.setVisibleColumns((Object[]) new String[]{"id",
-            "studentId", "studentName", "title", "dateSubmitted"});
-        // Set column alignment
-        courseworksTable.setColumnAlignments(new Table.Align[]{Table.ALIGN_LEFT,
-            Table.Align.CENTER, Table.Align.CENTER, Table.Align.CENTER,
-            Table.Align.CENTER});
+        public Table createSubmittedCourseworkTable(BeanItemContainer beanItemContainer,
+                String moduleNameAsTableName) {
 
-        // Sort by date and module id
-        courseworksTable.setSortEnabled(true);
-        courseworksTable.sort(new String[]{"dateSubmitted"},
-                new boolean[]{true});
+            this.moduleTable.setContainerDataSource(beanItemContainer);
+            this.moduleTable.setCaption(moduleNameAsTableName);
+            moduleTable.setEditable(false);
+            moduleTable.setSelectable(true);
+            moduleTable.setWidth("100%");
 
-        courseworksTable.setColumnWidth("id", 50);
-        courseworksTable.setPageLength(8);
+            // Set column data properties and names
+            moduleTable.setColumnHeader("id", "ID");
 
-        return courseworksTable;
+            moduleTable.addGeneratedColumn("studentId",
+                    new StudentIdColumnGenerator());
+            moduleTable.setColumnHeader("studentId", "Student ID");
 
-    }
+            moduleTable.addGeneratedColumn("studentName",
+                    new StudentNameColumnGenerator());
+            moduleTable.setColumnHeader("studentName", "Student");
 
-    public HorizontalLayout createPanelHeader() {
-        final HorizontalLayout layoutHeader = new HorizontalLayout();
-        layoutHeader.addStyleName("v-panel-caption");
-        layoutHeader.setWidth("100%");
-        layoutHeader.setSpacing(true);
+            moduleTable.setColumnHeader("title", "Title");
+            moduleTable.addGeneratedColumn("dateSubmitted",
+                    new LocalDateTimeColumnGenerator());
+            moduleTable.setColumnHeader("dateSubmitted", "Date Submitted");
 
-        Label titleLabel = new Label(VIEW_TITLE);
-        titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
-        titleLabel.setSizeFull();
-        layoutHeader.addComponent(titleLabel);
+            // Arrange columns order
+            moduleTable.setVisibleColumns((Object[]) new String[]{"id",
+                "studentId", "studentName", "title", "dateSubmitted"});
+            // Set column alignment
+            moduleTable.setColumnAlignments(new Table.Align[]{Table.ALIGN_LEFT,
+                Table.Align.CENTER, Table.Align.CENTER, Table.Align.CENTER,
+                Table.Align.CENTER});
 
-        Button openFileButton = new Button("View Coursework");
-        openFileButton.setStyleName(ValoTheme.BUTTON_SMALL);
-        layoutHeader.addComponent(openFileButton);
+            // Sort by date and module id
+            moduleTable.setSortEnabled(true);
+            moduleTable.sort(new String[]{"dateSubmitted"},
+                    new boolean[]{false});
 
-        layoutHeader.setExpandRatio(titleLabel, 1);
-        return layoutHeader;
+            moduleTable.setColumnWidth("id", 50);
+            moduleTable.setPageLength(8);
+
+            moduleTable.setImmediate(true);
+            moduleTable.addItemClickListener(new ItemClickEvent.ItemClickListener() {
+
+                @Override
+                public void itemClick(ItemClickEvent event) {
+                    // Save the selected bean
+                    BeanItem<Coursework> item = (BeanItem) event.getItem();
+                    Coursework selectedBean = item.getBean();
+                    selectedCoursework = selectedBean;
+                }
+            });
+
+            return moduleTable;
+
+        }
+
+        public HorizontalLayout createPanelHeader() {
+            final HorizontalLayout layoutHeader = new HorizontalLayout();
+            layoutHeader.addStyleName("v-panel-caption");
+            layoutHeader.setWidth("100%");
+            layoutHeader.setSpacing(true);
+            layoutHeader.setMargin(true);
+
+            Label titleLabel = new Label(VIEW_TITLE);
+            titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
+            titleLabel.setSizeFull();
+            layoutHeader.addComponent(titleLabel);
+
+            Button openFileButton = new Button("View Coursework");
+            openFileButton.setStyleName(ValoTheme.BUTTON_SMALL);
+            openFileButton.addClickListener(new Button.ClickListener() {
+
+                @Override
+                public void buttonClick(Button.ClickEvent event) {
+                    if (beanItemContainer.size() < 1 
+                            || selectedCoursework == null) {
+                        NotificationUtil.showInformation(
+                                "No table item selected.", 
+                                "No item found.");
+                    } else {
+                        AppEventBus.post(new AppEvent
+                                .LecturerViewCourseworkEvent(selectedCoursework));
+                    }
+                }
+            });
+            layoutHeader.addComponent(openFileButton);
+
+            layoutHeader.setExpandRatio(titleLabel, 1);
+            return layoutHeader;
+        }
+
     }
 
 }

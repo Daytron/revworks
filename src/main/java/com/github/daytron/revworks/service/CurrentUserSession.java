@@ -19,7 +19,6 @@ import com.github.daytron.revworks.model.ClassTable;
 import com.vaadin.server.VaadinSession;
 import java.io.File;
 import java.security.Principal;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**

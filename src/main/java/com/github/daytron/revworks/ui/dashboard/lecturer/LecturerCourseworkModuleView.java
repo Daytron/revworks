@@ -15,8 +15,6 @@
  */
 package com.github.daytron.revworks.ui.dashboard.lecturer;
 
-import com.github.daytron.revworks.ui.dashboard.student.*;
-import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
@@ -25,14 +23,11 @@ import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
-import com.github.daytron.revworks.presenter.LecturerNameColumnGenerator;
 import com.github.daytron.revworks.presenter.LocalDateTimeColumnGenerator;
 import com.github.daytron.revworks.presenter.StudentIdColumnGenerator;
 import com.github.daytron.revworks.presenter.StudentNameColumnGenerator;
 import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
@@ -46,7 +41,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;

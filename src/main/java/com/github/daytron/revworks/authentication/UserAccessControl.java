@@ -35,6 +35,7 @@ import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.service.LecturerDataInserterImpl;
+import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.service.StudentDataInserterImpl;
 import com.github.daytron.revworks.ui.AdminDashboardScreen;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
@@ -137,6 +138,7 @@ public class UserAccessControl implements AccessControl {
 
             if (isUserALecturer()) {
                 AppEventBus.register(new LecturerDataInserterImpl());
+                AppEventBus.register(LecturerDataProviderImpl.get());
             } else {
                 // Student otherwise
                 AppEventBus.register(new StudentDataInserterImpl());

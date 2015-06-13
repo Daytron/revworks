@@ -115,7 +115,8 @@ public enum PreparedQueryStatement {
             + "INNER JOIN Module ON Module.id = Class.module_id "
             + "INNER JOIN Lecturer ON Lecturer.user_id = Class.lecturer_user_id "
             + "INNER JOIN User ON User.id = Lecturer.user_id "
-            + "WHERE Coursework.class_id = ?;"),
+            + "WHERE Coursework.class_id = ? AND "
+            + "Coursework.student_user_id = ?;"),
     LECTURER_SELECT_COURSEWORK("SELECT Coursework.id AS id, "
             + "Coursework.title AS title, "
             + "Coursework.date_submitted AS dateSubmitted, "

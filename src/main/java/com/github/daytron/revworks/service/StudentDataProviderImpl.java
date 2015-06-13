@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.FilePath;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
@@ -24,6 +25,7 @@ import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
+import com.github.daytron.revworks.model.User;
 import com.google.common.io.Files;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinService;
@@ -76,6 +78,8 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                                     .getQuery());
 
                     preparedStatement.setInt(1, classTable.getId());
+                    preparedStatement.setInt(2, 
+                                ((User)CurrentUserSession.getPrincipal()).getId());
 
                     ResultSet resultSet = preparedStatement.executeQuery();
 

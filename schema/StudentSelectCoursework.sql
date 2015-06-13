@@ -8,4 +8,5 @@ INNER JOIN Class ON Class.id = Coursework.class_id
 INNER JOIN Module ON Module.id = Class.module_id 
 INNER JOIN Lecturer ON Lecturer.user_id = Class.lecturer_user_id 
 INNER JOIN User ON User.id = Lecturer.user_id 
-WHERE Class.id = ?;
+WHERE Class.id = 2 AND 
+Coursework.student_user_id = 1;

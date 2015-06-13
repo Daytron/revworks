@@ -18,11 +18,12 @@ package com.github.daytron.revworks.service;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.Announcement;
+import com.github.daytron.revworks.model.Coursework;
 import java.util.List;
 
 /**
  * The base template for common SQL data retrieval process for
- * users.
+ * both student and lecturer users.
  *
  * @author Ryan Gilera
  */
@@ -31,5 +32,9 @@ public interface DataProvider {
     public List<Announcement> populateHomeViewWithData() throws
             SQLErrorQueryException, 
             SQLErrorRetrievingConnectionAndPoolException;
+    
+    public Coursework extractReviewsAndComments() throws 
+            SQLErrorRetrievingConnectionAndPoolException, 
+            SQLErrorQueryException;
 
 }

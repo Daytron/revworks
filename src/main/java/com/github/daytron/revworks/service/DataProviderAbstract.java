@@ -15,7 +15,6 @@
  */
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.MainUI;
@@ -25,6 +24,9 @@ import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.model.Announcement;
 import com.github.daytron.revworks.model.ClassTable;
+import com.github.daytron.revworks.model.Comment;
+import com.github.daytron.revworks.model.Coursework;
+import com.github.daytron.revworks.model.Review;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,7 +35,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,8 +50,11 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
     private static final String GSM_LONDON = "GSM London";
 
     private List<Announcement> listOfAnnouncements;
+    private Coursework receivedCoursework;
 
     public DataProviderAbstract() {
+        // init empty
+        receivedCoursework = null;
     }
 
     @Override
@@ -172,6 +176,130 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                     ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
         }
 
+    }
+    
+    @Override
+    public Coursework extractReviewsAndComments() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
+
+        if (reserveConnectionPool()) {
+            try {
+                PreparedStatement preparedStatementReview
+                        = getConnection().prepareStatement(
+                                PreparedQueryStatement.SELECT_REVIEW.getQuery());
+
+                preparedStatementReview.setInt(1, this.receivedCoursework.getId());
+                ResultSet resultSetReview = preparedStatementReview.executeQuery();
+
+                // if no reviews found, return the coursework
+                // By default, the list of reviews is empty
+                if (!resultSetReview.next()) {
+                    preparedStatementReview.close();
+                    resultSetReview.close();
+                    releaseConnection();
+
+                    return this.receivedCoursework;
+                }
+
+                final List<Review> listOfReviews = new ArrayList<>();
+                resultSetReview.beforeFirst();
+
+                // Iterate through reviews
+                while (resultSetReview.next()) {
+                    int reviewId = resultSetReview.getInt(1);
+                    int scrollLocation = resultSetReview.getInt(2);
+
+                    Timestamp timestamp = resultSetReview.getTimestamp(3);
+                    LocalDateTime dateSubmittedReview = timestamp.toLocalDateTime();
+
+                    // Then extract all comments from this review
+                    PreparedStatement preparedStatementComment
+                            = getConnection().prepareStatement(
+                                    PreparedQueryStatement.SELECT_COMMENT.getQuery());
+
+                    preparedStatementComment.setInt(1, reviewId);
+                    ResultSet resultSetComment
+                            = preparedStatementComment.executeQuery();
+
+                    // If no comments found, create empty list of comments
+                    if (!resultSetComment.next()) {
+                        listOfReviews.add(new Review(
+                                reviewId, scrollLocation, dateSubmittedReview, 
+                                new ArrayList<>()));
+
+                        preparedStatementComment.close();
+                        resultSetComment.close();
+                        continue;
+                    }
+
+                    final List<Comment> listOfComments = new ArrayList<>();
+                    resultSetComment.beforeFirst();
+
+                    // Iterate through comments
+                    while (resultSetComment.next()) {
+                        int commentId = resultSetComment.getInt(1);
+                        String commentMesage = resultSetComment.getString(2);
+
+                        Timestamp timestampComment = resultSetComment.getTimestamp(3);
+                        LocalDateTime dateSubmittedComment
+                                = timestampComment.toLocalDateTime();
+
+                        boolean isStudentToLecturer = resultSetComment.getBoolean(4);
+
+                        Comment comment;
+                        if (isStudentToLecturer) {
+                            comment = new Comment(
+                                    commentId,
+                                    this.receivedCoursework.getStudentUser(),
+                                    this.receivedCoursework.getClassTable()
+                                    .getLecturerUser(),
+                                    commentMesage, dateSubmittedComment);
+                        } else {
+                            comment = new Comment(
+                                    commentId,
+                                    this.receivedCoursework.getClassTable()
+                                    .getLecturerUser(), 
+                                    this.receivedCoursework.getStudentUser(),
+                                    commentMesage, dateSubmittedComment);
+                        }
+                        
+                        listOfComments.add(comment);
+                    }
+                    
+                    preparedStatementComment.close();
+                    resultSetComment.close();
+                    
+                    Review review = new Review(reviewId, scrollLocation, 
+                            dateSubmittedReview, listOfComments);
+                    listOfReviews.add(review);
+
+                }
+                
+                preparedStatementReview.close();
+                resultSetReview.close();
+                releaseConnection();
+                
+                this.receivedCoursework.setListOfReviews(listOfReviews);
+                return this.receivedCoursework;
+
+            } catch (SQLException ex) {
+                Logger.getLogger(LecturerDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
+                releaseConnection();
+                throw new SQLErrorQueryException(
+                        ExceptionMsg.SQL_ERROR_QUERY.getMsg());
+            }
+        } else {
+            throw new SQLErrorRetrievingConnectionAndPoolException(
+                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
+        }
+
+    }
+
+    public void setReceivedCoursework(Coursework receivedCoursework) {
+        this.receivedCoursework = receivedCoursework;
+    }
+    
+    public Coursework getReceivedCoursework() {
+        return receivedCoursework;
     }
 
 }

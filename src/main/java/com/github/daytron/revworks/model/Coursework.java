@@ -17,6 +17,8 @@ package com.github.daytron.revworks.model;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Coursework model class for coursework table.
@@ -33,6 +35,7 @@ public class Coursework {
     private final File courseworkFile;
     private final ClassTable classTable;
     private final StudentUser studentUser;
+    private List<Review> listOfReviews;
 
     public Coursework(int id, String title, LocalDateTime dateSubmitted,
             File courseworkFile, String fileExtension, ClassTable classTable, 
@@ -44,6 +47,12 @@ public class Coursework {
         this.courseworkFile = courseworkFile;
         this.classTable = classTable;
         this.studentUser = studentUser;
+        
+        // Initially set to empty when coursework module view is launched
+        // Then set it with new set of Review objects only when user 
+        // decides to open a particular coursework, this way it saves up 
+        // resources.
+        this.listOfReviews = new ArrayList<>();
     }
 
     public ClassTable getClassTable() {
@@ -74,4 +83,12 @@ public class Coursework {
         return fileExtension;
     }
 
+    public List<Review> getListOfReviews() {
+        return listOfReviews;
+    }
+
+    public void setListOfReviews(List<Review> listOfReviews) {
+        this.listOfReviews = listOfReviews;
+    }
+    
 }

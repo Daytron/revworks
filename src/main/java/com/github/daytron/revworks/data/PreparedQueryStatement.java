@@ -128,7 +128,19 @@ public enum PreparedQueryStatement {
             + "FROM Coursework "
             + "INNER JOIN Student ON Student.user_id = Coursework.student_user_id "
             + "INNER JOIN User ON User.id = Coursework.student_user_id "
-            + "WHERE Coursework.class_id = ?;");
+            + "WHERE Coursework.class_id = ?;"),
+    SELECT_REVIEW("SELECT Review.id AS id, "
+            + "Review.scroll_location as scroll, "
+            + "Review.date_submitted as date "
+            + "FROM Review "
+            + "WHERE Review.coursework_id = ?; "),
+    SELECT_COMMENT("SELECT Comment.id AS id, "
+            + "Comment.message AS message, "
+            + "Comment.date_submitted AS dateSubmitted, "
+            + "Comment.is_student_to_lecturer AS isStudentToLecturer  "
+            + "FROM Comment  "
+            + "WHERE Comment.review_id = ? "
+            + "ORDER BY Comment.date_submitted DESC; ");
 
     private final String query;
 

@@ -37,24 +37,14 @@ import java.util.logging.Logger;
 
 /**
  * Responsible for verifying the user login credentials through the MySQL
- * database. It is a singleton class to prevent multiple connections to the
- * database.
+ * database. It also extracts class table and verify semester of the signed user.
  *
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
 public class UserAuthentication extends QueryManagerAbstract {
 
-    private UserAuthentication() {
-    }
-
-    /**
-     * Returns the one and only one instance of this class.
-     *
-     * @return The UserAuthentication object
-     */
-    public static UserAuthentication get() {
-        return UserAuthenticationServiceHolder.INSTANCE;
+    public UserAuthentication() {
     }
 
     /**
@@ -100,7 +90,7 @@ public class UserAuthentication extends QueryManagerAbstract {
                     preparedStatementUser.close();
                     resultSetUser.close();
                     releaseConnection();
-                    
+
                     throw new AuthenticationException(
                             ExceptionMsg.AUTHENTICATION_EXCEPTION_NO_USER.getMsg());
                 }
@@ -139,7 +129,7 @@ public class UserAuthentication extends QueryManagerAbstract {
                 releaseConnection();
                 throw new AuthenticationException(
                         ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
-            } 
+            }
 
         } else {
             throw new SQLErrorRetrievingConnectionAndPoolException(
@@ -149,21 +139,21 @@ public class UserAuthentication extends QueryManagerAbstract {
     }
 
     /**
-     * Retrieve Retrieve current classes associated with the current user within 
+     * Retrieve Retrieve current classes associated with the current user within
      * the current semester. Returns empty list of no class found.
-     * 
+     *
      * @param userType A UserType object
      * @param user Principal object
      * @param semesterID current semesterID
      * @return
      * @throws SQLErrorRetrievingConnectionAndPoolException
-     * @throws SQLErrorQueryException 
+     * @throws SQLErrorQueryException
      */
     CopyOnWriteArrayList<ClassTable> extractClassTables(UserType userType, Principal user, String semesterID) throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
         if (userType == UserType.ADMIN) {
             return new CopyOnWriteArrayList<>();
         }
-        
+
         if (semesterID.isEmpty()) {
             return new CopyOnWriteArrayList<>();
         }
@@ -177,8 +167,8 @@ public class UserAuthentication extends QueryManagerAbstract {
                                     PreparedQueryStatement.STUDENT_SELECT_CLASS.getQuery());
                     User studentUser = (User) user;
                     System.out.println("Student user ID" + studentUser.getId());
-                                    
-                    preparedStatementClass.setInt(1,studentUser.getId());
+
+                    preparedStatementClass.setInt(1, studentUser.getId());
                     preparedStatementClass.setString(2, semesterID);
 
                     ResultSet resultSetStudentClass = preparedStatementClass.executeQuery();
@@ -215,7 +205,7 @@ public class UserAuthentication extends QueryManagerAbstract {
 
                     return listOfClassTables;
 
-                // Otherwise it's a lecturer user
+                    // Otherwise it's a lecturer user
                     // Note: admin user are filtered on top
                 } else {
                     PreparedStatement preparedStatementLecturerClass
@@ -301,11 +291,11 @@ public class UserAuthentication extends QueryManagerAbstract {
                 } else {
                     resultSetSemester.first();
                     String semesterID = resultSetSemester.getString(1).toUpperCase();
-                    
+
                     preparedStatementSemester.close();
                     resultSetSemester.close();
                     releaseConnection();
-                    
+
                     return semesterID;
                 }
 
@@ -323,11 +313,4 @@ public class UserAuthentication extends QueryManagerAbstract {
 
     }
 
-    /**
-     * Private inner class to hold the single object of this singleton class
-     */
-    private static class UserAuthenticationServiceHolder {
-
-        private static final UserAuthentication INSTANCE = new UserAuthentication();
-    }
 }

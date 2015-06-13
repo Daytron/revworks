@@ -15,7 +15,11 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.model.ClassTable;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import java.io.File;
 import java.security.Principal;
@@ -41,9 +45,9 @@ public class CurrentUserSession {
     /**
      * The attribute key used to store the current semester id
      */
-    public static final String CURRENT_SEMESTER
-            = "Current Semester";
+    public static final String CURRENT_SEMESTER = "Current Semester";
 
+    public static final String JDBC_CONNECTION_POOL_KEY = "JDBC POOL";
     /**
      * The attribute key used to store the current classes associated with the
      * current user
@@ -57,15 +61,19 @@ public class CurrentUserSession {
     /**
      * Sets the name of the current user and stores it in the current session.
      * Using a {@code null} username will remove the username from the session.
-     * It also stores a list for generated files mark for deletion later on and
-     * the current semester through semester id.
+     * It also stores a list for generated files mark for deletion later on, the
+     * current semester through semester id and the SimpleJDBCConnectionPool
+     * object used for this session.
      *
      * @param currentUser The current user
+     * @param semesterID The current semester
      * @param listOfClassTables The list of classes associated with the user
+     * @param jbdcConnectionPool The SimpleJDBCConnectionPool object
      * @throws IllegalStateException if the current session cannot be accessed.
      */
     public static void set(Principal currentUser, String semesterID,
-            CopyOnWriteArrayList<ClassTable> listOfClassTables) {
+            CopyOnWriteArrayList<ClassTable> listOfClassTables,
+            JDBCConnectionPool jbdcConnectionPool) {
         try {
             VaadinSession vaadinSession = VaadinSession.getCurrent();
 
@@ -84,6 +92,10 @@ public class CurrentUserSession {
             // For file trash bin
             CopyOnWriteArrayList<File> listOfFilesToBeDeleted = new CopyOnWriteArrayList<>();
             vaadinSession.setAttribute(TRASH_CAN_FOR_FILES_KEY, listOfFilesToBeDeleted);
+
+            // For JDBC connection pool
+            vaadinSession.setAttribute(JDBC_CONNECTION_POOL_KEY, jbdcConnectionPool);
+
         } finally {
             VaadinSession.getCurrent().getLockInstance().unlock();
         }
@@ -134,16 +146,29 @@ public class CurrentUserSession {
     }
 
     /**
-     * Return list of classes associated with the current user. For admin user
+     * Returns list of classes associated with the current user. For admin user
      * the list is empty by default.
      *
-     * @return
+     * @return CopyOnWriteArrayList object
      */
     public static CopyOnWriteArrayList<ClassTable> getCurrentClassTables() {
         CopyOnWriteArrayList<ClassTable> listOfClasses
                 = (CopyOnWriteArrayList<ClassTable>) VaadinSession.getCurrent()
                 .getAttribute(CURRENT_CLASSES);
         return (listOfClasses == null) ? null : listOfClasses;
+    }
+
+    /**
+     * Returns the simple jdbc connection pool object that is used throughout
+     * the session.
+     *
+     * @return SimpleJDBCConnectionPool object
+     */
+    public static JDBCConnectionPool getJDBCConnectionPool() {
+        SimpleJDBCConnectionPool simpleJDBCConnectionPool
+                = (SimpleJDBCConnectionPool) VaadinSession.getCurrent()
+                .getAttribute(JDBC_CONNECTION_POOL_KEY);
+        return (simpleJDBCConnectionPool == null) ? null : simpleJDBCConnectionPool;
     }
 
     /**
@@ -154,7 +179,9 @@ public class CurrentUserSession {
      * and redirect to a new session.
      */
     public static void signOut() {
+        MainUI.get().close();
         VaadinSession.getCurrent().close();
-        VaadinSession.getCurrent().getSession().invalidate();
+        VaadinService.getCurrentRequest().getWrappedSession().invalidate();
+        //VaadinSession.getCurrent().getSession().invalidate();
     }
 }

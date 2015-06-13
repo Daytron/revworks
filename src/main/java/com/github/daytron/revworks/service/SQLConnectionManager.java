@@ -19,27 +19,18 @@ import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import java.sql.SQLException;
 
 /**
- * A singleton class for establishing connection to the database.
+ * A class for establishing and retrieving connection from the database.
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class SQLConnectionManager {
-
-    private static final long serialVersionUID = 1L;
 
     private SimpleJDBCConnectionPool jbdcConnectionPool = null;
 
-    private SQLConnectionManager() {
+    public SQLConnectionManager() {
     }
 
-    /**
-     * Returns the one and only one object of this class
-     * 
-     * @return SQLConnectionManager object
-     */
-    public static SQLConnectionManager get() {
-        return SQLConnectionManagerHolder.INSTANCE;
-    }
 
     /**
      * Returns {@link SimpleJDBCConnectionPool} object. Creates a new object if
@@ -56,15 +47,8 @@ public class SQLConnectionManager {
                     "jdbc:mysql://localhost/appschema",
                     "uservalidator", "sqluserpw", 2, 10);
         }
-
+        
         return jbdcConnectionPool;
     }
 
-    /**
-     * A private inner class that serves as a singleton object container 
-     */
-    private static class SQLConnectionManagerHolder {
-
-        private static final SQLConnectionManager INSTANCE = new SQLConnectionManager();
-    }
 }

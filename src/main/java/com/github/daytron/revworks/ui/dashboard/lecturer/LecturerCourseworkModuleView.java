@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.ui.dashboard.lecturer;
 
+import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
@@ -26,7 +27,6 @@ import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.presenter.LocalDateTimeColumnGenerator;
 import com.github.daytron.revworks.presenter.StudentIdColumnGenerator;
 import com.github.daytron.revworks.presenter.StudentNameColumnGenerator;
-import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -70,7 +70,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
         if (!isInitialised) {
             try {
                 this.listOfNBeanItemContainers
-                        = LecturerDataProviderImpl.get().extractCourseworkData();
+                        = MainUI.get().getLecturerDataProvider().extractCourseworkData();
                 initView();
                 isInitialised = true;
 

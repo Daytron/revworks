@@ -35,14 +35,15 @@ import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.service.LecturerDataInserterImpl;
-import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.service.StudentDataInserterImpl;
 import com.github.daytron.revworks.ui.AdminDashboardScreen;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.Validator;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
@@ -109,24 +110,25 @@ public class UserAccessControl implements AccessControl {
 
         Principal user;
         try {
-            String semesterID = UserAuthentication.get()
-                    .verifyCurrentDateWithinASemester();
-            
-            
-            user = UserAuthentication.get()
-                    .authenticate(userType, userName, password);
-                     
-            CopyOnWriteArrayList<ClassTable> listOfClassTable =
-                    UserAuthentication.get().extractClassTables(userType, user,
+            UserAuthentication userAuthentication = MainUI.get().getUserAuthentication();
+            String semesterID = userAuthentication.verifyCurrentDateWithinASemester();
+
+            user = userAuthentication.authenticate(userType, userName, password);
+
+            CopyOnWriteArrayList<ClassTable> listOfClassTable
+                    = userAuthentication.extractClassTables(userType, user,
                             semesterID);
+
+            JDBCConnectionPool connectionPool = userAuthentication.getConnectionPool();
             
             // Saves data to the current session
             // if sign-in on a date 
             // that there is no ongoing semester the semesterID 
             // variable is empty String.
             // if no class found, listOfClassTable is empty too
-            CurrentUserSession.set(user, semesterID, listOfClassTable);
-
+            CurrentUserSession.set(user, semesterID, listOfClassTable,
+                    connectionPool);
+            
             // Verifies if this is the only login session for the current user
             // If this is second login session made by the user,
             // it terminates the old session and continue with this new session
@@ -135,21 +137,23 @@ public class UserAccessControl implements AccessControl {
             MainUI.MainUIServlet.saveUserSessionInfo(getPrincipalName(),
                     VaadinSession.getCurrent());
             MainUI.MainUIServlet.printSessions("user login");
-
-            if (isUserALecturer()) {
+            
+            if (userType == UserType.LECTURER) {
                 AppEventBus.register(new LecturerDataInserterImpl());
-                AppEventBus.register(LecturerDataProviderImpl.get());
+                AppEventBus.register(MainUI.get().getLecturerDataProvider());
             } else {
                 // Student otherwise
                 AppEventBus.register(new StudentDataInserterImpl());
             }
+
             
+
             MainUI.get().showDashboardScreen();
-            
+
             NotificationUtil.showInformation(
                     FontAwesomeIcon.THUMBS_O_UP.getLgSize(),
                     "Welcome " + getFirstName() + "!", "");
-            
+
         } catch (AuthenticationException | SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException ex) {
             Logger.getLogger(UserAccessControl.class.getName()).log(Level.SEVERE, null, ex);
             NotificationUtil.showError(
@@ -199,18 +203,19 @@ public class UserAccessControl implements AccessControl {
         Principal adminUser;
 
         try {
-            String semesterID = UserAuthentication.get().verifyCurrentDateWithinASemester();
-            
-            adminUser = UserAuthentication.get()
-                    .authenticate(userType, userName, password);
-            
+            UserAuthentication userAuthentication = MainUI.get().getUserAuthentication();
+            String semesterID = userAuthentication.verifyCurrentDateWithinASemester();
+
+            adminUser = userAuthentication.authenticate(userType, userName, password);
+
             // Saves data to the current session
             // Note that for admin access, if sign-in on a date 
             // that there is no ongoing semester the semesterID 
             // variable is empty String.
             // Default list of classes is empty as well
-            CurrentUserSession.set(adminUser, semesterID, 
-                    new CopyOnWriteArrayList<>());
+            CurrentUserSession.set(adminUser, semesterID,
+                    new CopyOnWriteArrayList<>(), 
+                    userAuthentication.getConnectionPool());
 
             // Verifies if this is the only login session for the current user
             // If this is second login session made by the user,
@@ -366,10 +371,14 @@ public class UserAccessControl implements AccessControl {
     @Subscribe
     @Override
     public void signOut(final AppEvent.UserLogoutRequestEvent event) {
+        // Set landing page after signout 
+        Page.getCurrent().setLocation(VaadinServlet.getCurrent().getServletConfig()
+                .getServletContext().getContextPath());
+
         CurrentUserSession.signOut();
 
         // Reloads the page which will point back to login page
-        Page.getCurrent().reload();
+        //Page.getCurrent().reload();
     }
 
     @Override

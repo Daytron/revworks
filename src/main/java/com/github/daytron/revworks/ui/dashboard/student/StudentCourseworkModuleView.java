@@ -27,7 +27,6 @@ import com.github.daytron.revworks.presenter.LecturerNameColumnGenerator;
 import com.github.daytron.revworks.presenter.LocalDateTimeColumnGenerator;
 import com.github.daytron.revworks.presenter.ModuleIDColumnGenerator;
 import com.github.daytron.revworks.presenter.ModuleNameColumnGenerator;
-import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -69,7 +68,7 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
             try {
-                this.courseworksContainer = StudentDataProviderImpl.get()
+                this.courseworksContainer = MainUI.get().getStudentDataProvider()
                         .extractCourseworkData();
                 initView();
                 isInitialised = true;

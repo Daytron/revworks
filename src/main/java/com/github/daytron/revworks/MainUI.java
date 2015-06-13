@@ -17,8 +17,12 @@ package com.github.daytron.revworks;
 
 import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.authentication.UserAccessControl;
+import com.github.daytron.revworks.authentication.UserAuthentication;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
+import com.github.daytron.revworks.service.LecturerDataProviderImpl;
+import com.github.daytron.revworks.service.SQLConnectionManager;
+import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.ui.LoginScreen;
 import com.github.daytron.revworks.ui.dashboard.DashboardScreen;
 import com.vaadin.annotations.Push;
@@ -27,6 +31,7 @@ import javax.servlet.annotation.WebServlet;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.SessionDestroyEvent;
 import com.vaadin.server.SessionDestroyListener;
@@ -53,12 +58,16 @@ public class MainUI extends UI {
 
     private final AccessControl accessControl = new UserAccessControl();
     private final AppEventBus appEventBus = new AppEventBus();
+    private final SQLConnectionManager connectionManager = new SQLConnectionManager();
+    private final LecturerDataProviderImpl lecturerDataProvider = new LecturerDataProviderImpl();
+    private final StudentDataProviderImpl studentDataProvider = new StudentDataProviderImpl();
+    private final UserAuthentication userAuthentication = new UserAuthentication();
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         // Set max session timeout after 10 minutes
-        VaadinSession.getCurrent().getSession().setMaxInactiveInterval(600);
-        
+        VaadinSession.getCurrent().getSession().setMaxInactiveInterval(300);
+
         Responsive.makeResponsive(this);
         setLocale(vaadinRequest.getLocale());
 
@@ -71,15 +80,31 @@ public class MainUI extends UI {
         } else {
             showDashboardScreen();
         }
-        
+
     }
-    
+
     public static MainUI get() {
         return (MainUI) UI.getCurrent();
     }
 
     public AccessControl getAccessControl() {
         return accessControl;
+    }
+
+    public SQLConnectionManager getConnectionManager() {
+        return connectionManager;
+    }
+
+    public LecturerDataProviderImpl getLecturerDataProvider() {
+        return lecturerDataProvider;
+    }
+
+    public StudentDataProviderImpl getStudentDataProvider() {
+        return studentDataProvider;
+    }
+
+    public UserAuthentication getUserAuthentication() {
+        return userAuthentication;
     }
 
     public void showDashboardScreen() {
@@ -96,13 +121,14 @@ public class MainUI extends UI {
     }
 
     @WebServlet(urlPatterns = "/*", name = "MainUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MainUI.class, productionMode = false)
+    @VaadinServletConfiguration(ui = MainUI.class, productionMode = false,
+            closeIdleSessions = true, heartbeatInterval = 90)
     public static class MainUIServlet extends VaadinServlet implements
             SessionDestroyListener {
 
         private static final ConcurrentHashMap<String, VaadinSession> listOfUserSessions = new ConcurrentHashMap<>();
-        public static final String TRASH_CAN_FOR_FILES_KEY
-            = "Trashcan";
+        public static final String TRASH_CAN_FOR_FILES_KEY = "Trashcan";
+        public static final String JDBC_POOL_KEY = "JDBC POOL";
 
         /**
          * Saves the new login session to the collection member,
@@ -185,20 +211,27 @@ public class MainUI extends UI {
                 final String KEY = CurrentUserSession.class.getCanonicalName();
                 Principal user = (Principal) event.getSession()
                         .getAttribute(KEY);
-                CopyOnWriteArrayList<File> listOfFilesToDelete 
+                CopyOnWriteArrayList<File> listOfFilesToDelete
                         = (CopyOnWriteArrayList<File>) event.getSession()
                         .getAttribute(TRASH_CAN_FOR_FILES_KEY);
-                
+
                 if (user == null) {
                     System.out.println("User in session is null!!");
                 } else {
+                    // Explicitly cleanup all available or reserve connections 
+                    // in the connection pool to free up MYSQL connection load
+                    JDBCConnectionPool jdbccp = ((JDBCConnectionPool) event.getSession()
+                            .getAttribute(JDBC_POOL_KEY));
+                    jdbccp.destroy();
+
+                    // Remove the closed session from list
                     listOfUserSessions.remove(user.getName());
-                    
-                    // Clean uploaded data through deletion
+
+                    // Clean any uploaded or temp files through deletion
                     for (File file : listOfFilesToDelete) {
                         file.delete();
                     }
-                    
+
                     printSessions("Session destroyed with session");
                 }
             }

@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.ui.dashboard;
 
+import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.model.Announcement;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
@@ -135,9 +136,10 @@ public class HomeView extends VerticalLayout implements View {
             try {
 
                 // Does not matter if lecturer or student's data provider
-                // They share the common method
+                // They share the common method from DataProviderAbstract
                 this.listOfAnnouncements
-                        = StudentDataProviderImpl.get().populateHomeViewWithData();
+                        = MainUI.get().getStudentDataProvider()
+                                .populateHomeViewWithData();
 
                 initView();
                 initialised = true;

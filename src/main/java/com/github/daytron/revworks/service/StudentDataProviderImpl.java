@@ -56,10 +56,6 @@ public class StudentDataProviderImpl extends DataProviderAbstract
         super();
     }
 
-    public static StudentDataProviderImpl get() {
-        return StudentDataProviderHolder.INSTANCE;
-    }
-
     @Override
     public BeanItemContainer<Coursework> extractCourseworkData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, SQLNoResultFoundException, FileNotFoundException, IOException {
         CopyOnWriteArrayList<ClassTable> listOfClassTables
@@ -172,10 +168,5 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                     ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
         }
     }
-
-    private static class StudentDataProviderHolder {
-
-        private static final StudentDataProviderImpl INSTANCE = new StudentDataProviderImpl();
-    }
-
+    
 }

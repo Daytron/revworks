@@ -15,15 +15,19 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.FilePath;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
+import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
+import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinService;
@@ -48,33 +52,29 @@ import java.util.logging.Logger;
 public class LecturerDataProviderImpl extends DataProviderAbstract
         implements LecturerDataProvider {
 
-    private LecturerDataProviderImpl() {
+
+    public LecturerDataProviderImpl() {
         super();
     }
 
-    public static LecturerDataProviderImpl get() {
-        return LecturerDataProviderHolder.INSTANCE;
-    }
-
     @Override
-    public ConcurrentHashMap<ClassTable,BeanItemContainer> extractCourseworkData() throws
+    public ConcurrentHashMap<ClassTable, BeanItemContainer> extractCourseworkData() throws
             SQLErrorRetrievingConnectionAndPoolException,
             SQLErrorQueryException, NoClassAttachedToLecturerException {
-        CopyOnWriteArrayList<ClassTable> listOfClassTables = 
-                CurrentUserSession.getCurrentClassTables();
+        CopyOnWriteArrayList<ClassTable> listOfClassTables
+                = CurrentUserSession.getCurrentClassTables();
         if (listOfClassTables.isEmpty()) {
             return new ConcurrentHashMap<>();
         }
-        
+
         if (reserveConnectionPool()) {
 
             try {
-                
+
                 // Pull courseworks for each class resulting
                 // to a BeanItemContainer and save it to a List object
                 // Then pass those opbjects to BeanItemContainer
-                final ConcurrentHashMap<ClassTable,BeanItemContainer> 
-                        listOfBeanItemContainers = new ConcurrentHashMap<>();
+                final ConcurrentHashMap<ClassTable, BeanItemContainer> listOfBeanItemContainers = new ConcurrentHashMap<>();
 
                 for (ClassTable classTable : listOfClassTables) {
                     final PreparedStatement preparedStatementCoursework
@@ -93,15 +93,15 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                     if (!resultSetCoursework.next()) {
                         preparedStatementCoursework.close();
                         resultSetCoursework.close();
-                        
+
                         listOfBeanItemContainers.put(classTable,
                                 new BeanItemContainer(Coursework.class));
                         continue;
                     }
 
                     resultSetCoursework.beforeFirst();
-                    BeanItemContainer<Coursework> beanItemContainer = 
-                            new BeanItemContainer<>(Coursework.class);
+                    BeanItemContainer<Coursework> beanItemContainer
+                            = new BeanItemContainer<>(Coursework.class);
                     while (resultSetCoursework.next()) {
                         // getPrincipal the bytes data from the resultset
                         byte[] pdfData = resultSetCoursework.getBytes(4);
@@ -162,7 +162,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                                 studentUser));
 
                     }
-                    
+
                     listOfBeanItemContainers.put(classTable, beanItemContainer);
 
                     preparedStatementCoursework.close();
@@ -185,8 +185,11 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
         }
     }
 
-    private static class LecturerDataProviderHolder {
+    @Subscribe
+    public void receiveCourseworkDataFromTable(final AppEvent.LecturerViewCourseworkEvent event) {
+        setReceivedCoursework(event.getCoursework());
 
-        private static final LecturerDataProviderImpl INSTANCE = new LecturerDataProviderImpl();
+        MainUI.get().getNavigator().navigateTo(LecturerCourseworkView.VIEW_NAME);
     }
+
 }

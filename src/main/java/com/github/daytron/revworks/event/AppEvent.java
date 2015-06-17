@@ -19,6 +19,7 @@ import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
 import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
@@ -121,12 +122,14 @@ public abstract class AppEvent {
         private final ClassTable selectedClass;
         private final TextField title;
         private final RichTextArea richTextArea;
+        private final Button submitButton;
 
         public LecturerSubmitNewAnnouncementEvent(ClassTable selectedClass,
-                TextField title, RichTextArea richTextArea) {
+                TextField title, RichTextArea richTextArea, Button submitButton) {
             this.selectedClass = selectedClass;
             this.title = title;
             this.richTextArea = richTextArea;
+            this.submitButton = submitButton;
         }
 
         public ClassTable getSelectedClass() {
@@ -139,6 +142,10 @@ public abstract class AppEvent {
 
         public RichTextArea getRichTextArea() {
             return richTextArea;
+        }
+
+        public Button getSubmitButton() {
+            return submitButton;
         }
 
     }
@@ -197,6 +204,7 @@ public abstract class AppEvent {
     }
 
     public static final class ToggleCourseworkViewEvent {
+
         private final CssLayout contentLayout;
         private final boolean isToggled;
 
@@ -212,16 +220,17 @@ public abstract class AppEvent {
         public CssLayout getContentLayout() {
             return contentLayout;
         }
-        
+
     }
-    
+
     public static final class LecturerSubmitNewReviewEvent {
+
         private final int courseworkId;
         private final int pageNumber;
         private final String message;
         private final LecturerCourseworkView courseworkView;
 
-        public LecturerSubmitNewReviewEvent(int courseworkId, int pageNumber, 
+        public LecturerSubmitNewReviewEvent(int courseworkId, int pageNumber,
                 String message, LecturerCourseworkView courseworkView) {
             this.courseworkId = courseworkId;
             this.pageNumber = pageNumber;
@@ -244,11 +253,11 @@ public abstract class AppEvent {
         public LecturerCourseworkView getCourseworkView() {
             return courseworkView;
         }
-        
-        
+
     }
-    
-    public static final class  LecturerAddReviewButtonEvent {
+
+    public static final class LecturerAddReviewButtonEvent {
+
         private final int reviewId;
         private final int pageNum;
 
@@ -264,11 +273,11 @@ public abstract class AppEvent {
         public int getPageNum() {
             return pageNum;
         }
-        
-        
+
     }
-    
+
     public static final class LecturerSubmitACommentEvent {
+
         private final int ReviewId;
         private final String message;
 
@@ -284,8 +293,7 @@ public abstract class AppEvent {
         public String getMessage() {
             return message;
         }
-        
-        
+
     }
 
 }

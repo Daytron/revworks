@@ -89,6 +89,10 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
                 NotificationUtil.showInformation(
                         FontAwesomeIcon.CHECK_CIRCLE_O.getLgSize(),
                         "Sent!", "Your announcement is saved.");
+                
+                // Reenable the submit button, allowing lecturer to 
+                // submit another one.
+                event.getSubmitButton().setEnabled(true);
             } catch (SQLException ex) {
                 Logger.getLogger(LecturerDataInserterImpl.class.getName())
                         .log(Level.SEVERE, null, ex);

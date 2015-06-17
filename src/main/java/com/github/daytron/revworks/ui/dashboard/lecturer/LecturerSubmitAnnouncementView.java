@@ -15,14 +15,10 @@
  */
 package com.github.daytron.revworks.ui.dashboard.lecturer;
 
-import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
-import com.github.daytron.revworks.exception.SQLErrorQueryException;
-import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.service.CurrentUserSession;
-import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -38,8 +34,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The view class for creating new announcement for lecturers.
@@ -133,24 +127,29 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
         Button resetButton = new Button("Reset");
 
         final List<ClassTable> copyOfClassTables = this.listOfClassTables;
+        submitButton.setDisableOnClick(true);
         submitButton.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                Button button = event.getButton();
                 if (moduleComboBox.getValue() == null) {
                     NotificationUtil.showError("No class selected");
+                    button.setEnabled(true);
                     return;
                 }
 
                 if (titleTextField.getValue() == null
                         || titleTextField.getValue().isEmpty()) {
                     NotificationUtil.showError("Empty title field.");
+                    button.setEnabled(true);
                     return;
                 }
 
                 if (richTextArea.getValue() == null
                         || richTextArea.getValue().isEmpty()) {
                     NotificationUtil.showError("Empty message field.");
+                    button.setEnabled(true);
                     return;
                 }
 
@@ -165,13 +164,14 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
                 if (selectedClass == null) {
                     NotificationUtil.showError("Something went wrong.",
                             "Could not find matching class.");
+                    button.setEnabled(true);
                     return;
                 }
 
                 AppEventBus.post(
                         new AppEvent.LecturerSubmitNewAnnouncementEvent(
                                 selectedClass, titleTextField,
-                                richTextArea));
+                                richTextArea,button));
             }
         });
 

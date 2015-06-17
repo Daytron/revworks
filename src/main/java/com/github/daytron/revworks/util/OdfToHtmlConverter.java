@@ -21,14 +21,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.odftoolkit.odfdom.converter.core.BasicURIResolver;
 import org.odftoolkit.odfdom.converter.core.FileImageExtractor;
+import org.odftoolkit.odfdom.converter.core.ODFConverterException;
 import org.odftoolkit.odfdom.converter.xhtml.XHTMLConverter;
 import org.odftoolkit.odfdom.converter.xhtml.XHTMLOptions;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
@@ -38,18 +38,17 @@ import org.odftoolkit.odfdom.doc.OdfTextDocument;
  *
  * @author Ryan Gilera
  */
-public class OdfToHtmlConverter {
+public final class OdfToHtmlConverter {
 
     private static final String htmlExtension = ".html";
 
-    public static List<File> convert(File fileToConvert) throws FileNotFoundException, Exception {
+    public static List<File> convert(File fileToConvert) throws FileNotFoundException, ODFConverterException, IOException, Exception {
         String basePath = VaadinService.getCurrent()
                 .getBaseDirectory().getAbsolutePath()
                 + FilePath.TEMP_FILE_HOLDER.getPath();
 
         List<File> listOfFiles = new ArrayList<>();
 
-        try {
             File htmlFile = new File(FilePath.HTML_OUTPUT_NAME.getPath() 
                     + htmlExtension);
 
@@ -74,12 +73,6 @@ public class OdfToHtmlConverter {
             listOfFiles.add(locaFolderLocal);
             return listOfFiles;
 
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(OdfToHtmlConverter.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        } catch (Exception ex) {
-            Logger.getLogger(OdfToHtmlConverter.class.getName()).log(Level.SEVERE, null, ex);
-            throw ex;
-        }
+        
     }
 }

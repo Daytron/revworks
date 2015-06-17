@@ -15,103 +15,128 @@
  */
 package com.github.daytron.revworks.util;
 
+import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Notification;
 
 /**
  * Utility class for formatted notifications.
- * 
+ *
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class NotificationUtil {
+public final class NotificationUtil {
+
+    private NotificationUtil() {
+    }
+
     /**
      * Creates an error notification with a single parameter for caption.
-     * 
+     *
      * @param caption The main message of the notification
      */
     public static void showError(String caption) {
         showError(caption, "");
     }
-    
+
     /**
-     * Creates an error notification with two parameters for caption and 
-     * time delay.
-     * 
+     * Creates an error notification with two parameters for caption and time
+     * delay.
+     *
      * @param caption The main message of the notification
      * @param delay The time delay in milliseconds
      */
     public static void showError(String caption, int delay) {
         showError(caption, "", delay);
     }
-    
+
     /**
-     * Creates an error notification with two parameters for caption and 
+     * Creates an error notification with two parameters for caption and
      * description.
-     * 
+     *
      * @param caption The main message of the notification
      * @param description Secondary description message
      */
     public static void showError(String caption, String description) {
         showError(caption, description, 0);
     }
-    
+
     /**
-     * Creates an error notification with three parameters for caption, 
+     * Creates an error notification with three parameters for caption,
      * description and time delay.
-     * 
+     *
      * @param caption The main message of the notification
      * @param description Secondary description message
      * @param delay The time delay in milliseconds
      */
     public static void showError(String caption, String description, int delay) {
         Notification errorNotification;
-        
+
         caption = "<i class=\"fa fa-exclamation-circle fa-2x\"></i>&nbsp;&nbsp;"
-                    + caption;
+                + caption;
         if (description.isEmpty()) {
-            errorNotification = new Notification(caption, 
+            errorNotification = new Notification(caption,
                     Notification.Type.ERROR_MESSAGE);
         } else {
-            errorNotification = new Notification(caption, description, 
+            errorNotification = new Notification(caption, description,
                     Notification.Type.ERROR_MESSAGE);
         }
-        
+
         errorNotification.setHtmlContentAllowed(true);
         errorNotification.setPosition(Position.TOP_CENTER);
-        
+
         if (delay != 0) {
             errorNotification.setDelayMsec(delay);
         }
-        
+
         errorNotification.show(Page.getCurrent());
     }
-    
+
     public static void showInformation(String title, String message) {
         showInformation("", title, message);
     }
-    
-    public static void showInformation(String fontAwesomeIcon, String title, 
+
+    public static void showInformation(String fontAwesomeIcon, String title,
             String message) {
         if (!fontAwesomeIcon.isEmpty()) {
             title = fontAwesomeIcon + title;
         }
-        
+
         Notification newNotification;
         if (message == null || message.isEmpty()) {
-            newNotification = new Notification(title, 
+            newNotification = new Notification(title,
                     Notification.Type.TRAY_NOTIFICATION);
         } else {
-            newNotification = new Notification(title, message, 
+            newNotification = new Notification(title, message,
                     Notification.Type.TRAY_NOTIFICATION);
         }
-        
+
         newNotification.setHtmlContentAllowed(true);
-        newNotification.setStyleName("custom-tray-notifications");
-        newNotification.setDelayMsec(4000);
+        newNotification.setStyleName("custom-tray-notifications-info");
+        newNotification.setDelayMsec(3000);
         newNotification.setPosition(Position.TOP_RIGHT);
         newNotification.show(Page.getCurrent());
     }
-    
+
+    public static void showWarning(String title, String message) {
+        
+        title = FontAwesomeIcon.EXCLAMATION_CIRCLE.get2xSize() + title;
+       
+        Notification newNotification;
+        if (message == null || message.isEmpty()) {
+            newNotification = new Notification(title,
+                    Notification.Type.TRAY_NOTIFICATION);
+        } else {
+            newNotification = new Notification(title, message,
+                    Notification.Type.TRAY_NOTIFICATION);
+        }
+
+        newNotification.setHtmlContentAllowed(true);
+        newNotification.setStyleName("custom-tray-notifications-warning");
+        newNotification.setDelayMsec(3000);
+        newNotification.setPosition(Position.TOP_RIGHT);
+        newNotification.show(Page.getCurrent());
+    }
+
 }

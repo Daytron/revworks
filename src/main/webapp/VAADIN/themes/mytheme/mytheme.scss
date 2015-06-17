@@ -61,10 +61,12 @@ $header-height: round($v-unit-size / 1.1) !default;
 
 @import "../valo/valo.scss";
 @import "views/announcement-view.scss";
+@import "views/lecturer-coursework-view.scss";
 
 @mixin mytheme {
     @include valo;
     @include announcement-view;
+    @include lecturer-coursework-view;
 
     // Login Screen
     .login-screen {
@@ -171,8 +173,19 @@ $header-height: round($v-unit-size / 1.1) !default;
         }
     }
 
-    .v-Notification.custom-tray-notifications {
+    .v-Notification.custom-tray-notifications-info {
         background:rgba(19,47,99,0.7);
+        font-size: 0.8rem;
+        color: #fff;
+        border-radius: 5px;
+
+        h1 {
+            color: #fff;
+        }
+    }
+    
+    .v-Notification.custom-tray-notifications-warning {
+        background:rgba(96,62,19,0.7);
         font-size: 0.8rem;
         color: #fff;
         border-radius: 5px;

@@ -179,7 +179,7 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
     }
     
     @Override
-    public Coursework extractReviewsAndComments() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
+    public Coursework extractReviews() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
 
         if (reserveConnectionPool()) {
             try {
@@ -206,77 +206,18 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                 // Iterate through reviews
                 while (resultSetReview.next()) {
                     int reviewId = resultSetReview.getInt(1);
-                    int scrollLocation = resultSetReview.getInt(2);
+                    int pageNum = resultSetReview.getInt(2);
 
                     Timestamp timestamp = resultSetReview.getTimestamp(3);
                     LocalDateTime dateSubmittedReview = timestamp.toLocalDateTime();
 
-                    // Then extract all comments from this review
-                    PreparedStatement preparedStatementComment
-                            = getConnection().prepareStatement(
-                                    PreparedQueryStatement.SELECT_COMMENT.getQuery());
-
-                    preparedStatementComment.setInt(1, reviewId);
-                    ResultSet resultSetComment
-                            = preparedStatementComment.executeQuery();
-
-                    // If no comments found, create empty list of comments
-                    if (!resultSetComment.next()) {
-                        listOfReviews.add(new Review(
-                                reviewId, scrollLocation, dateSubmittedReview, 
-                                new ArrayList<>()));
-
-                        preparedStatementComment.close();
-                        resultSetComment.close();
-                        continue;
-                    }
-
-                    final List<Comment> listOfComments = new ArrayList<>();
-                    resultSetComment.beforeFirst();
-
-                    // Iterate through comments
-                    while (resultSetComment.next()) {
-                        int commentId = resultSetComment.getInt(1);
-                        String commentMesage = resultSetComment.getString(2);
-
-                        Timestamp timestampComment = resultSetComment.getTimestamp(3);
-                        LocalDateTime dateSubmittedComment
-                                = timestampComment.toLocalDateTime();
-
-                        boolean isStudentToLecturer = resultSetComment.getBoolean(4);
-
-                        Comment comment;
-                        if (isStudentToLecturer) {
-                            comment = new Comment(
-                                    commentId,
-                                    this.receivedCoursework.getStudentUser(),
-                                    this.receivedCoursework.getClassTable()
-                                    .getLecturerUser(),
-                                    commentMesage, dateSubmittedComment);
-                        } else {
-                            comment = new Comment(
-                                    commentId,
-                                    this.receivedCoursework.getClassTable()
-                                    .getLecturerUser(), 
-                                    this.receivedCoursework.getStudentUser(),
-                                    commentMesage, dateSubmittedComment);
-                        }
-                        
-                        listOfComments.add(comment);
-                    }
-                    
-                    preparedStatementComment.close();
-                    resultSetComment.close();
-                    
-                    Review review = new Review(reviewId, scrollLocation, 
-                            dateSubmittedReview, listOfComments);
+                    Review review = new Review(reviewId, pageNum, 
+                            dateSubmittedReview);
                     listOfReviews.add(review);
-
                 }
                 
                 preparedStatementReview.close();
                 resultSetReview.close();
-                releaseConnection();
                 
                 this.receivedCoursework.setListOfReviews(listOfReviews);
                 return this.receivedCoursework;
@@ -286,6 +227,8 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                 releaseConnection();
                 throw new SQLErrorQueryException(
                         ExceptionMsg.SQL_ERROR_QUERY.getMsg());
+            } finally {
+                releaseConnection();
             }
         } else {
             throw new SQLErrorRetrievingConnectionAndPoolException(

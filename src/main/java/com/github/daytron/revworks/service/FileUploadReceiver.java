@@ -41,9 +41,7 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
     // In bytes 10 MB = 10,000,000 bytes
     private static final long MAX_SIZE_FILE_ALLOWED = 10000000;
 
-    private final String DOCX_EXTENSION = "docx";
-    private final String ODF_EXTENSION = "odf";
-    private final String ODT_EXTENSION = "odt";
+    private final String PDF_EXTENSION = "pdf";
 
     private final ProgressBar progressbar;
     private File fileUploaded;
@@ -98,9 +96,7 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
 
         // Detect if the user has the right file extension
         String fileExtension = Files.getFileExtension(event.getFilename()).toLowerCase();
-        if (!(fileExtension.equalsIgnoreCase(DOCX_EXTENSION)
-                || fileExtension.equalsIgnoreCase(ODF_EXTENSION)
-                || fileExtension.equalsIgnoreCase(ODT_EXTENSION))) {
+        if (!(fileExtension.equalsIgnoreCase(PDF_EXTENSION))) {
 
             NotificationUtil.showError(
                     ErrorMsg.STUDENT_FAILED_UPLOAD_COURSEWORK.getText(),
@@ -159,7 +155,7 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
 
         // Save reference of file to the current session to be cleanup after
         // the session ended
-        CurrentUserSession.saveFileToBin(fileUploaded);
+        CurrentUserSession.markForGarbageCollection(fileUploaded);
 
     }
 

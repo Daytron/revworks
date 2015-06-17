@@ -20,7 +20,7 @@ package com.github.daytron.revworks.util;
  *
  * @author Ryan Gilera
  */
-public class StringUtil {
+public final class StringUtil {
 
     private StringUtil() {
     }

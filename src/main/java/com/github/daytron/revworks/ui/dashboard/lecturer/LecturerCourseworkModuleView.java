@@ -17,6 +17,7 @@ package com.github.daytron.revworks.ui.dashboard.lecturer;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
@@ -130,7 +131,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
             this.beanItemContainer = beanItemContainer;
             this.moduleNameAsTableName = moduleNameAsTableName;
             this.moduleTable = new Table();
-            this.selectedCoursework = null;;
+            this.selectedCoursework = null;
         }
 
         public BeanItemContainer getBeanItemContainer() {
@@ -255,6 +256,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
             layoutHeader.addComponent(titleLabel);
 
             Button openFileButton = new Button("View Coursework");
+            openFileButton.setDisableOnClick(true);
             openFileButton.setStyleName(ValoTheme.BUTTON_SMALL);
             openFileButton.addClickListener(new Button.ClickListener() {
 
@@ -265,6 +267,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
                         NotificationUtil.showInformation(
                                 "No table item selected.", 
                                 "No item found.");
+                        event.getButton().setEnabled(true);
                     } else {
                         AppEventBus.post(new AppEvent
                                 .LecturerViewCourseworkEvent(selectedCoursework));

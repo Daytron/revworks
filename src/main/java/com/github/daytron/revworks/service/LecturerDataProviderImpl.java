@@ -63,6 +63,9 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
             SQLErrorQueryException, NoClassAttachedToLecturerException {
         CopyOnWriteArrayList<ClassTable> listOfClassTables
                 = CurrentUserSession.getCurrentClassTables();
+        
+        // If somehow the lecturer is not registered to any classes
+        // Better save resources and send back an empty class list 
         if (listOfClassTables.isEmpty()) {
             return new ConcurrentHashMap<>();
         }

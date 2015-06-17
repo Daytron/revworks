@@ -25,7 +25,12 @@ public enum FontAwesomeIcon {
     CHECK_CIRCLE_O("<i class=\"fa fa-check-circle-o "),
     CLOUD_UPLOAD("<i class=\"fa fa-cloud-upload "),
     INFO_CIRCLE("<i class=\"fa fa-info-circle "),
-    THUMBS_O_UP("<i class=\"fa fa-thumbs-o-up ");
+    THUMBS_O_UP("<i class=\"fa fa-thumbs-o-up "),
+    EXCLAMATION_CIRCLE("<i class=\"fa fa-exclamation-circle "),
+    
+    // NONE SIZEABLE - SPINNERS
+    REFRESHER_SPIN("<i class=\"fa fa-refresh fa-spin\"></i>")
+    ;
 
     private final String code;
 
@@ -51,6 +56,10 @@ public enum FontAwesomeIcon {
 
     public String get5xSize() {
         return code + "fa-5x\"></i>&nbsp;&nbsp;";
+    }
+    
+    public String getSpinner() {
+        return code + "&nbsp;&nbsp;";
     }
 
 }

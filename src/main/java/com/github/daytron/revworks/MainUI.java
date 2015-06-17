@@ -42,9 +42,15 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 import java.io.File;
 import java.security.Principal;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.logging.Level;
 import javax.servlet.ServletException;
 
 /**
@@ -108,7 +114,10 @@ public class MainUI extends UI {
     }
 
     public void showDashboardScreen() {
-        setContent(new DashboardScreen(MainUI.this));
+        DashboardScreen dashboardScreen = new DashboardScreen(MainUI.this);
+        AppEventBus.register(dashboardScreen);
+
+        setContent(dashboardScreen);
         getNavigator().navigateTo(getNavigator().getState());
     }
 
@@ -127,8 +136,6 @@ public class MainUI extends UI {
             SessionDestroyListener {
 
         private static final ConcurrentHashMap<String, VaadinSession> listOfUserSessions = new ConcurrentHashMap<>();
-        public static final String TRASH_CAN_FOR_FILES_KEY = "Trashcan";
-        public static final String JDBC_POOL_KEY = "JDBC POOL";
 
         /**
          * Saves the new login session to the collection member,
@@ -208,21 +215,44 @@ public class MainUI extends UI {
                 System.out.println("Session is null!!!");
                 printSessions("With session null");
             } else {
-                final String KEY = CurrentUserSession.class.getCanonicalName();
+                final String KEY = CurrentUserSession.CURRENT_USER_SESSION_ATTRIBUTE_KEY;
                 Principal user = (Principal) event.getSession()
                         .getAttribute(KEY);
-                CopyOnWriteArrayList<File> listOfFilesToDelete
-                        = (CopyOnWriteArrayList<File>) event.getSession()
-                        .getAttribute(TRASH_CAN_FOR_FILES_KEY);
 
                 if (user == null) {
                     System.out.println("User in session is null!!");
                 } else {
+
+                    // This manually deregisters JDBC driver, which prevents Tomcat 7 from complaining about memory leaks wrto this class 
+                    Enumeration<Driver> drivers = DriverManager.getDrivers();
+                    while (drivers.hasMoreElements()) {
+                        Driver driver = drivers.nextElement();
+                        try {
+                            DriverManager.deregisterDriver(driver);
+                            System.out.println(String.format("deregistering jdbc driver: %s", driver));
+                        } catch (SQLException e) {
+                            System.out.println(String.format("Error deregistering driver %s", driver));
+                        }
+
+                    }
+
+                    CopyOnWriteArrayList<File> listOfFilesToDelete
+                            = (CopyOnWriteArrayList<File>) event.getSession()
+                            .getAttribute(CurrentUserSession.TRASH_CAN_FOR_FILES_KEY);
                     // Explicitly cleanup all available or reserve connections 
                     // in the connection pool to free up MYSQL connection load
                     JDBCConnectionPool jdbccp = ((JDBCConnectionPool) event.getSession()
-                            .getAttribute(JDBC_POOL_KEY));
-                    jdbccp.destroy();
+                            .getAttribute(CurrentUserSession.JDBC_CONNECTION_POOL_KEY));
+                    if (jdbccp != null) {
+                        jdbccp.destroy();
+                    }
+
+                    // Shutdown the remaining service thread
+                    ScheduledExecutorService service = (ScheduledExecutorService) event.getSession().getAttribute(
+                            CurrentUserSession.CURRENT_SCHEDULED_EXECUTOR);
+                    if (service != null) {
+                        service.shutdownNow();
+                    }
 
                     // Remove the closed session from list
                     listOfUserSessions.remove(user.getName());

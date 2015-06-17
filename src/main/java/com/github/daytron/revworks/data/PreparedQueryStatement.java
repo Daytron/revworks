@@ -101,7 +101,6 @@ public enum PreparedQueryStatement {
             + "VALUES (?,?,now(),2);"),
     LECTURER_INSERT_NEW_CLASSWIDE_ANNOUNCEMENT("INSERT INTO "
             + "ClassWideAnnouncement VALUES (?,?);"),
-    SELECT_LASTROW_ANNOUNCEMENT("SELECT id FROM Announcement ORDER BY id DESC LIMIT 1;"),
     STUDENT_INSERT_NEW_COURSEWORK("INSERT INTO Coursework "
             + "(title,date_submitted,file,file_extension,student_user_id,"
             + "class_id) VALUES (?,now(),?,?,?,?);"),
@@ -131,17 +130,30 @@ public enum PreparedQueryStatement {
             + "INNER JOIN User ON User.id = Coursework.student_user_id "
             + "WHERE Coursework.class_id = ?;"),
     SELECT_REVIEW("SELECT Review.id AS id, "
-            + "Review.scroll_location as scroll, "
+            + "Review.page_num as pageNum, "
             + "Review.date_submitted as date "
             + "FROM Review "
-            + "WHERE Review.coursework_id = ?; "),
-    SELECT_COMMENT("SELECT Comment.id AS id, "
+            + "WHERE Review.coursework_id = ? "
+            + "ORDER BY Review.page_num ASC;"),
+    SELECT_COMMENT_DESC("SELECT Comment.id AS id, "
             + "Comment.message AS message, "
             + "Comment.date_submitted AS dateSubmitted, "
             + "Comment.is_student_to_lecturer AS isStudentToLecturer  "
             + "FROM Comment  "
             + "WHERE Comment.review_id = ? "
-            + "ORDER BY Comment.date_submitted DESC; ");
+            + "ORDER BY Comment.date_submitted DESC; "),
+     SELECT_COMMENT_ASC("SELECT "
+            + "Comment.message AS message, "
+            + "Comment.date_submitted AS dateSubmitted, "
+            + "Comment.is_student_to_lecturer AS isStudentToLecturer  "
+            + "FROM Comment  "
+            + "WHERE Comment.review_id = ? "
+            + "ORDER BY Comment.date_submitted ASC; "),
+     LECTURER_INSERT_REVIEW("INSERT INTO Review(page_num,date_submitted,"
+             + "coursework_id) VALUES (?,now(),?);"),
+     INSERT_COMMENT("INSERT INTO Comment(message,date_submitted,"
+             + "is_student_to_lecturer,review_id) "
+             + "VALUES (?,now(),?,?);");
 
     private final String query;
 

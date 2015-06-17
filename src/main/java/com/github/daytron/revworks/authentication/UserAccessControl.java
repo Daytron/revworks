@@ -145,9 +145,7 @@ public class UserAccessControl implements AccessControl {
                 // Student otherwise
                 AppEventBus.register(new StudentDataInserterImpl());
             }
-
             
-
             MainUI.get().showDashboardScreen();
 
             NotificationUtil.showInformation(

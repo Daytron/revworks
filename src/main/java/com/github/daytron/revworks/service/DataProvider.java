@@ -33,7 +33,7 @@ public interface DataProvider {
             SQLErrorQueryException, 
             SQLErrorRetrievingConnectionAndPoolException;
     
-    public Coursework extractReviewsAndComments() throws 
+    public Coursework extractReviews() throws 
             SQLErrorRetrievingConnectionAndPoolException, 
             SQLErrorQueryException;
 

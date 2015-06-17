@@ -1,5 +1,6 @@
 SELECT Review.id AS id, 
-Review.scroll_location as scroll,
+Review.page_num as pageNum,
 Review.date_submitted as date 
 FROM Review
-WHERE Review.coursework_id = 1;
+WHERE Review.coursework_id = 1 
+ORDER BY Review.page_num ASC;

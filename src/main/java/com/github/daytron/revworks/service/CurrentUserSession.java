@@ -24,6 +24,7 @@ import com.vaadin.server.VaadinSession;
 import java.io.File;
 import java.security.Principal;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * A static class for handling user in a session.
@@ -45,15 +46,16 @@ public class CurrentUserSession {
     /**
      * The attribute key used to store the current semester id
      */
-    public static final String CURRENT_SEMESTER = "Current Semester";
+    public static final String CURRENT_SEMESTER_KEY = "Current Semester";
 
     public static final String JDBC_CONNECTION_POOL_KEY = "JDBC POOL";
     /**
      * The attribute key used to store the current classes associated with the
      * current user
      */
-    public static final String CURRENT_CLASSES
-            = "Current Classes";
+    public static final String CURRENT_CLASSES = "Current Classes";
+    
+    public static final String CURRENT_SCHEDULED_EXECUTOR = "ExecutorService";
 
     private CurrentUserSession() {
     }
@@ -84,7 +86,7 @@ public class CurrentUserSession {
                     CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
 
             // For current semester
-            vaadinSession.setAttribute(CURRENT_SEMESTER, semesterID);
+            vaadinSession.setAttribute(CURRENT_SEMESTER_KEY, semesterID);
 
             // For list of classes
             vaadinSession.setAttribute(CURRENT_CLASSES, listOfClassTables);
@@ -106,8 +108,31 @@ public class CurrentUserSession {
      *
      * @param fileToBeDeletedLater A File object marked to be deleted
      */
-    public static void saveFileToBin(File fileToBeDeletedLater) {
+    public static void markForGarbageCollection(File fileToBeDeletedLater) {
         getFileTrashBin().add(fileToBeDeletedLater);
+    }
+    
+    public static void setCurrentExecutorService(ScheduledExecutorService service) {
+        // shutdown previous if not null
+        ScheduledExecutorService serviceExecutor = getScheduledExecutorService();
+        if (serviceExecutor != null) {
+            serviceExecutor.shutdownNow();
+        }
+        
+        try {
+            VaadinSession vaadinSession = VaadinSession.getCurrent();
+            vaadinSession.getLockInstance().lock();
+            vaadinSession.setAttribute(CURRENT_SCHEDULED_EXECUTOR, service);
+            
+        } finally {
+            VaadinSession.getCurrent().getLockInstance().unlock();
+        }
+    }
+    
+    public static ScheduledExecutorService getScheduledExecutorService() {
+        ScheduledExecutorService service = (ScheduledExecutorService) VaadinSession
+                .getCurrent().getAttribute(CURRENT_SCHEDULED_EXECUTOR);
+        return  (service == null) ? null : service;
     }
 
     /**
@@ -141,7 +166,7 @@ public class CurrentUserSession {
      */
     public static String getCurrentSemester() {
         String currentSemester = (String) VaadinSession.getCurrent()
-                .getAttribute(CURRENT_SEMESTER);
+                .getAttribute(CURRENT_SEMESTER_KEY);
         return (currentSemester == null) ? null : currentSemester;
     }
 

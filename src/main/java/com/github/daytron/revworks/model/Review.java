@@ -16,7 +16,6 @@
 package com.github.daytron.revworks.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Review model class for Review table.
@@ -25,32 +24,25 @@ import java.util.List;
  */
 public class Review {
     private final int id;
-    private final int scrollLocation;
+    private final int pageNumber;
     private final LocalDateTime dateSubmitted;
-    private final List<Comment> listOfComments;
 
-    public Review(int id, int scrollLocation, LocalDateTime dateSubmitted, 
-            List<Comment> listOfComments) {
+    public Review(int id, int pageNum, LocalDateTime dateSubmitted) {
         this.id = id;
-        this.scrollLocation = scrollLocation;
+        this.pageNumber = pageNum;
         this.dateSubmitted = dateSubmitted;
-        this.listOfComments = listOfComments;
     }
 
     public int getId() {
         return id;
     }
 
-    public int getScrollLocation() {
-        return scrollLocation;
+    public int getPageNumber() {
+        return pageNumber;
     }
 
     public LocalDateTime getDateSubmitted() {
         return dateSubmitted;
-    }
-
-    public List<Comment> getListOfComments() {
-        return listOfComments;
     }
     
 }

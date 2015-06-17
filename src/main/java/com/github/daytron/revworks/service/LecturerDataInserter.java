@@ -26,4 +26,8 @@ import com.github.daytron.revworks.event.AppEvent;
 public interface LecturerDataInserter {
 
     public void insertNewAnnouncement(final AppEvent.LecturerSubmitNewAnnouncementEvent event);
+    
+    public void insertNewReview(final AppEvent.LecturerSubmitNewReviewEvent event);
+    
+    public void insertNewComment(final AppEvent.LecturerSubmitACommentEvent event);
 }

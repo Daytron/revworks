@@ -20,8 +20,6 @@ import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.model.Announcement;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
-import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;

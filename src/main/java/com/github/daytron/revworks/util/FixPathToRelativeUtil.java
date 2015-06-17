@@ -15,6 +15,8 @@
  */
 package com.github.daytron.revworks.util;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,11 +31,12 @@ import java.util.logging.Logger;
  *
  * @author Ryan Gilera
  */
-public class FixPathToRelativeUtil {
+public final class FixPathToRelativeUtil {
 
     public static String fixPath(File htmlFile) throws IOException {
         try {
-            String htmlCodeWithAbsolutePath = extractHtmlCode(htmlFile);
+            String htmlCodeWithAbsolutePath = Files.toString(htmlFile, 
+                    Charsets.UTF_8);
             String newHTMLCodeWithRelativePath = htmlCodeWithAbsolutePath
                     .replace("/home/ryan/GitRepos/revworks/target/revworks-1.0-SNAPSHOT/VAADIN/themes/mytheme/", "./VAADIN/themes/mytheme/");
 

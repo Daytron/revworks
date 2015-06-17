@@ -18,6 +18,8 @@ package com.github.daytron.revworks.event;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
+import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
@@ -167,8 +169,9 @@ public abstract class AppEvent {
         }
 
     }
-    
+
     public static final class LecturerViewCourseworkEvent {
+
         private final Coursework coursework;
 
         public LecturerViewCourseworkEvent(Coursework coursework) {
@@ -179,8 +182,9 @@ public abstract class AppEvent {
             return coursework;
         }
     }
-    
+
     public static final class StudentViewCourseworkEvent {
+
         private final Coursework coursework;
 
         public StudentViewCourseworkEvent(Coursework coursework) {
@@ -190,6 +194,98 @@ public abstract class AppEvent {
         public Coursework getCoursework() {
             return coursework;
         }
+    }
+
+    public static final class ToggleCourseworkViewEvent {
+        private final CssLayout contentLayout;
+        private final boolean isToggled;
+
+        public ToggleCourseworkViewEvent(CssLayout contentLayout, boolean isToggled) {
+            this.contentLayout = contentLayout;
+            this.isToggled = isToggled;
+        }
+
+        public boolean isToggled() {
+            return isToggled;
+        }
+
+        public CssLayout getContentLayout() {
+            return contentLayout;
+        }
+        
+    }
+    
+    public static final class LecturerSubmitNewReviewEvent {
+        private final int courseworkId;
+        private final int pageNumber;
+        private final String message;
+        private final LecturerCourseworkView courseworkView;
+
+        public LecturerSubmitNewReviewEvent(int courseworkId, int pageNumber, 
+                String message, LecturerCourseworkView courseworkView) {
+            this.courseworkId = courseworkId;
+            this.pageNumber = pageNumber;
+            this.message = message;
+            this.courseworkView = courseworkView;
+        }
+
+        public int getCourseworkId() {
+            return courseworkId;
+        }
+
+        public int getPageNumber() {
+            return pageNumber;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public LecturerCourseworkView getCourseworkView() {
+            return courseworkView;
+        }
+        
+        
+    }
+    
+    public static final class  LecturerAddReviewButtonEvent {
+        private final int reviewId;
+        private final int pageNum;
+
+        public LecturerAddReviewButtonEvent(int reviewId, int pageNum) {
+            this.reviewId = reviewId;
+            this.pageNum = pageNum;
+        }
+
+        public int getReviewId() {
+            return reviewId;
+        }
+
+        public int getPageNum() {
+            return pageNum;
+        }
+        
+        
+    }
+    
+    public static final class LecturerSubmitACommentEvent {
+        private final int ReviewId;
+        private final String message;
+
+        public LecturerSubmitACommentEvent(int reviewID, String message) {
+            this.ReviewId = reviewID;
+            this.message = message;
+        }
+
+        public int getReviewId() {
+            return ReviewId;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+        
+        
     }
 
 }

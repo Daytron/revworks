@@ -317,7 +317,7 @@ INSERT INTO `appschema`.`CourseModule` VALUES (1,'PM302');
 INSERT INTO `appschema`.`CourseModule` VALUES (6,'PM302A');
 
 # Semester table
-INSERT INTO `appschema`.`Semester` VALUES('C15','2015-06-01','2015-09-28');
+INSERT INTO `appschema`.`Semester` VALUES('C15','2015-06-08','2015-09-28');
 INSERT INTO `appschema`.`Semester` VALUES('E15','2015-10-05','2016-02-05');
 INSERT INTO `appschema`.`Semester` VALUES('A16','2016-02-08','2016-06-03');
 
@@ -382,12 +382,12 @@ INSERT INTO `appschema`.`AnnouncementType` VALUES (2,'ClassWide');
 INSERT INTO `appschema`.`Announcement` (`title`,`message`,`date_submitted`,`announcement_type_id`)
 VALUES ('Welcome to Revworks!','This is your main portal for coursework reviews from your lecturers. 
 If you have any problem please visit us in the CIT clinic or email us at support@gsm.org.uk.',
-'2015-06-05 08:01:00',1);
+'2015-06-15 08:01:00',1);
 INSERT INTO `appschema`.`Announcement` (`title`,`message`,`date_submitted`,`announcement_type_id`)
 VALUES ('Review Availability','Dear Students, <br><br>I am available to review your assignments over the weekends. 
 If you have something that you would like me to review, please send it by friday. For late submissions, 
 I\'ll look at them later next week. <br>Thank you.',
-'2015-06-06 20:05:14',2);
+'2015-06-15 20:05:14',2);
 
 # ClassWideAnnouncement table
 INSERT INTO `appschema`.`ClassWideAnnouncement` VALUES (2,1);

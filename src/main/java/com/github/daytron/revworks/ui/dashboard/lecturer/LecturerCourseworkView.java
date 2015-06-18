@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.odftoolkit.odfdom.converter.core.ODFConverterException;
 
 /**
  *
@@ -105,7 +104,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         }
     }
 
-    private void initView() throws ODFConverterException, Exception {
+    private void initView() throws Exception {
         final CssLayout expanderWraperLayout = new CssLayout();
         expanderWraperLayout.setWidth("100%");
         expanderWraperLayout.addStyleName(".wrapper-layout");
@@ -158,8 +157,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         return toolbarLayout;
     }
 
-    private VerticalLayout createContentLayout() throws IOException,
-            ODFConverterException, Exception {
+    private VerticalLayout createContentLayout() throws IOException,Exception {
         final VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setWidth("100%");
 
@@ -195,7 +193,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
 
     }
 
-    private CssLayout createCourseworkViewer() throws IOException, ODFConverterException, Exception {
+    private CssLayout createCourseworkViewer() throws IOException, Exception {
         final CssLayout viewerLayout = new CssLayout();
         viewerLayout.setWidth("100%");
         viewerLayout.setStyleName(ValoTheme.LAYOUT_CARD);

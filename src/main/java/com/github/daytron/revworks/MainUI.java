@@ -223,17 +223,17 @@ public class MainUI extends UI {
                 } else {
 
                     // This manually deregisters JDBC driver, which prevents Tomcat 7 from complaining about memory leaks wrto this class 
-                    Enumeration<Driver> drivers = DriverManager.getDrivers();
-                    while (drivers.hasMoreElements()) {
-                        Driver driver = drivers.nextElement();
-                        try {
-                            DriverManager.deregisterDriver(driver);
-                            System.out.println(String.format("deregistering jdbc driver: %s", driver));
-                        } catch (SQLException e) {
-                            System.out.println(String.format("Error deregistering driver %s", driver));
-                        }
-
-                    }
+//                    Enumeration<Driver> drivers = DriverManager.getDrivers();
+//                    while (drivers.hasMoreElements()) {
+//                        Driver driver = drivers.nextElement();
+//                        try {
+//                            DriverManager.deregisterDriver(driver);
+//                            System.out.println(String.format("deregistering jdbc driver: %s", driver));
+//                        } catch (SQLException e) {
+//                            System.out.println(String.format("Error deregistering driver %s", driver));
+//                        }
+//
+//                    }
 
                     CopyOnWriteArrayList<File> listOfFilesToDelete
                             = (CopyOnWriteArrayList<File>) event.getSession()

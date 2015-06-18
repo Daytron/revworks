@@ -23,7 +23,7 @@ import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.Review;
-import com.github.daytron.revworks.presenter.ReviewButtonListener;
+import com.github.daytron.revworks.presenter.LecturerReviewButtonListener;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.github.daytron.revworks.util.PdfRenderer;
 import com.vaadin.data.Property;
@@ -87,7 +87,8 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
                     listOfPdfPages = new ArrayList<>();
                     initView();
                 } catch (Exception ex) {
-                    Logger.getLogger(LecturerCourseworkView.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(LecturerCourseworkView.class.getName())
+                            .log(Level.SEVERE, null, ex);
                     NotificationUtil.showError(
                             ErrorMsg.DATA_FETCH_ERROR.getText(),
                             ErrorMsg.CONSULT_YOUR_ADMIN.getText());
@@ -95,7 +96,8 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
                 }
                 isInitialised = true;
             } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException ex) {
-                Logger.getLogger(LecturerCourseworkView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LecturerCourseworkView.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 NotificationUtil.showError(
                         ErrorMsg.DATA_FETCH_ERROR.getText(),
                         ErrorMsg.CONSULT_YOUR_ADMIN.getText());
@@ -173,6 +175,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         CssLayout scrollLayout = createScrollComponent();
 
         // Comment Layout
+        // By default it is a placeholder hidden with reviewId 0
         commentLayout
                 = new LecturerCommentComponent(coursework, true, currentPage,
                         this);
@@ -233,6 +236,9 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
                         courseworkPagePanel.setContent(image);
                         currentPage = page;
                     } catch (Exception e) {
+                        NotificationUtil.showError(
+                        ErrorMsg.DATA_FETCH_ERROR.getText(),
+                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
                     }
                 } catch (NumberFormatException e) {
                 }
@@ -259,6 +265,9 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
                         currentPage = currentPage - 1;
                         pageField.setValue("" + currentPage);
                     } catch (Exception e) {
+                        NotificationUtil.showError(
+                        ErrorMsg.DATA_FETCH_ERROR.getText(),
+                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
                     }
                 }
             }
@@ -284,6 +293,9 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
                         currentPage = currentPage + 1;
                         pageField.setValue("" + currentPage);
                     } catch (Exception e) {
+                        NotificationUtil.showError(
+                        ErrorMsg.DATA_FETCH_ERROR.getText(),
+                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
                     }
                 }
             }
@@ -373,7 +385,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
             listOfReviewButtons.put(review.getId(), reviewButton);
             scrollReviewLayout.addComponent(reviewButton);
 
-            reviewButton.addClickListener(new ReviewButtonListener(this, 
+            reviewButton.addClickListener(new LecturerReviewButtonListener(this, 
             review.getPageNumber()));
         }
         scrollPanel.setContent(scrollReviewLayout);

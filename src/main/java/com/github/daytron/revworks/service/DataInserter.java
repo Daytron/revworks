@@ -15,6 +15,8 @@
  */
 package com.github.daytron.revworks.service;
 
+import com.github.daytron.revworks.event.AppEvent;
+
 /**
  * The base template for common SQL data insertion and update process for users.
  *
@@ -22,4 +24,5 @@ package com.github.daytron.revworks.service;
  */
 public interface DataInserter {
     public void notifyDataSendError();
+    public void insertNewComment(final AppEvent.SubmitACommentEvent event);
 }

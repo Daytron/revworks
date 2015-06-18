@@ -15,8 +15,8 @@
  */
 package com.github.daytron.revworks.presenter;
 
-import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCommentComponent;
-import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
+import com.github.daytron.revworks.ui.dashboard.student.StudentCommentComponent;
+import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkView;
 import com.vaadin.ui.Button;
 import java.util.Map;
 
@@ -24,12 +24,12 @@ import java.util.Map;
  *
  * @author Ryan Gilera
  */
-public class ReviewButtonListener implements Button.ClickListener {
+public class StudentReviewButtonListener implements Button.ClickListener {
 
-    private final LecturerCourseworkView courseworkView;
+    private final StudentCourseworkView courseworkView;
     private final int associatedPage;
 
-    public ReviewButtonListener(LecturerCourseworkView courseworkView, 
+    public StudentReviewButtonListener(StudentCourseworkView courseworkView, 
             int associatedPage) {
         this.courseworkView = courseworkView;
         this.associatedPage = associatedPage;
@@ -46,27 +46,27 @@ public class ReviewButtonListener implements Button.ClickListener {
             }
         }
 
-        // Do nothing if review comment is already shown or reviewId is zero
+        // Do nothing if reviewId is zero
         if (reviewId == 0) {
             return;
         }
 
-                // Skip new comment layout generation if it is the current 
+        // Skip new comment layout generation if it is the current commentLayout
         // stored commentLayout and show it if hidden
         if (reviewId == courseworkView.getCommentLayout().getReviewId()) {
             courseworkView.getCommentLayout().setVisible(true);
             return;
         }
 
-                //Otherwise begin New comment component generation
+        //Otherwise begin New comment component generation
         // But first shutdown the old componentLayout executor service
+        // Also flip the page viewer to the correspoding review associated page
         courseworkView.getCommentLayout().shutdownScheduler();
 
         courseworkView.getCommentLayout().setVisible(true);
-        LecturerCommentComponent lcc
-                = new LecturerCommentComponent(courseworkView.getCoursework(),
-                        false, courseworkView.getCurrentPage(),
-                        reviewId, courseworkView);
+        StudentCommentComponent lcc
+                = new StudentCommentComponent(courseworkView.getCoursework(),
+                        reviewId);
 
         courseworkView.getCoreContentLayout().replaceComponent(
                 courseworkView.getCommentLayout(), lcc);

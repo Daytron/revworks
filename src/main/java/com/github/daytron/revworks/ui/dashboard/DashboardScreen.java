@@ -16,11 +16,12 @@
 package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.MainUI;
-import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEvent.*;
 import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkModuleView;
 import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
 import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerSubmitAnnouncementView;
 import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkModuleView;
+import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkView;
 import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkSucessView;
 import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkView;
 import com.google.common.eventbus.Subscribe;
@@ -71,6 +72,8 @@ public class DashboardScreen extends VerticalLayout {
             // inner views 
             navigator.addView(StudentSubmitCourseworkSucessView.VIEW_NAME, 
                     StudentSubmitCourseworkSucessView.class);
+            navigator.addView(StudentCourseworkView.VIEW_NAME, 
+                    StudentCourseworkView.class);
         } else if (mainUI.getAccessControl().isUserALecturer()) {
             menu.addView(HomeView.class,
                     HomeView.VIEW_NAME,
@@ -103,8 +106,7 @@ public class DashboardScreen extends VerticalLayout {
     }
     
     @Subscribe
-    public void toggleMaxViewForCourseworkView(
-            final AppEvent.ToggleCourseworkViewEvent event) {
+    public void toggleMaxViewForCourseworkView(final ToggleCourseworkViewEvent event) {
         viewContainer.setVisible(true);
         headerLayout.setVisible(!event.isToggled());
         menu.setVisible(!event.isToggled());

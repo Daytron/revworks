@@ -16,7 +16,14 @@
 package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.data.PreparedQueryStatement;
+import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.util.NotificationUtil;
+import com.google.common.eventbus.Subscribe;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Abstract class for implementing {@link DataInserter} interface for common
@@ -31,5 +38,32 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
         NotificationUtil.showError(
                 ErrorMsg.DATA_SEND_ERROR.getText(),
                 ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+    }
+    
+    @Subscribe
+    @Override
+    public void insertNewComment(final AppEvent.SubmitACommentEvent event) {
+        if (reserveConnectionPool()) {
+            try (PreparedStatement preparedStatementComment = getConnection()
+                    .prepareStatement(
+                            PreparedQueryStatement.INSERT_COMMENT.getQuery())) {
+                        preparedStatementComment.setString(1, event.getMessage());
+                        preparedStatementComment.setBoolean(2, event.isStudentToLecturer());
+                        preparedStatementComment.setInt(3, event.getReviewId());
+
+                        preparedStatementComment.executeUpdate();
+                        getConnection().commit();
+
+                        preparedStatementComment.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(LecturerDataInserterImpl.class.getName())
+                                .log(Level.SEVERE, null, ex);
+                        notifyDataSendError();
+                    } finally {
+                        releaseConnection();
+                    }
+        } else {
+            notifyDataSendError();
+        }
     }
 }

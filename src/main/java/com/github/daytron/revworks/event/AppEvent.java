@@ -276,14 +276,17 @@ public abstract class AppEvent {
 
     }
 
-    public static final class LecturerSubmitACommentEvent {
+    public static final class SubmitACommentEvent {
 
         private final int ReviewId;
         private final String message;
+        private final boolean isStudentToLecturer;
 
-        public LecturerSubmitACommentEvent(int reviewID, String message) {
+        public SubmitACommentEvent(int reviewID, String message, 
+                boolean isStudentToLecturer) {
             this.ReviewId = reviewID;
             this.message = message;
+            this.isStudentToLecturer = isStudentToLecturer;
         }
 
         public int getReviewId() {
@@ -294,6 +297,11 @@ public abstract class AppEvent {
             return message;
         }
 
-    }
+        public boolean isStudentToLecturer() {
+            return isStudentToLecturer;
+        }
 
+        
+    }
+    
 }

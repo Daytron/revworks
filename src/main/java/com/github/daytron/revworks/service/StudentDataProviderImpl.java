@@ -19,6 +19,7 @@ import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.FilePath;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
+import com.github.daytron.revworks.event.AppEvent.*;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
@@ -26,6 +27,9 @@ import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
 import com.github.daytron.revworks.model.User;
+import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
+import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkView;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinService;
@@ -52,14 +56,13 @@ import java.util.logging.Logger;
 public class StudentDataProviderImpl extends DataProviderAbstract
         implements StudentDataProvider {
 
-    private List<ClassTable> listOfClasses;
-
     public StudentDataProviderImpl() {
         super();
     }
 
     @Override
-    public BeanItemContainer<Coursework> extractCourseworkData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, SQLNoResultFoundException, FileNotFoundException, IOException {
+    public BeanItemContainer<Coursework> extractCourseworkData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, 
+            SQLNoResultFoundException, FileNotFoundException, IOException {
         CopyOnWriteArrayList<ClassTable> listOfClassTables
                 = CurrentUserSession.getCurrentClassTables();
 
@@ -81,71 +84,70 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                     preparedStatement.setInt(2, 
                                 ((User)CurrentUserSession.getPrincipal()).getId());
 
-                    ResultSet resultSet = preparedStatement.executeQuery();
-
                     // Skip to the next class if there are no coursework 
                     // submitted for this class
-                    if (!resultSet.next()) {
+                    try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                        // Skip to the next class if there are no coursework
+                        // submitted for this class
+                        if (!resultSet.next()) {
+                            preparedStatement.close();
+                            resultSet.close();
+                            
+                            continue;
+                        }
+                        
+                        resultSet.beforeFirst();
+                        
+                        // Cycle through the SQL query result
+                        while (resultSet.next()) {
+                            
+                            // getPrincipal the bytes data from the resultset
+                            byte[] pdfData = resultSet.getBytes(4);
+                            
+                            // Retrieve file extension
+                            String fileExtension = resultSet.getString(5);
+                            
+                            // Prepare destination path of the pdf file
+                            String basePath = VaadinService.getCurrent()
+                                    .getBaseDirectory().getAbsolutePath()
+                                    + FilePath.TEMP_FILE_HOLDER.getPath();
+                            
+                            // Generate random filename
+                            // so it won't overwrite by the next retrieve file
+                            String randomStringForFilename = UUID.randomUUID().toString();
+                            
+                            String pdfFilename = basePath
+                                    + FilePath.FILE_OUTPUT_NAME.getPath()
+                                    + "/" + randomStringForFilename + "."
+                                    + fileExtension;
+                            
+                            File pdfFile = new File(pdfFilename);
+                            pdfFile.getParentFile().mkdirs();
+                            pdfFile.createNewFile();
+                            
+                            // Begin file write from the bytes retrieved to the newly
+                            // created file with random UUID as filename
+                            Files.write(pdfData, pdfFile);
+                            
+                            // Add to trashbin for later file cleanup
+                            CurrentUserSession.getFileTrashBin().add(pdfFile);
+                            
+                            // Convert SQL DATETIME datatype to Java 8's LocalDateTime
+                            Timestamp timestamp = resultSet.getTimestamp(3);
+                            LocalDateTime dateSubmitted = timestamp.toLocalDateTime();
+                            
+                            listOfCourseworks.add(new Coursework(resultSet.getInt(1),
+                                    resultSet.getString(2),
+                                    dateSubmitted,
+                                    pdfFile,
+                                    fileExtension,
+                                    classTable,
+                                    (StudentUser) CurrentUserSession.getPrincipal()));
+                        }
+                        
                         preparedStatement.close();
-                        resultSet.close();
-
-                        continue;
                     }
-
-                    resultSet.beforeFirst();
-
-                    // Cycle through the SQL query result
-                    while (resultSet.next()) {
-
-                        // getPrincipal the bytes data from the resultset
-                        byte[] pdfData = resultSet.getBytes(4);
-
-                        // Retrieve file extension
-                        String fileExtension = resultSet.getString(5);
-
-                        // Prepare destination path of the pdf file
-                        String basePath = VaadinService.getCurrent()
-                                .getBaseDirectory().getAbsolutePath()
-                                + FilePath.TEMP_FILE_HOLDER.getPath();
-
-                        // Generate random filename
-                        // so it won't overwrite by the next retrieve file
-                        String randomStringForFilename = UUID.randomUUID().toString();
-
-                        String pdfFilename = basePath
-                                + FilePath.FILE_OUTPUT_NAME.getPath()
-                                + "/" + randomStringForFilename + "."
-                                + fileExtension;
-
-                        File pdfFile = new File(pdfFilename);
-                        pdfFile.getParentFile().mkdirs();
-                        pdfFile.createNewFile();
-
-                        // Begin file write from the bytes retrieved to the newly 
-                        // created file with random UUID as filename
-                        Files.write(pdfData, pdfFile);
-
-                        // Add to trashbin for later file cleanup
-                        CurrentUserSession.getFileTrashBin().add(pdfFile);
-
-                        // Convert SQL DATETIME datatype to Java 8's LocalDateTime
-                        Timestamp timestamp = resultSet.getTimestamp(3);
-                        LocalDateTime dateSubmitted = timestamp.toLocalDateTime();
-
-                        listOfCourseworks.add(new Coursework(resultSet.getInt(1),
-                                resultSet.getString(2),
-                                dateSubmitted,
-                                pdfFile,
-                                fileExtension,
-                                classTable,
-                                (StudentUser) CurrentUserSession.getPrincipal()));
-                    }
-
-                    preparedStatement.close();
-                    resultSet.close();
                 }
-
-                releaseConnection();
 
                 BeanItemContainer<Coursework> courseworksContainer
                         = new BeanItemContainer<>(Coursework.class);
@@ -154,18 +156,20 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                 return courseworksContainer;
 
             } catch (SQLException ex) {
-                Logger.getLogger(StudentDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
-                releaseConnection();
+                Logger.getLogger(StudentDataProviderImpl.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 throw new SQLErrorQueryException(
                         ExceptionMsg.SQL_ERROR_QUERY.getMsg());
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(StudentDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
-                releaseConnection();
+                Logger.getLogger(StudentDataProviderImpl.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 throw ex;
             } catch (IOException ex) {
-                Logger.getLogger(StudentDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
-                releaseConnection();
+                Logger.getLogger(StudentDataProviderImpl.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 throw ex;
+            } finally {
+                releaseConnection();
             }
         } else {
             throw new SQLErrorRetrievingConnectionAndPoolException(
@@ -173,4 +177,10 @@ public class StudentDataProviderImpl extends DataProviderAbstract
         }
     }
     
+    @Subscribe
+    public void receiveCourseworkDataFromTable(final StudentViewCourseworkEvent event) {
+        setReceivedCoursework(event.getCoursework());
+
+        MainUI.get().getNavigator().navigateTo(StudentCourseworkView.VIEW_NAME);
+    }
 }

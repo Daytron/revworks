@@ -23,9 +23,9 @@ INSERT INTO `appschema`.`User` (`first_name`, `last_name`,`usertype_id`) VALUES 
 #9
 INSERT INTO `appschema`.`User` (`first_name`, `last_name`,`usertype_id`) VALUES ('Elayne', 'Trakand',2);
 #10
-INSERT INTO `appschema`.`User` (`first_name`, `last_name`,`usertype_id`) VALUES ('Verin', 'Mathwin',2);
-#11
 INSERT INTO `appschema`.`User` (`first_name`, `last_name`,`usertype_id`) VALUES ('Cadsuane', 'Melaidhrin',2);
+#11
+INSERT INTO `appschema`.`User` (`first_name`, `last_name`,`usertype_id`) VALUES ('Shaun', 'Plummer',2);
 #12
 INSERT INTO `appschema`.`User` (`first_name`, `last_name`,`usertype_id`) VALUES ('Lan', 'Mandragoran',2);
 #13
@@ -133,7 +133,7 @@ INSERT INTO `appschema`.`Student` VALUES (9, 126258,'youview');
 #10
 INSERT INTO `appschema`.`Student` VALUES (10, 126259,'youview');
 #11
-INSERT INTO `appschema`.`Student` VALUES (11, 126260,'youview');
+INSERT INTO `appschema`.`Student` VALUES (11, 127214,'VictorTango');
 #12
 INSERT INTO `appschema`.`Student` VALUES (12, 126261,'youview');
 #13
@@ -203,13 +203,13 @@ INSERT INTO `appschema`.`Lecturer` VALUES (43, 'asim.majeed@gsm.org.uk','youview
 #44
 INSERT INTO `appschema`.`Lecturer` VALUES (44, 'baba.sheba@gsm.org.uk','youview');
 #45
-INSERT INTO `appschema`.`Lecturer` VALUES (45, 'aster.mekonnen@gsm.org.uk','youview');
+INSERT INTO `appschema`.`Lecturer` VALUES (45, 'aster.mekonnen@gsm.org.uk','VictorTango');
 #46
 INSERT INTO `appschema`.`Lecturer` VALUES (46, 'amarjeet.singh@gsm.org.uk','youview');
 #47
 INSERT INTO `appschema`.`Lecturer` VALUES (47, 'anwar.ulhawq@gsm.org.uk','youview');
 #48
-INSERT INTO `appschema`.`Lecturer` VALUES (48, 'salvatore.maiorano@gsm.org.uk','youvie');
+INSERT INTO `appschema`.`Lecturer` VALUES (48, 'salvatore.maiorano@gsm.org.uk','youview');
 #49
 INSERT INTO `appschema`.`Lecturer` VALUES (49, 'tendai.mhlanga@gsm.org.uk','youview');
 #50
@@ -373,6 +373,12 @@ INSERT INTO `appschema`.`StudentClass` VALUES (7, 5);
 INSERT INTO `appschema`.`StudentClass` VALUES (8, 6);
 INSERT INTO `appschema`.`StudentClass` VALUES (9, 6);
 INSERT INTO `appschema`.`StudentClass` VALUES (10, 6);
+
+# Shaun
+INSERT INTO `appschema`.`StudentClass` VALUES (11, 2);
+INSERT INTO `appschema`.`StudentClass` VALUES (11, 3);
+INSERT INTO `appschema`.`StudentClass` VALUES (11, 6);
+
 
 # Announcement type table
 INSERT INTO `appschema`.`AnnouncementType` VALUES (1,'SystemWide');

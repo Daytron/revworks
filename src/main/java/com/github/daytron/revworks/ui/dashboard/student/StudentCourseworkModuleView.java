@@ -200,6 +200,7 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
 
         Button openFileButton = new Button("View Coursework");
         openFileButton.setStyleName(ValoTheme.BUTTON_SMALL);
+        openFileButton.setDisableOnClick(true);
         openFileButton.addClickListener(new Button.ClickListener() {
 
             @Override
@@ -209,6 +210,7 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
                         NotificationUtil.showInformation(
                                 "No table item selected.", 
                                 "No item found.");
+                        event.getButton().setEnabled(true);
                     } else {
                         AppEventBus.post(new AppEvent
                                 .StudentViewCourseworkEvent(selectedCoursework));

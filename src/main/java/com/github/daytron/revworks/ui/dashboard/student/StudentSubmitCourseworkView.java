@@ -160,6 +160,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
 
         final List<ClassTable> copyOfClassTables = this.listOfClasses;
         Button submitButton = new Button("Submit");
+        submitButton.setDisableOnClick(true);
         submitButton.addClickListener(new Button.ClickListener() {
 
             @Override
@@ -170,6 +171,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
                         || titleTextField.getValue() == null) {
                     NotificationUtil.showError(
                             ErrorMsg.EMPTY_TITLE_FIELD.getText());
+                    event.getButton().setEnabled(true);
                     return;
                 } else {
                     newFormattedTitle = StringUtil
@@ -180,12 +182,14 @@ public class StudentSubmitCourseworkView extends VerticalLayout
                 if (!fileUploadReceiver.isUploaded()) {
                     NotificationUtil.showError(
                             ErrorMsg.FILE_IS_NOT_YET_UPLOADED.getText());
+                    event.getButton().setEnabled(true);
                     return;
                 }
 
                 if (!agreeBox.getValue()) {
                     NotificationUtil.showError(
                             ErrorMsg.TERMS_NOT_ACCEPTED.getText());
+                    event.getButton().setEnabled(true);
                     return;
                 }
 
@@ -195,6 +199,13 @@ public class StudentSubmitCourseworkView extends VerticalLayout
                             (String) moduleComboBox.getValue())) {
                         selectedClass = classTable;
                     }
+                }
+                
+                if (selectedClass == null) {
+                    NotificationUtil.showError("Something went wrong.",
+                            "Could not find matching class.");
+                    event.getButton().setEnabled(true);
+                    return;
                 }
 
                 AppEventBus.post(new AppEvent.StudentSubmitCourseworkEvent(

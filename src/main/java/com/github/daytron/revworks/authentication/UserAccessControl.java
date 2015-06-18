@@ -29,7 +29,7 @@ import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.data.LoginString;
 import com.github.daytron.revworks.data.LoginValidationNum;
 import com.github.daytron.revworks.data.UserType;
-import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEvent.*;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
@@ -72,7 +72,7 @@ public class UserAccessControl implements AccessControl {
      */
     @Subscribe
     @Override
-    public void signIn(final AppEvent.UserLoginRequestEvent event) {
+    public void signIn(final UserLoginRequestEvent event) {
 
         try {
             event.getUserField().validate();
@@ -98,8 +98,7 @@ public class UserAccessControl implements AccessControl {
      *
      * @param event The custom event for regular user sign-in event
      */
-    private void authenticateUserLoginRequest(
-            final AppEvent.UserLoginRequestEvent event) {
+    private void authenticateUserLoginRequest(final UserLoginRequestEvent event) {
         String userTypeString = (String) event.getUserTypeOptionGroup().getValue();
 
         UserType userType = (userTypeString.equalsIgnoreCase(UserType.STUDENT.getText()))
@@ -144,6 +143,7 @@ public class UserAccessControl implements AccessControl {
             } else {
                 // Student otherwise
                 AppEventBus.register(new StudentDataInserterImpl());
+                AppEventBus.register(MainUI.get().getStudentDataProvider());
             }
             
             MainUI.get().showDashboardScreen();
@@ -168,7 +168,7 @@ public class UserAccessControl implements AccessControl {
      */
     @Subscribe
     @Override
-    public void signInAdmin(final AppEvent.AdminLoginRequestEvent event) {
+    public void signInAdmin(final AdminLoginRequestEvent event) {
         try {
             event.getUserField().validate();
             event.getPasswordField().validate();
@@ -192,8 +192,7 @@ public class UserAccessControl implements AccessControl {
      *
      * @param event The custom event for admin sign-in event
      */
-    private void authenticateAdminLoginRequest(
-            final AppEvent.AdminLoginRequestEvent event) {
+    private void authenticateAdminLoginRequest(final AdminLoginRequestEvent event) {
         UserType userType = UserType.ADMIN;
         String userName = event.getUserField().getValue();
         String password = event.getPasswordField().getValue();
@@ -253,7 +252,7 @@ public class UserAccessControl implements AccessControl {
     @Subscribe
     @Override
     public void webmasterLinkOnClick(
-            final AppEvent.WebmasterLinkClickEvent event) {
+            final WebmasterLinkClickEvent event) {
         AdminLoginPopup adminLoginPopup = new AdminLoginPopup();
 
         adminLoginPopup.setSizeUndefined();
@@ -270,7 +269,7 @@ public class UserAccessControl implements AccessControl {
      */
     @Subscribe
     @Override
-    public void optionGroupOnChangeValue(final AppEvent.OptionChangeValueEvent event) {
+    public void optionGroupOnChangeValue(final OptionChangeValueEvent event) {
         // Retrieve component and new value
         final TextField usernameField = event.getUsernameField();
         String value = event.getValue();
@@ -368,7 +367,7 @@ public class UserAccessControl implements AccessControl {
 
     @Subscribe
     @Override
-    public void signOut(final AppEvent.UserLogoutRequestEvent event) {
+    public void signOut(final UserLogoutRequestEvent event) {
         // Set landing page after signout 
         Page.getCurrent().setLocation(VaadinServlet.getCurrent().getServletConfig()
                 .getServletContext().getContextPath());

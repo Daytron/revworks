@@ -17,7 +17,7 @@ package com.github.daytron.revworks.authentication;
 
 import com.github.daytron.revworks.exception.WrongCurrentUserTypeException;
 import com.github.daytron.revworks.data.UserType;
-import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEvent.*;
 
 /**
  * The base interface for authentication, authorisation checks and access
@@ -27,15 +27,15 @@ import com.github.daytron.revworks.event.AppEvent;
  */
 public interface AccessControl {
 
-    public void signIn(AppEvent.UserLoginRequestEvent event);
+    public void signIn(UserLoginRequestEvent event);
 
-    public void signOut(AppEvent.UserLogoutRequestEvent event);
+    public void signOut(UserLogoutRequestEvent event);
 
-    public void signInAdmin(AppEvent.AdminLoginRequestEvent event);
+    public void signInAdmin(AdminLoginRequestEvent event);
 
-    public void webmasterLinkOnClick(AppEvent.WebmasterLinkClickEvent event);
+    public void webmasterLinkOnClick(WebmasterLinkClickEvent event);
 
-    public void optionGroupOnChangeValue(AppEvent.OptionChangeValueEvent event);
+    public void optionGroupOnChangeValue(OptionChangeValueEvent event);
 
     public boolean isUserSignedIn();
 

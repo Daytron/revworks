@@ -1,6 +1,6 @@
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEvent.*;
 
 /*
  * Copyright 2015 Ryan Gilera.
@@ -25,9 +25,7 @@ import com.github.daytron.revworks.event.AppEvent;
  */
 public interface LecturerDataInserter {
 
-    public void insertNewAnnouncement(final AppEvent.LecturerSubmitNewAnnouncementEvent event);
+    public void insertNewAnnouncement(final LecturerSubmitNewAnnouncementEvent event);
     
-    public void insertNewReview(final AppEvent.LecturerSubmitNewReviewEvent event);
-    
-    public void insertNewComment(final AppEvent.LecturerSubmitACommentEvent event);
+    public void insertNewReview(final LecturerSubmitNewReviewEvent event);
 }

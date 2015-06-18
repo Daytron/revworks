@@ -19,7 +19,7 @@ import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.FilePath;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
-import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEvent.*;
 import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
@@ -52,7 +52,6 @@ import java.util.logging.Logger;
 public class LecturerDataProviderImpl extends DataProviderAbstract
         implements LecturerDataProvider {
 
-
     public LecturerDataProviderImpl() {
         super();
     }
@@ -71,13 +70,12 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
         }
 
         if (reserveConnectionPool()) {
-
             try {
-
                 // Pull courseworks for each class resulting
                 // to a BeanItemContainer and save it to a List object
                 // Then pass those opbjects to BeanItemContainer
-                final ConcurrentHashMap<ClassTable, BeanItemContainer> listOfBeanItemContainers = new ConcurrentHashMap<>();
+                final ConcurrentHashMap<ClassTable, BeanItemContainer> 
+                        listOfBeanItemContainers = new ConcurrentHashMap<>();
 
                 for (ClassTable classTable : listOfClassTables) {
                     final PreparedStatement preparedStatementCoursework
@@ -189,7 +187,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
     }
 
     @Subscribe
-    public void receiveCourseworkDataFromTable(final AppEvent.LecturerViewCourseworkEvent event) {
+    public void receiveCourseworkDataFromTable(final LecturerViewCourseworkEvent event) {
         setReceivedCoursework(event.getCoursework());
 
         MainUI.get().getNavigator().navigateTo(LecturerCourseworkView.VIEW_NAME);

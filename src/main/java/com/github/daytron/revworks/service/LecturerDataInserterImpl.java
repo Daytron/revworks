@@ -17,8 +17,8 @@ package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
-import com.github.daytron.revworks.event.AppEvent;
-import com.github.daytron.revworks.presenter.ReviewButtonListener;
+import com.github.daytron.revworks.event.AppEvent.*;
+import com.github.daytron.revworks.presenter.LecturerReviewButtonListener;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.ui.Button;
@@ -39,7 +39,7 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
 
     @Subscribe
     @Override
-    public void insertNewAnnouncement(final AppEvent.LecturerSubmitNewAnnouncementEvent event) {
+    public void insertNewAnnouncement(final LecturerSubmitNewAnnouncementEvent event) {
 
         if (reserveConnectionPool()) {
             try {
@@ -107,7 +107,7 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
 
     @Subscribe
     @Override
-    public void insertNewReview(AppEvent.LecturerSubmitNewReviewEvent event) {
+    public void insertNewReview(LecturerSubmitNewReviewEvent event) {
         if (reserveConnectionPool()) {
             try {
                 PreparedStatement preparedStatementReview
@@ -161,7 +161,7 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
                 event.getCourseworkView().getScrollReviewLayout()
                         .addComponent(reviewButton);
                 
-                reviewButton.addClickListener(new ReviewButtonListener(
+                reviewButton.addClickListener(new LecturerReviewButtonListener(
                     event.getCourseworkView(), event.getPageNumber()));
             } catch (SQLException ex) {
                 Logger.getLogger(LecturerDataInserterImpl.class.getName())
@@ -170,33 +170,6 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
             } finally {
                 releaseConnection();
             }
-        } else {
-            notifyDataSendError();
-        }
-    }
-
-    @Subscribe
-    @Override
-    public void insertNewComment(final AppEvent.LecturerSubmitACommentEvent event) {
-        if (reserveConnectionPool()) {
-            try (PreparedStatement preparedStatementComment = getConnection()
-                    .prepareStatement(
-                            PreparedQueryStatement.INSERT_COMMENT.getQuery())) {
-                        preparedStatementComment.setString(1, event.getMessage());
-                        preparedStatementComment.setBoolean(2, false);
-                        preparedStatementComment.setInt(3, event.getReviewId());
-
-                        preparedStatementComment.executeUpdate();
-                        getConnection().commit();
-
-                        preparedStatementComment.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(LecturerDataInserterImpl.class.getName())
-                                .log(Level.SEVERE, null, ex);
-                        notifyDataSendError();
-                    } finally {
-                        releaseConnection();
-                    }
         } else {
             notifyDataSendError();
         }

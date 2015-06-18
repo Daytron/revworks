@@ -24,7 +24,6 @@ import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.model.Announcement;
 import com.github.daytron.revworks.model.ClassTable;
-import com.github.daytron.revworks.model.Comment;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.Review;
 import java.sql.PreparedStatement;
@@ -179,7 +178,8 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
     }
     
     @Override
-    public Coursework extractReviews() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
+    public Coursework extractReviews() throws 
+            SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
 
         if (reserveConnectionPool()) {
             try {

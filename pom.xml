@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -102,16 +102,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>18.0</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.opensagres.xdocreport</groupId>
-            <artifactId>org.apache.poi.xwpf.converter.xhtml</artifactId>
-            <version>1.0.5</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.opensagres.xdocreport</groupId>
-            <artifactId>org.odftoolkit.odfdom.converter.xhtml</artifactId>
-            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
@@ -162,7 +152,8 @@
                     <compileReport>false</compileReport>
                     <style>OBF</style>
                     <strict>true</strict>
-                    <runTarget>http://localhost:8080/revworks</runTarget>
+                    <!--<runTarget>http://localhost:8080/revworks</runTarget>-->
+                    <runTarget>http://revworks.space</runTarget>
                 </configuration>
                 <executions>
                     <execution>

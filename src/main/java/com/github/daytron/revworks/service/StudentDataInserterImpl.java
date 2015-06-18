@@ -17,7 +17,7 @@ package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
-import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEvent.*;
 import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkSucessView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
@@ -35,11 +35,12 @@ import java.util.logging.Logger;
  *
  * @author Ryan Gilera
  */
-public class StudentDataInserterImpl extends  DataInserterAbstract implements StudentDataInserter {
+public class StudentDataInserterImpl extends  DataInserterAbstract 
+implements StudentDataInserter {
 
     @Subscribe
     @Override
-    public void insertNewCoursework(AppEvent.StudentSubmitCourseworkEvent event) {
+    public void insertNewCoursework(StudentSubmitCourseworkEvent event) {
         
         if (reserveConnectionPool()) {
             try {
@@ -69,7 +70,7 @@ public class StudentDataInserterImpl extends  DataInserterAbstract implements St
                 getConnection().commit();
                 
                 preparedStatement.close();
-                releaseConnection();
+                
                 
                 // switch view to success page
                 MainUI.get().getNavigator()
@@ -77,15 +78,20 @@ public class StudentDataInserterImpl extends  DataInserterAbstract implements St
                 
                 
             } catch (SQLException | FileNotFoundException ex) {
-                Logger.getLogger(StudentDataInserterImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StudentDataInserterImpl.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 notifyDataSendError();
             } catch (IOException ex) {
-                Logger.getLogger(StudentDataInserterImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StudentDataInserterImpl.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 notifyDataSendError();
+            } finally {
+                releaseConnection();
             }
         } else {
             notifyDataSendError();
         }
     }
+
     
 }

@@ -49,6 +49,7 @@ import java.util.logging.Logger;
  *
  * @author Ryan Gilera
  */
+@SuppressWarnings("serial")
 public class LecturerCommentComponent extends CssLayout {
 
     private final ScheduledExecutorService scheduler
@@ -93,7 +94,7 @@ public class LecturerCommentComponent extends CssLayout {
 
         runnableTask = new CommentsExtractorRunnable();
         scheduledFuture = scheduler.scheduleWithFixedDelay(runnableTask,
-                0, 2, TimeUnit.SECONDS);
+                0, 1, TimeUnit.SECONDS);
         
 
         CurrentUserSession.setCurrentExecutorService(scheduler);
@@ -170,8 +171,8 @@ public class LecturerCommentComponent extends CssLayout {
                                 coursework.getId(), page, messageString, 
                         courseworkView));
                     } else {
-                        AppEventBus.post(new AppEvent.LecturerSubmitACommentEvent(
-                                reviewId, messageString));
+                        AppEventBus.post(new AppEvent.SubmitACommentEvent(
+                                reviewId, messageString, false));
                     }
 
                     isFirstComment = false;
@@ -204,6 +205,7 @@ public class LecturerCommentComponent extends CssLayout {
     }
 
     public void shutdownScheduler() {
+        scheduledFuture.cancel(true);
         scheduler.shutdownNow();
     }
 

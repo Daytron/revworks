@@ -17,7 +17,6 @@ package com.github.daytron.revworks.ui.dashboard.lecturer;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
-import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;

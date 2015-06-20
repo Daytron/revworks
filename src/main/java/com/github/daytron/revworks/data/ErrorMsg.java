@@ -33,8 +33,8 @@ public enum ErrorMsg {
     // For coursework upload
     STUDENT_FAILED_UPLOAD_COURSEWORK("Failed uploading the file."),
     STUDENT_REACHED_MAX_FILE_SIZE("Your file must not exceed 10 MB."),
-    STUDENT_WRONG_FILE_TYPE_UPLOAD("Invalid filetype. Only accepts docx, odf "
-            + "and odt file extensions."),
+    STUDENT_WRONG_FILE_TYPE_UPLOAD("Invalid filetype. Only accepts pdf file "
+            + "extension."),
     EMPTY_TITLE_FIELD("Empty title field."),
     FILE_IS_NOT_YET_UPLOADED("Your file is not yet uploaded."),
     TERMS_NOT_ACCEPTED("Please accept the terms and condition by ticking the "

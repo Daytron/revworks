@@ -118,8 +118,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
 
         // Info label
         Label uploadInformationLabel = new Label();
-        uploadInformationLabel.setValue("We accept the following filetypes: "
-                + "docx, odf and odt extensions.");
+        uploadInformationLabel.setValue("Upload your coursework PDF file here.");
         contentFormLayout.addComponent(uploadInformationLabel);
 
         // Upload area

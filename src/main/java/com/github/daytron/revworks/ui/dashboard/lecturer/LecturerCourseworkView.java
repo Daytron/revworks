@@ -22,8 +22,8 @@ import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.Coursework;
-import com.github.daytron.revworks.model.Review;
-import com.github.daytron.revworks.presenter.LecturerReviewButtonListener;
+import com.github.daytron.revworks.model.Note;
+import com.github.daytron.revworks.presenter.NoteButtonListener;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.github.daytron.revworks.util.PdfRenderer;
 import com.vaadin.data.Property;
@@ -65,11 +65,11 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
     private Panel courseworkPagePanel;
     private int currentPage;
     private final TextField pageField;
-    private VerticalLayout scrollReviewLayout;
+    private VerticalLayout scrollNoteLayout;
     private LecturerCommentComponent commentLayout;
     private HorizontalLayout coreContentLayout;
 
-    private Map<Integer, Button> listOfReviewButtons;
+    private Map<Integer, Button> listOfNoteButtons;
 
     public LecturerCourseworkView() {
         this.pageField = new TextField();
@@ -79,9 +79,9 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
             try {
-                listOfReviewButtons = new HashMap<>();
+                listOfNoteButtons = new HashMap<>();
                 coursework = MainUI.get().getLecturerDataProvider()
-                        .extractReviews();
+                        .extractNotes();
                 try {
                     listOfPdfPages = new ArrayList<>();
                     initView();
@@ -173,7 +173,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         CssLayout scrollLayout = createScrollComponent();
 
         // Comment Layout
-        // By default it is a placeholder hidden with reviewId 0
+        // By default it is a placeholder hidden with noteId 0
         commentLayout
                 = new LecturerCommentComponent(coursework, true, currentPage,
                         this);
@@ -338,16 +338,16 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         headerLayout.addStyleName("v-panel-caption");
         headerLayout.setWidth("100%");
 
-        Label titleLabel = new Label("Review");
+        Label titleLabel = new Label("Note");
         titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
         titleLabel.setSizeFull();
         headerLayout.addComponent(titleLabel);
 
-        Button addReviewButton = new Button("Add");
-        addReviewButton.setIcon(FontAwesome.PLUS_CIRCLE);
-        addReviewButton.addStyleName(ValoTheme.BUTTON_BORDERLESS);
-        addReviewButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        addReviewButton.addClickListener(new Button.ClickListener() {
+        Button addNoteButton = new Button("Add");
+        addNoteButton.setIcon(FontAwesome.PLUS_CIRCLE);
+        addNoteButton.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+        addNoteButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        addNoteButton.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
@@ -362,7 +362,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
                 commentLayout = lcc;
             }
         });
-        headerLayout.addComponent(addReviewButton);
+        headerLayout.addComponent(addNoteButton);
 
         headerLayout.setExpandRatio(titleLabel, 1);
         scrollLayout.addComponent(headerLayout);
@@ -372,37 +372,37 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         scrollPanel.setWidth("100%");
         scrollPanel.setHeight("565px");
 
-        scrollReviewLayout = new VerticalLayout();
-        scrollReviewLayout.setWidth("100%");
-        scrollReviewLayout.setHeight(null);
+        scrollNoteLayout = new VerticalLayout();
+        scrollNoteLayout.setWidth("100%");
+        scrollNoteLayout.setHeight(null);
 
-        for (Review review : coursework.getListOfReviews()) {
-            Button reviewButton = new Button("p" + review.getPageNumber());
-            reviewButton.setSizeFull();
+        for (Note note : coursework.getListOfNotes()) {
+            Button noteButton = new Button("p" + note.getPageNumber());
+            noteButton.setSizeFull();
 
-            listOfReviewButtons.put(review.getId(), reviewButton);
-            scrollReviewLayout.addComponent(reviewButton);
+            listOfNoteButtons.put(note.getId(), noteButton);
+            scrollNoteLayout.addComponent(noteButton);
 
-            reviewButton.addClickListener(new LecturerReviewButtonListener(this, 
-            review.getPageNumber()));
+            noteButton.addClickListener(new NoteButtonListener(this, 
+            note.getPageNumber()));
         }
-        scrollPanel.setContent(scrollReviewLayout);
+        scrollPanel.setContent(scrollNoteLayout);
         scrollLayout.addComponent(scrollPanel);
 
         return scrollLayout;
 
     }
 
-    public VerticalLayout getScrollReviewLayout() {
-        return scrollReviewLayout;
+    public VerticalLayout getScrollNoteLayout() {
+        return scrollNoteLayout;
     }
 
     public LecturerCommentComponent getCommentLayout() {
         return commentLayout;
     }
 
-    public Map<Integer, Button> getListOfReviewButtons() {
-        return listOfReviewButtons;
+    public Map<Integer, Button> getListOfNoteButtons() {
+        return listOfNoteButtons;
     }
 
     public void shutdownExecutorService() {

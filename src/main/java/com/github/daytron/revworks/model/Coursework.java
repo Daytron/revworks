@@ -35,7 +35,7 @@ public class Coursework {
     private final File courseworkFile;
     private final ClassTable classTable;
     private final StudentUser studentUser;
-    private List<Review> listOfReviews;
+    private List<Note> listOfNotes;
 
     public Coursework(int id, String title, LocalDateTime dateSubmitted,
             File courseworkFile, String fileExtension, ClassTable classTable, 
@@ -49,10 +49,10 @@ public class Coursework {
         this.studentUser = studentUser;
         
         // Initially set to empty when coursework module view is launched
-        // Then set it with new set of Review objects only when user 
+        // Then set it with new set of Note objects only when user 
         // decides to open a particular coursework, this way it saves up 
         // resources.
-        this.listOfReviews = new ArrayList<>();
+        this.listOfNotes = new ArrayList<>();
     }
 
     public ClassTable getClassTable() {
@@ -83,12 +83,12 @@ public class Coursework {
         return fileExtension;
     }
 
-    public List<Review> getListOfReviews() {
-        return listOfReviews;
+    public List<Note> getListOfNotes() {
+        return listOfNotes;
     }
 
-    public void setListOfReviews(List<Review> listOfReviews) {
-        this.listOfReviews = listOfReviews;
+    public void setListOfNotes(List<Note> listOfNotes) {
+        this.listOfNotes = listOfNotes;
     }
     
 }

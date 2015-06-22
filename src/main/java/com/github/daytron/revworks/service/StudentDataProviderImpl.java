@@ -27,7 +27,6 @@ import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
 import com.github.daytron.revworks.model.User;
-import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
 import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;

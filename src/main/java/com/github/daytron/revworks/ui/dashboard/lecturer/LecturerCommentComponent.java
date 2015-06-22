@@ -61,7 +61,7 @@ public class LecturerCommentComponent extends CssLayout {
     private final Label commentLabel;
     private final TextArea writerArea;
     private boolean isFirstComment;
-    private int reviewId;
+    private int noteId;
     private final int page;
     private final LecturerCourseworkView courseworkView;
     
@@ -74,12 +74,12 @@ public class LecturerCommentComponent extends CssLayout {
     }
 
     public LecturerCommentComponent(Coursework coursework,
-            boolean isFirstComment, int page, int reviewID, 
+            boolean isFirstComment, int page, int noteId, 
             LecturerCourseworkView courseworkView) {
         this.coursework = coursework;
         this.isFirstComment = isFirstComment;
         this.page = page;
-        this.reviewId = reviewID;
+        this.noteId = noteId;
         this.courseworkView = courseworkView;
 
         setWidth("100%");
@@ -166,13 +166,13 @@ public class LecturerCommentComponent extends CssLayout {
                     String messageString = writerArea.getValue();
                     writerArea.setValue("");
 
-                    if (isFirstComment && reviewId == 0) {
-                        AppEventBus.post(new AppEvent.LecturerSubmitNewReviewEvent(
+                    if (isFirstComment && noteId == 0) {
+                        AppEventBus.post(new AppEvent.SubmitNewNoteEvent(
                                 coursework.getId(), page, messageString, 
                         courseworkView));
                     } else {
                         AppEventBus.post(new AppEvent.SubmitACommentEvent(
-                                reviewId, messageString, false));
+                                noteId, messageString, false));
                     }
 
                     isFirstComment = false;
@@ -196,12 +196,12 @@ public class LecturerCommentComponent extends CssLayout {
         return writerArea;
     }
 
-    public void setReviewId(int reviewId) {
-        this.reviewId = reviewId;
+    public void setNoteId(int noteId) {
+        this.noteId = noteId;
     }
 
-    public int getReviewId() {
-        return reviewId;
+    public int getNoteId() {
+        return noteId;
     }
 
     public void shutdownScheduler() {
@@ -215,14 +215,14 @@ public class LecturerCommentComponent extends CssLayout {
 
         @Override
         public void run() {
-            if (!isFirstComment && reviewId > 0) {
+            if (!isFirstComment && noteId > 0) {
                 if (reserveConnectionPool()) {
                     try {
                         ResultSet resultSet;
                         StringBuilder stringBuilder;
                         try (PreparedStatement preparedStatement = getConnection()
                                 .prepareStatement(PreparedQueryStatement.SELECT_COMMENT_ASC.getQuery())) {
-                            preparedStatement.setInt(1, reviewId);
+                            preparedStatement.setInt(1, noteId);
                             resultSet = preparedStatement.executeQuery();
                             if (!resultSet.next()) {
                                 preparedStatement.close();

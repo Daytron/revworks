@@ -25,7 +25,7 @@ import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.model.Announcement;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
-import com.github.daytron.revworks.model.Review;
+import com.github.daytron.revworks.model.Note;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -178,52 +178,53 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
     }
     
     @Override
-    public Coursework extractReviews() throws 
+    public Coursework extractNotes() throws 
             SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
 
         if (reserveConnectionPool()) {
             try {
-                PreparedStatement preparedStatementReview
+                PreparedStatement preparedStatementNote
                         = getConnection().prepareStatement(
-                                PreparedQueryStatement.SELECT_REVIEW.getQuery());
+                                PreparedQueryStatement.SELECT_NOTE.getQuery());
 
-                preparedStatementReview.setInt(1, this.receivedCoursework.getId());
-                ResultSet resultSetReview = preparedStatementReview.executeQuery();
+                preparedStatementNote.setInt(1, this.receivedCoursework.getId());
+                ResultSet resultSetNote = preparedStatementNote.executeQuery();
 
-                // if no reviews found, return the coursework
-                // By default, the list of reviews is empty
-                if (!resultSetReview.next()) {
-                    preparedStatementReview.close();
-                    resultSetReview.close();
+                // if no notes found, return the coursework
+                // By default, the list of notes is empty
+                if (!resultSetNote.next()) {
+                    preparedStatementNote.close();
+                    resultSetNote.close();
                     releaseConnection();
 
                     return this.receivedCoursework;
                 }
 
-                final List<Review> listOfReviews = new ArrayList<>();
-                resultSetReview.beforeFirst();
+                final List<Note> listOfNotes = new ArrayList<>();
+                resultSetNote.beforeFirst();
 
-                // Iterate through reviews
-                while (resultSetReview.next()) {
-                    int reviewId = resultSetReview.getInt(1);
-                    int pageNum = resultSetReview.getInt(2);
+                // Iterate through notes
+                while (resultSetNote.next()) {
+                    int noteId = resultSetNote.getInt(1);
+                    int pageNum = resultSetNote.getInt(2);
 
-                    Timestamp timestamp = resultSetReview.getTimestamp(3);
-                    LocalDateTime dateSubmittedReview = timestamp.toLocalDateTime();
+                    Timestamp timestamp = resultSetNote.getTimestamp(3);
+                    LocalDateTime dateSubmittedNote = timestamp.toLocalDateTime();
 
-                    Review review = new Review(reviewId, pageNum, 
-                            dateSubmittedReview);
-                    listOfReviews.add(review);
+                    Note note = new Note(noteId, pageNum, 
+                            dateSubmittedNote);
+                    listOfNotes.add(note);
                 }
                 
-                preparedStatementReview.close();
-                resultSetReview.close();
+                preparedStatementNote.close();
+                resultSetNote.close();
                 
-                this.receivedCoursework.setListOfReviews(listOfReviews);
+                this.receivedCoursework.setListOfNotes(listOfNotes);
                 return this.receivedCoursework;
 
             } catch (SQLException ex) {
-                Logger.getLogger(LecturerDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LecturerDataProviderImpl.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 releaseConnection();
                 throw new SQLErrorQueryException(
                         ExceptionMsg.SQL_ERROR_QUERY.getMsg());

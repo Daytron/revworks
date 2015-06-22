@@ -49,7 +49,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
                             PreparedQueryStatement.INSERT_COMMENT.getQuery())) {
                         preparedStatementComment.setString(1, event.getMessage());
                         preparedStatementComment.setBoolean(2, event.isStudentToLecturer());
-                        preparedStatementComment.setInt(3, event.getReviewId());
+                        preparedStatementComment.setInt(3, event.getNoteId());
 
                         preparedStatementComment.executeUpdate();
                         getConnection().commit();

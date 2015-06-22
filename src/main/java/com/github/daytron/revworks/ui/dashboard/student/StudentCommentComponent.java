@@ -60,11 +60,11 @@ public class StudentCommentComponent extends CssLayout {
     private final Coursework coursework;
     private final Label commentLabel;
     private final TextArea writerArea;
-    private int reviewId;
+    private int noteId;
 
-    public StudentCommentComponent(Coursework coursework, int reviewID) {
+    public StudentCommentComponent(Coursework coursework, int noteId) {
         this.coursework = coursework;
-        this.reviewId = reviewID;
+        this.noteId = noteId;
 
         setWidth("100%");
         setStyleName(ValoTheme.LAYOUT_CARD);
@@ -144,12 +144,12 @@ public class StudentCommentComponent extends CssLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                if (!writerArea.isEmpty() && reviewId > 0) {
+                if (!writerArea.isEmpty() && noteId > 0) {
                     String messageString = writerArea.getValue();
                     writerArea.setValue("");
 
                     AppEventBus.post(new AppEvent.SubmitACommentEvent(
-                            reviewId, messageString, true));
+                            noteId, messageString, true));
                 }
             }
         });
@@ -162,8 +162,8 @@ public class StudentCommentComponent extends CssLayout {
         return contentLayout;
     }
 
-    public int getReviewId() {
-        return reviewId;
+    public int getNoteId() {
+        return noteId;
     }
 
     public void shutdownScheduler() {
@@ -177,7 +177,7 @@ public class StudentCommentComponent extends CssLayout {
 
         @Override
         public void run() {
-            if (reviewId > 0) {
+            if (noteId > 0) {
                 if (reserveConnectionPool()) {
                     try {
                         ResultSet resultSet;
@@ -185,7 +185,7 @@ public class StudentCommentComponent extends CssLayout {
                         try (PreparedStatement preparedStatement = getConnection()
                                 .prepareStatement(PreparedQueryStatement
                                         .SELECT_COMMENT_ASC.getQuery())) {
-                            preparedStatement.setInt(1, reviewId);
+                            preparedStatement.setInt(1, noteId);
                             resultSet = preparedStatement.executeQuery();
                             if (!resultSet.next()) {
                                 preparedStatement.close();

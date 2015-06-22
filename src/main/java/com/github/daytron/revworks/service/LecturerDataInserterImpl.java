@@ -18,7 +18,7 @@ package com.github.daytron.revworks.service;
 import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.event.AppEvent.*;
-import com.github.daytron.revworks.presenter.LecturerReviewButtonListener;
+import com.github.daytron.revworks.presenter.NoteButtonListener;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.ui.Button;
@@ -107,26 +107,26 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
 
     @Subscribe
     @Override
-    public void insertNewReview(LecturerSubmitNewReviewEvent event) {
+    public void insertNewNote(SubmitNewNoteEvent event) {
         if (reserveConnectionPool()) {
             try {
-                PreparedStatement preparedStatementReview
+                PreparedStatement preparedStatementNote
                         = getConnection().prepareStatement(
-                                PreparedQueryStatement.LECTURER_INSERT_REVIEW.getQuery(),
+                                PreparedQueryStatement.INSERT_NOTE.getQuery(),
                                 Statement.RETURN_GENERATED_KEYS);
-                preparedStatementReview.setInt(1, event.getPageNumber());
-                preparedStatementReview.setInt(2, event.getCourseworkId());
+                preparedStatementNote.setInt(1, event.getPageNumber());
+                preparedStatementNote.setInt(2, event.getCourseworkId());
 
-                preparedStatementReview.executeUpdate();
+                preparedStatementNote.executeUpdate();
                 getConnection().commit();
 
-                ResultSet resultSet = preparedStatementReview.getGeneratedKeys();
-                int generatedReviewId;
+                ResultSet resultSet = preparedStatementNote.getGeneratedKeys();
+                int generatedNoteId;
 
                 if (resultSet.next()) {
-                    generatedReviewId = resultSet.getInt(1);
+                    generatedNoteId = resultSet.getInt(1);
                 } else {
-                    preparedStatementReview.close();
+                    preparedStatementNote.close();
                     resultSet.close();
                     releaseConnection();
 
@@ -139,29 +139,29 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
                                 PreparedQueryStatement.INSERT_COMMENT.getQuery());
                 preparedStatementComment.setString(1, event.getMessage());
                 preparedStatementComment.setBoolean(2, false);
-                preparedStatementComment.setInt(3, generatedReviewId);
+                preparedStatementComment.setInt(3, generatedNoteId);
 
                 preparedStatementComment.executeUpdate();
                 getConnection().commit();
 
-                preparedStatementReview.close();
+                preparedStatementNote.close();
                 resultSet.close();
                 preparedStatementComment.close();
 
                 event.getCourseworkView().getCommentLayout()
-                        .setReviewId(generatedReviewId);
+                        .setNoteId(generatedNoteId);
 
-                // Create review button
-                final Button reviewButton = new Button("p" + event.getPageNumber());
-                reviewButton.setSizeFull();
+                // Create note button
+                final Button noteButton = new Button("p" + event.getPageNumber());
+                noteButton.setSizeFull();
                 
-                event.getCourseworkView().getListOfReviewButtons()
-                        .put(generatedReviewId, reviewButton);
+                event.getCourseworkView().getListOfNoteButtons()
+                        .put(generatedNoteId, noteButton);
                 
-                event.getCourseworkView().getScrollReviewLayout()
-                        .addComponent(reviewButton);
+                event.getCourseworkView().getScrollNoteLayout()
+                        .addComponent(noteButton);
                 
-                reviewButton.addClickListener(new LecturerReviewButtonListener(
+                noteButton.addClickListener(new NoteButtonListener(
                     event.getCourseworkView(), event.getPageNumber()));
             } catch (SQLException ex) {
                 Logger.getLogger(LecturerDataInserterImpl.class.getName())

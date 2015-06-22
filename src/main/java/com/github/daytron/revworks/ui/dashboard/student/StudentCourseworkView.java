@@ -22,8 +22,8 @@ import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.Coursework;
-import com.github.daytron.revworks.model.Review;
-import com.github.daytron.revworks.presenter.StudentReviewButtonListener;
+import com.github.daytron.revworks.model.Note;
+import com.github.daytron.revworks.presenter.StudentNoteButtonListener;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.github.daytron.revworks.util.PdfRenderer;
 import com.vaadin.data.Property;
@@ -65,11 +65,11 @@ public class StudentCourseworkView extends VerticalLayout implements View {
     private Panel courseworkPagePanel;
     private int currentPage;
     private final TextField pageField;
-    private VerticalLayout scrollReviewLayout;
+    private VerticalLayout scrollNoteLayout;
      private StudentCommentComponent commentLayout;
     private HorizontalLayout coreContentLayout;
 
-    private Map<Integer, Button> listOfReviewButtons;
+    private Map<Integer, Button> listOfNoteButtons;
     
     public StudentCourseworkView() {
         this.pageField = new TextField();
@@ -79,9 +79,9 @@ public class StudentCourseworkView extends VerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
             try {
-                listOfReviewButtons = new HashMap<>();
+                listOfNoteButtons = new HashMap<>();
                 coursework = MainUI.get().getStudentDataProvider()
-                        .extractReviews();
+                        .extractNotes();
                 
                 try {
                     listOfPdfPages = new ArrayList<>();
@@ -176,7 +176,7 @@ public class StudentCourseworkView extends VerticalLayout implements View {
         CssLayout scrollLayout = createScrollComponent();
 
         // Comment Layout
-        // By default it is a placeholder hidden with reviewId 0
+        // By default it is a placeholder hidden with noteId 0
         commentLayout
                 = new StudentCommentComponent(coursework, 0);
         commentLayout.setVisible(false);
@@ -341,7 +341,7 @@ public class StudentCourseworkView extends VerticalLayout implements View {
         headerLayout.addStyleName("v-panel-caption");
         headerLayout.setWidth("100%");
 
-        Label titleLabel = new Label("Review");
+        Label titleLabel = new Label("Note");
         titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
         titleLabel.setSizeFull();
         headerLayout.addComponent(titleLabel);
@@ -353,21 +353,21 @@ public class StudentCourseworkView extends VerticalLayout implements View {
         scrollPanel.setWidth("100%");
         scrollPanel.setHeight("565px");
 
-        scrollReviewLayout = new VerticalLayout();
-        scrollReviewLayout.setWidth("100%");
-        scrollReviewLayout.setHeight(null);
+        scrollNoteLayout = new VerticalLayout();
+        scrollNoteLayout.setWidth("100%");
+        scrollNoteLayout.setHeight(null);
 
-        for (Review review : coursework.getListOfReviews()) {
-            Button reviewButton = new Button("p" + review.getPageNumber());
-            reviewButton.setSizeFull();
+        for (Note note : coursework.getListOfNotes()) {
+            Button noteButton = new Button("p" + note.getPageNumber());
+            noteButton.setSizeFull();
 
-            listOfReviewButtons.put(review.getId(), reviewButton);
-            scrollReviewLayout.addComponent(reviewButton);
+            listOfNoteButtons.put(note.getId(), noteButton);
+            scrollNoteLayout.addComponent(noteButton);
 
-            reviewButton.addClickListener(new StudentReviewButtonListener(this, 
-            review.getPageNumber()));
+            noteButton.addClickListener(new StudentNoteButtonListener(this, 
+            note.getPageNumber()));
         }
-        scrollPanel.setContent(scrollReviewLayout);
+        scrollPanel.setContent(scrollNoteLayout);
         scrollLayout.addComponent(scrollPanel);
 
         return scrollLayout;
@@ -378,8 +378,8 @@ public class StudentCourseworkView extends VerticalLayout implements View {
         return commentLayout;
     }
 
-    public Map<Integer, Button> getListOfReviewButtons() {
-        return listOfReviewButtons;
+    public Map<Integer, Button> getListOfNoteButtons() {
+        return listOfNoteButtons;
     }
 
     public Coursework getCoursework() {

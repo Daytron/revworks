@@ -24,12 +24,12 @@ import java.util.Map;
  *
  * @author Ryan Gilera
  */
-public class LecturerReviewButtonListener implements Button.ClickListener {
+public class NoteButtonListener implements Button.ClickListener {
 
     private final LecturerCourseworkView courseworkView;
     private final int associatedPage;
 
-    public LecturerReviewButtonListener(LecturerCourseworkView courseworkView, 
+    public NoteButtonListener(LecturerCourseworkView courseworkView, 
             int associatedPage) {
         this.courseworkView = courseworkView;
         this.associatedPage = associatedPage;
@@ -37,37 +37,37 @@ public class LecturerReviewButtonListener implements Button.ClickListener {
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
-        int reviewId = 0;
+        int noteId = 0;
         for (Map.Entry<Integer, Button> entry
-                : courseworkView.getListOfReviewButtons().entrySet()) {
+                : courseworkView.getListOfNoteButtons().entrySet()) {
             if (entry.getValue() == event.getButton()) {
-                reviewId = entry.getKey();
+                noteId = entry.getKey();
                 break;
             }
         }
 
-        // Do nothing if review comment is already shown or reviewId is zero
-        if (reviewId == 0) {
+        // Do nothing if note comment is already shown or noteId is zero
+        if (noteId == 0) {
             return;
         }
 
         // Skip new comment layout generation if it is the current 
         // stored commentLayout and show it if hidden
-        if (reviewId == courseworkView.getCommentLayout().getReviewId()) {
+        if (noteId == courseworkView.getCommentLayout().getNoteId()) {
             courseworkView.getCommentLayout().setVisible(true);
             return;
         }
 
         //Otherwise begin New comment component generation
         // But first shutdown the old componentLayout executor service
-        // Also flip the page viewer to the correspoding review associated page
+        // Also flip the page viewer to the correspoding note associated page
         courseworkView.getCommentLayout().shutdownScheduler();
 
         courseworkView.getCommentLayout().setVisible(true);
         LecturerCommentComponent lcc
                 = new LecturerCommentComponent(courseworkView.getCoursework(),
                         false, courseworkView.getCurrentPage(),
-                        reviewId, courseworkView);
+                        noteId, courseworkView);
 
         courseworkView.getCoreContentLayout().replaceComponent(
                 courseworkView.getCommentLayout(), lcc);

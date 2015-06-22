@@ -18,16 +18,16 @@ package com.github.daytron.revworks.model;
 import java.time.LocalDateTime;
 
 /**
- * Review model class for Review table.
+ * Note model class for Note table.
  * 
  * @author Ryan Gilera
  */
-public class Review {
+public class Note {
     private final int id;
     private final int pageNumber;
     private final LocalDateTime dateSubmitted;
 
-    public Review(int id, int pageNum, LocalDateTime dateSubmitted) {
+    public Note(int id, int pageNum, LocalDateTime dateSubmitted) {
         this.id = id;
         this.pageNumber = pageNum;
         this.dateSubmitted = dateSubmitted;

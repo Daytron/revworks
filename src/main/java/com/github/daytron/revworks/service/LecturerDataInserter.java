@@ -27,5 +27,5 @@ public interface LecturerDataInserter {
 
     public void insertNewAnnouncement(final LecturerSubmitNewAnnouncementEvent event);
     
-    public void insertNewReview(final LecturerSubmitNewReviewEvent event);
+    public void insertNewNote(final SubmitNewNoteEvent event);
 }

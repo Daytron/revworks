@@ -223,14 +223,14 @@ public abstract class AppEvent {
 
     }
 
-    public static final class LecturerSubmitNewReviewEvent {
+    public static final class SubmitNewNoteEvent {
 
         private final int courseworkId;
         private final int pageNumber;
         private final String message;
         private final LecturerCourseworkView courseworkView;
 
-        public LecturerSubmitNewReviewEvent(int courseworkId, int pageNumber,
+        public SubmitNewNoteEvent(int courseworkId, int pageNumber,
                 String message, LecturerCourseworkView courseworkView) {
             this.courseworkId = courseworkId;
             this.pageNumber = pageNumber;
@@ -256,18 +256,18 @@ public abstract class AppEvent {
 
     }
 
-    public static final class LecturerAddReviewButtonEvent {
+    public static final class LecturerAddNoteButtonEvent {
 
-        private final int reviewId;
+        private final int noteId;
         private final int pageNum;
 
-        public LecturerAddReviewButtonEvent(int reviewId, int pageNum) {
-            this.reviewId = reviewId;
+        public LecturerAddNoteButtonEvent(int noteId, int pageNum) {
+            this.noteId = noteId;
             this.pageNum = pageNum;
         }
 
-        public int getReviewId() {
-            return reviewId;
+        public int getNoteId() {
+            return noteId;
         }
 
         public int getPageNum() {
@@ -278,19 +278,19 @@ public abstract class AppEvent {
 
     public static final class SubmitACommentEvent {
 
-        private final int ReviewId;
+        private final int noteId;
         private final String message;
         private final boolean isStudentToLecturer;
 
-        public SubmitACommentEvent(int reviewID, String message, 
+        public SubmitACommentEvent(int noteID, String message, 
                 boolean isStudentToLecturer) {
-            this.ReviewId = reviewID;
+            this.noteId = noteID;
             this.message = message;
             this.isStudentToLecturer = isStudentToLecturer;
         }
 
-        public int getReviewId() {
-            return ReviewId;
+        public int getNoteId() {
+            return noteId;
         }
 
         public String getMessage() {

@@ -15,8 +15,9 @@
  */
 package com.github.daytron.revworks.presenter;
 
-import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCommentComponent;
-import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
+import com.github.daytron.revworks.service.CurrentUserSession;
+import com.github.daytron.revworks.ui.dashboard.CommentComponent;
+import com.github.daytron.revworks.ui.dashboard.CourseworkView;
 import com.vaadin.ui.Button;
 import java.util.Map;
 
@@ -26,10 +27,10 @@ import java.util.Map;
  */
 public class NoteButtonListener implements Button.ClickListener {
 
-    private final LecturerCourseworkView courseworkView;
+    private final CourseworkView courseworkView;
     private final int associatedPage;
 
-    public NoteButtonListener(LecturerCourseworkView courseworkView, 
+    public NoteButtonListener(CourseworkView courseworkView, 
             int associatedPage) {
         this.courseworkView = courseworkView;
         this.associatedPage = associatedPage;
@@ -46,7 +47,7 @@ public class NoteButtonListener implements Button.ClickListener {
             }
         }
 
-        // Do nothing if note comment is already shown or noteId is zero
+        // if no button found skip
         if (noteId == 0) {
             return;
         }
@@ -55,23 +56,32 @@ public class NoteButtonListener implements Button.ClickListener {
         // stored commentLayout and show it if hidden
         if (noteId == courseworkView.getCommentLayout().getNoteId()) {
             courseworkView.getCommentLayout().setVisible(true);
+          
+            // Also point to the associated page if somehow not in the 
+            // targeted page
+            if (courseworkView.getCurrentPage() != associatedPage) {
+                courseworkView.flipToPage(associatedPage);
+            }
             return;
         }
 
         //Otherwise begin New comment component generation
         // But first shutdown the old componentLayout executor service
         // Also flip the page viewer to the correspoding note associated page
-        courseworkView.getCommentLayout().shutdownScheduler();
+        courseworkView.getCommentLayout().shutdownCommentExecutor();
 
         courseworkView.getCommentLayout().setVisible(true);
-        LecturerCommentComponent lcc
-                = new LecturerCommentComponent(courseworkView.getCoursework(),
+        CommentComponent lcc
+                = new CommentComponent(courseworkView.getCoursework(),
                         false, courseworkView.getCurrentPage(),
                         noteId, courseworkView);
 
         courseworkView.getCoreContentLayout().replaceComponent(
                 courseworkView.getCommentLayout(), lcc);
         courseworkView.setCommentLayout(lcc);
+        
+        // Store new comment component to this session
+        CurrentUserSession.setCurrentCommentComponent(lcc);
         
         courseworkView.flipToPage(associatedPage);
         

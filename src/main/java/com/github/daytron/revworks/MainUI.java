@@ -24,6 +24,8 @@ import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.ui.LoginScreen;
+import com.github.daytron.revworks.ui.dashboard.CommentComponent;
+import com.github.daytron.revworks.ui.dashboard.CourseworkView;
 import com.github.daytron.revworks.ui.dashboard.DashboardScreen;
 import com.vaadin.annotations.Push;
 import javax.servlet.annotation.WebServlet;
@@ -222,19 +224,6 @@ public class MainUI extends UI {
                     System.out.println("User in session is null!!");
                 } else {
 
-                    // This manually deregisters JDBC driver, which prevents Tomcat 7 from complaining about memory leaks wrto this class 
-//                    Enumeration<Driver> drivers = DriverManager.getDrivers();
-//                    while (drivers.hasMoreElements()) {
-//                        Driver driver = drivers.nextElement();
-//                        try {
-//                            DriverManager.deregisterDriver(driver);
-//                            System.out.println(String.format("deregistering jdbc driver: %s", driver));
-//                        } catch (SQLException e) {
-//                            System.out.println(String.format("Error deregistering driver %s", driver));
-//                        }
-//
-//                    }
-
                     CopyOnWriteArrayList<File> listOfFilesToDelete
                             = (CopyOnWriteArrayList<File>) event.getSession()
                             .getAttribute(CurrentUserSession.TRASH_CAN_FOR_FILES_KEY);
@@ -246,12 +235,20 @@ public class MainUI extends UI {
                         jdbccp.destroy();
                     }
 
-                    // Shutdown the remaining service thread
-                    ScheduledExecutorService service = (ScheduledExecutorService) event.getSession().getAttribute(
-                            CurrentUserSession.CURRENT_SCHEDULED_EXECUTOR);
-                    if (service != null) {
-                        service.shutdownNow();
+                    // Shutdown the remaining service threads
+                    CourseworkView courseworkView = (CourseworkView) 
+                            event.getSession().getAttribute(CurrentUserSession
+                            .CURRENT_COURSEWORK_VIEW);
+                    CommentComponent commentComponent = (CommentComponent)
+                            event.getSession().getAttribute(CurrentUserSession
+                            .CURRENT_COMMENT_COMPONENT);
+                    if (courseworkView != null) {
+                        courseworkView.shutdownNoteExecutor();
                     }
+                    if (commentComponent != null) {
+                        commentComponent.shutdownCommentExecutor();
+                    }
+                    
 
                     // Remove the closed session from list
                     listOfUserSessions.remove(user.getName());

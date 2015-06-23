@@ -26,7 +26,7 @@ import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPool
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
-import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
+import com.github.daytron.revworks.ui.dashboard.CourseworkView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
 import com.vaadin.data.util.BeanItemContainer;
@@ -190,7 +190,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
     public void receiveCourseworkDataFromTable(final LecturerViewCourseworkEvent event) {
         setReceivedCoursework(event.getCoursework());
 
-        MainUI.get().getNavigator().navigateTo(LecturerCourseworkView.VIEW_NAME);
+        MainUI.get().getNavigator().navigateTo(CourseworkView.VIEW_NAME);
     }
 
 }

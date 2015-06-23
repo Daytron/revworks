@@ -18,7 +18,7 @@ package com.github.daytron.revworks.event;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.ui.AdminLoginPopup;
-import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkView;
+import com.github.daytron.revworks.ui.dashboard.CourseworkView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.OptionGroup;
@@ -228,10 +228,10 @@ public abstract class AppEvent {
         private final int courseworkId;
         private final int pageNumber;
         private final String message;
-        private final LecturerCourseworkView courseworkView;
+        private final CourseworkView courseworkView;
 
         public SubmitNewNoteEvent(int courseworkId, int pageNumber,
-                String message, LecturerCourseworkView courseworkView) {
+                String message, CourseworkView courseworkView) {
             this.courseworkId = courseworkId;
             this.pageNumber = pageNumber;
             this.message = message;
@@ -250,43 +250,20 @@ public abstract class AppEvent {
             return message;
         }
 
-        public LecturerCourseworkView getCourseworkView() {
+        public CourseworkView getCourseworkView() {
             return courseworkView;
         }
 
     }
 
-    public static final class LecturerAddNoteButtonEvent {
-
-        private final int noteId;
-        private final int pageNum;
-
-        public LecturerAddNoteButtonEvent(int noteId, int pageNum) {
-            this.noteId = noteId;
-            this.pageNum = pageNum;
-        }
-
-        public int getNoteId() {
-            return noteId;
-        }
-
-        public int getPageNum() {
-            return pageNum;
-        }
-
-    }
-
-    public static final class SubmitACommentEvent {
+    public static final class SubmitNewCommentEvent {
 
         private final int noteId;
         private final String message;
-        private final boolean isStudentToLecturer;
 
-        public SubmitACommentEvent(int noteID, String message, 
-                boolean isStudentToLecturer) {
+        public SubmitNewCommentEvent(int noteID, String message) {
             this.noteId = noteID;
             this.message = message;
-            this.isStudentToLecturer = isStudentToLecturer;
         }
 
         public int getNoteId() {
@@ -296,11 +273,6 @@ public abstract class AppEvent {
         public String getMessage() {
             return message;
         }
-
-        public boolean isStudentToLecturer() {
-            return isStudentToLecturer;
-        }
-
         
     }
     

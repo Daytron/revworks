@@ -32,9 +32,9 @@ public interface DataProvider {
     public List<Announcement> populateHomeViewWithData() throws
             SQLErrorQueryException, 
             SQLErrorRetrievingConnectionAndPoolException;
-    
-    public Coursework extractNotes() throws 
-            SQLErrorRetrievingConnectionAndPoolException, 
-            SQLErrorQueryException;
+//    
+//    public Coursework extractNotes() throws 
+//            SQLErrorRetrievingConnectionAndPoolException, 
+//            SQLErrorQueryException;
 
 }

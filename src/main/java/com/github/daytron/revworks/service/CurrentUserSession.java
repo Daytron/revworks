@@ -17,6 +17,9 @@ package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.model.ClassTable;
+import com.github.daytron.revworks.model.Coursework;
+import com.github.daytron.revworks.ui.dashboard.CommentComponent;
+import com.github.daytron.revworks.ui.dashboard.CourseworkView;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.server.VaadinService;
@@ -54,8 +57,17 @@ public class CurrentUserSession {
      * current user
      */
     public static final String CURRENT_CLASSES = "Current Classes";
-    
-    public static final String CURRENT_SCHEDULED_EXECUTOR = "ExecutorService";
+
+    /**
+     * The attribute key used to store the current executor service for
+     * comments.
+     */
+    public static final String CURRENT_COMMENT_COMPONENT = "CommentExecutor";
+
+    /**
+     * The attribute key used to store the current executor service for notes.
+     */
+    public static final String CURRENT_COURSEWORK_VIEW = "NoteExecutor";
 
     private CurrentUserSession() {
     }
@@ -111,28 +123,59 @@ public class CurrentUserSession {
     public static void markForGarbageCollection(File fileToBeDeletedLater) {
         getFileTrashBin().add(fileToBeDeletedLater);
     }
-    
-    public static void setCurrentExecutorService(ScheduledExecutorService service) {
+
+    public static void setCurrentCommentComponent(CommentComponent commentComponent) {
         // shutdown previous if not null
-        ScheduledExecutorService serviceExecutor = getScheduledExecutorService();
-        if (serviceExecutor != null) {
-            serviceExecutor.shutdownNow();
-        }
-        
+        shutdownCommentExectorService();
+
         try {
             VaadinSession vaadinSession = VaadinSession.getCurrent();
             vaadinSession.getLockInstance().lock();
-            vaadinSession.setAttribute(CURRENT_SCHEDULED_EXECUTOR, service);
-            
+            vaadinSession.setAttribute(CURRENT_COMMENT_COMPONENT, commentComponent);
+
         } finally {
             VaadinSession.getCurrent().getLockInstance().unlock();
         }
     }
-    
-    public static ScheduledExecutorService getScheduledExecutorService() {
-        ScheduledExecutorService service = (ScheduledExecutorService) VaadinSession
-                .getCurrent().getAttribute(CURRENT_SCHEDULED_EXECUTOR);
-        return  (service == null) ? null : service;
+
+    public static CommentComponent getCurrentCommentComponent() {
+        CommentComponent commentComponent = (CommentComponent) VaadinSession
+                .getCurrent().getAttribute(CURRENT_COMMENT_COMPONENT);
+        return (commentComponent == null) ? null : commentComponent;
+    }
+
+    public static void shutdownCommentExectorService() {
+        CommentComponent oldCommentComponent = getCurrentCommentComponent();
+        if (oldCommentComponent != null) {
+            oldCommentComponent.shutdownCommentExecutor();
+        }
+    }
+
+    public static void setCurrentCourseworkView(CourseworkView courseworkView) {
+        // shutdown previous if not null
+        shutdownCourseworkViewExecutorService();
+        
+        try {
+            VaadinSession vaadinSession = VaadinSession.getCurrent();
+            vaadinSession.getLockInstance().lock();
+            vaadinSession.setAttribute(CURRENT_COURSEWORK_VIEW, courseworkView);
+
+        } finally {
+            VaadinSession.getCurrent().getLockInstance().unlock();
+        }
+    }
+
+    public static CourseworkView getCurrentCourseworkView() {
+        CourseworkView courseworkView = (CourseworkView) VaadinSession
+                .getCurrent().getAttribute(CURRENT_COURSEWORK_VIEW);
+        return courseworkView;
+    }
+
+    public static void shutdownCourseworkViewExecutorService() {
+        CourseworkView oldCourseworkView = getCurrentCourseworkView();
+        if (oldCourseworkView != null) {
+            oldCourseworkView.shutdownNoteExecutor();
+        }
     }
 
     /**
@@ -141,9 +184,9 @@ public class CurrentUserSession {
      * @return The CopyOnWriteArrayList object
      */
     public static CopyOnWriteArrayList<File> getFileTrashBin() {
-        CopyOnWriteArrayList<File> listOFiles = (CopyOnWriteArrayList) VaadinSession.getCurrent()
-                .getAttribute(TRASH_CAN_FOR_FILES_KEY);
-        return (listOFiles == null) ? null : listOFiles;
+        CopyOnWriteArrayList<File> listOFiles = (CopyOnWriteArrayList) VaadinSession
+                .getCurrent().getAttribute(TRASH_CAN_FOR_FILES_KEY);
+        return listOFiles;
     }
 
     /**
@@ -156,7 +199,7 @@ public class CurrentUserSession {
     public static Principal getPrincipal() {
         Principal currentUser = (Principal) VaadinSession.getCurrent()
                 .getAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY);
-        return (currentUser == null) ? null : currentUser;
+        return currentUser;
     }
 
     /**
@@ -167,7 +210,7 @@ public class CurrentUserSession {
     public static String getCurrentSemester() {
         String currentSemester = (String) VaadinSession.getCurrent()
                 .getAttribute(CURRENT_SEMESTER_KEY);
-        return (currentSemester == null) ? null : currentSemester;
+        return currentSemester;
     }
 
     /**
@@ -180,7 +223,7 @@ public class CurrentUserSession {
         CopyOnWriteArrayList<ClassTable> listOfClasses
                 = (CopyOnWriteArrayList<ClassTable>) VaadinSession.getCurrent()
                 .getAttribute(CURRENT_CLASSES);
-        return (listOfClasses == null) ? null : listOfClasses;
+        return listOfClasses;
     }
 
     /**
@@ -193,7 +236,7 @@ public class CurrentUserSession {
         SimpleJDBCConnectionPool simpleJDBCConnectionPool
                 = (SimpleJDBCConnectionPool) VaadinSession.getCurrent()
                 .getAttribute(JDBC_CONNECTION_POOL_KEY);
-        return (simpleJDBCConnectionPool == null) ? null : simpleJDBCConnectionPool;
+        return simpleJDBCConnectionPool;
     }
 
     /**

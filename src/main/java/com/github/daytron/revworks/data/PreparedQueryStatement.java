@@ -129,28 +129,22 @@ public enum PreparedQueryStatement {
             + "INNER JOIN Student ON Student.user_id = Coursework.student_user_id "
             + "INNER JOIN User ON User.id = Coursework.student_user_id "
             + "WHERE Coursework.class_id = ?;"),
-    SELECT_NOTE("SELECT Note.id AS id, "
-            + "Note.page_num as pageNum, "
-            + "Note.date_submitted as date "
-            + "FROM Note "
-            + "WHERE Note.coursework_id = ? "
-            + "ORDER BY Note.page_num ASC;"),
-    SELECT_COMMENT_DESC("SELECT Comment.id AS id, "
-            + "Comment.message AS message, "
-            + "Comment.date_submitted AS dateSubmitted, "
-            + "Comment.is_student_to_lecturer AS isStudentToLecturer  "
-            + "FROM Comment  "
-            + "WHERE Comment.note_id = ? "
-            + "ORDER BY Comment.date_submitted DESC; "),
-     SELECT_COMMENT_ASC("SELECT "
+    SELECT_NOTE("SELECT n.id, n.page_num, "
+            + "n.date_submitted, "
+            + "n.is_student_to_lecturer "
+            + "FROM Note n "
+            + "WHERE n.coursework_id = ? "
+            + "ORDER BY n.page_num ASC;"),
+     SELECT_COMMENT("SELECT "
             + "Comment.message AS message, "
             + "Comment.date_submitted AS dateSubmitted, "
             + "Comment.is_student_to_lecturer AS isStudentToLecturer  "
             + "FROM Comment  "
             + "WHERE Comment.note_id = ? "
             + "ORDER BY Comment.date_submitted ASC; "),
-     INSERT_NOTE("INSERT INTO Note(page_num,date_submitted,"
-             + "coursework_id) VALUES (?,now(),?);"),
+     INSERT_NOTE("INSERT INTO Note(page_num,date_submitted, "
+             + "is_student_to_lecturer,coursework_id) "
+             + "VALUES (?,now(),?,?);"),
      INSERT_COMMENT("INSERT INTO Comment(message,date_submitted,"
              + "is_student_to_lecturer,note_id) "
              + "VALUES (?,now(),?,?);");

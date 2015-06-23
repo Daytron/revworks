@@ -24,5 +24,6 @@ import com.github.daytron.revworks.event.AppEvent;
  */
 public interface DataInserter {
     public void notifyDataSendError();
-    public void insertNewComment(final AppEvent.SubmitACommentEvent event);
+    public void insertNewComment(final AppEvent.SubmitNewCommentEvent event);
+    public void insertNewNote(AppEvent.SubmitNewNoteEvent event);
 }

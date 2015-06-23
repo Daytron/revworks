@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.dashboard.lecturer;
+package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.Coursework;
-import com.github.daytron.revworks.model.Note;
 import com.github.daytron.revworks.presenter.NoteButtonListener;
+import com.github.daytron.revworks.service.CurrentUserSession;
+import com.github.daytron.revworks.service.DataProviderAbstract;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.github.daytron.revworks.util.PdfRenderer;
 import com.vaadin.data.Property;
@@ -42,10 +44,18 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,7 +64,7 @@ import java.util.logging.Logger;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class LecturerCourseworkView extends VerticalLayout implements View {
+public class CourseworkView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "CourseworkView";
     public static final String VIEW_TITLE = "Coursework Display View";
@@ -66,41 +76,64 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
     private int currentPage;
     private final TextField pageField;
     private VerticalLayout scrollNoteLayout;
-    private LecturerCommentComponent commentLayout;
+    private CommentComponent commentLayout;
     private HorizontalLayout coreContentLayout;
 
     private Map<Integer, Button> listOfNoteButtons;
 
-    public LecturerCourseworkView() {
+    private ScheduledExecutorService noteScheduler
+            = Executors.newScheduledThreadPool(1);
+    private Runnable noteRunnableTask;
+    private ScheduledFuture noteScheduledFuture;
+
+    public CourseworkView() {
         this.pageField = new TextField();
+        coursework = null;
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
-            try {
-                listOfNoteButtons = new HashMap<>();
+
+            listOfNoteButtons = new ConcurrentHashMap<>();
+
+            if (MainUI.get().getAccessControl().isUserAStudent()) {
+                coursework = MainUI.get().getStudentDataProvider()
+                        .getReceivedCoursework();
+            } else {
                 coursework = MainUI.get().getLecturerDataProvider()
-                        .extractNotes();
-                try {
-                    listOfPdfPages = new ArrayList<>();
-                    initView();
-                } catch (Exception ex) {
-                    Logger.getLogger(LecturerCourseworkView.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                    NotificationUtil.showError(
-                            ErrorMsg.DATA_FETCH_ERROR.getText(),
-                            ErrorMsg.CONSULT_YOUR_ADMIN.getText());
-                    return;
-                }
-                isInitialised = true;
-            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException ex) {
-                Logger.getLogger(LecturerCourseworkView.class.getName())
+                        .getReceivedCoursework();
+            }
+            
+            if (coursework == null) {
+                NotificationUtil.showError(
+                        ErrorMsg.DATA_FETCH_ERROR.getText(),
+                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                return;
+            }
+
+            try {
+                listOfPdfPages = new ArrayList<>();
+                initView();
+
+                noteRunnableTask = new CourseworkView.NotesExtractorRunnable(
+                        MainUI.get().getAccessControl().isUserAStudent(),
+                        this);
+                noteScheduledFuture = noteScheduler.scheduleWithFixedDelay(
+                        noteRunnableTask, 0, 1, TimeUnit.SECONDS);
+                
+                // Store coursework view to this session
+                CurrentUserSession.setCurrentCourseworkView(this);
+            } catch (Exception ex) {
+                Logger.getLogger(CourseworkView.class.getName())
                         .log(Level.SEVERE, null, ex);
                 NotificationUtil.showError(
                         ErrorMsg.DATA_FETCH_ERROR.getText(),
                         ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                return;
             }
+            isInitialised = true;
+
         }
     }
 
@@ -157,7 +190,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         return toolbarLayout;
     }
 
-    private VerticalLayout createContentLayout() throws IOException,Exception {
+    private VerticalLayout createContentLayout() throws IOException, Exception {
         final VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setWidth("100%");
 
@@ -175,8 +208,11 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         // Comment Layout
         // By default it is a placeholder hidden with noteId 0
         commentLayout
-                = new LecturerCommentComponent(coursework, true, currentPage,
+                = new CommentComponent(coursework, true, currentPage,
                         this);
+        
+        // Store new comment component to this session
+        CurrentUserSession.setCurrentCommentComponent(commentLayout);
         commentLayout.setVisible(false);
 
         coreContentLayout.addComponent(viewerLayout);
@@ -209,7 +245,6 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         titleLabel.setSizeFull();
         headerLayout.addComponent(titleLabel);
 
-        
         pageField.addStyleName(ValoTheme.TEXTFIELD_SMALL);
         pageField.setWidth(3, Unit.EM);
         pageField.setValue("1");
@@ -235,8 +270,8 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
                         currentPage = page;
                     } catch (Exception e) {
                         NotificationUtil.showError(
-                        ErrorMsg.DATA_FETCH_ERROR.getText(),
-                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                                ErrorMsg.DATA_FETCH_ERROR.getText(),
+                                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
                     }
                 } catch (NumberFormatException e) {
                 }
@@ -264,8 +299,8 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
                         pageField.setValue("" + currentPage);
                     } catch (Exception e) {
                         NotificationUtil.showError(
-                        ErrorMsg.DATA_FETCH_ERROR.getText(),
-                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                                ErrorMsg.DATA_FETCH_ERROR.getText(),
+                                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
                     }
                 }
             }
@@ -292,8 +327,8 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
                         pageField.setValue("" + currentPage);
                     } catch (Exception e) {
                         NotificationUtil.showError(
-                        ErrorMsg.DATA_FETCH_ERROR.getText(),
-                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                                ErrorMsg.DATA_FETCH_ERROR.getText(),
+                                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
                     }
                 }
             }
@@ -307,7 +342,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         listOfPdfPages = PdfRenderer.extractPages(coursework);
 
         // Label for total of pages next to the arrows in header
-        Label totalPagesLabel = new Label("/" + listOfPdfPages.size());
+        Label totalPagesLabel = new Label("/ " + listOfPdfPages.size());
         totalPagesLabel.setSizeUndefined();
 
         Image image = new Image(null, new FileResource(listOfPdfPages.get(0)));
@@ -352,14 +387,17 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 commentLayout.setVisible(true);
-                commentLayout.shutdownScheduler();
+                commentLayout.shutdownCommentExecutor();
 
-                LecturerCommentComponent lcc
-                        = new LecturerCommentComponent(coursework,
-                                true, currentPage, LecturerCourseworkView.this);
-
+                CommentComponent lcc
+                        = new CommentComponent(coursework,
+                                true, currentPage, CourseworkView.this);
+                
                 coreContentLayout.replaceComponent(commentLayout, lcc);
                 commentLayout = lcc;
+                
+                // Store new comment component to this session
+                CurrentUserSession.setCurrentCommentComponent(lcc);
             }
         });
         headerLayout.addComponent(addNoteButton);
@@ -376,16 +414,6 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         scrollNoteLayout.setWidth("100%");
         scrollNoteLayout.setHeight(null);
 
-        for (Note note : coursework.getListOfNotes()) {
-            Button noteButton = new Button("p" + note.getPageNumber());
-            noteButton.setSizeFull();
-
-            listOfNoteButtons.put(note.getId(), noteButton);
-            scrollNoteLayout.addComponent(noteButton);
-
-            noteButton.addClickListener(new NoteButtonListener(this, 
-            note.getPageNumber()));
-        }
         scrollPanel.setContent(scrollNoteLayout);
         scrollLayout.addComponent(scrollPanel);
 
@@ -397,16 +425,17 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         return scrollNoteLayout;
     }
 
-    public LecturerCommentComponent getCommentLayout() {
+    public CommentComponent getCommentLayout() {
         return commentLayout;
     }
 
     public Map<Integer, Button> getListOfNoteButtons() {
         return listOfNoteButtons;
     }
-
-    public void shutdownExecutorService() {
-        commentLayout.shutdownScheduler();
+    
+    public void shutdownNoteExecutor() {
+        noteScheduledFuture.cancel(true);
+        noteScheduler.shutdownNow();
     }
 
     public HorizontalLayout getCoreContentLayout() {
@@ -421,7 +450,7 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         return currentPage;
     }
 
-    public void setCommentLayout(LecturerCommentComponent commentLayout) {
+    public void setCommentLayout(CommentComponent commentLayout) {
         this.commentLayout = commentLayout;
     }
 
@@ -440,4 +469,122 @@ public class LecturerCourseworkView extends VerticalLayout implements View {
         pageField.setValue("" + currentPage);
     }
 
+    final class NotesExtractorRunnable extends DataProviderAbstract implements Runnable {
+
+        private int previousNoteCount = 0;
+        private final boolean isStudentUser;
+        private final CourseworkView courseworkView;
+
+        public NotesExtractorRunnable(boolean isStudentUser,
+                CourseworkView courseworkView) {
+            this.isStudentUser = isStudentUser;
+            this.courseworkView = courseworkView;
+        }
+
+        @Override
+        public void run() {
+            if (reserveConnectionPool()) {
+                ResultSet resultSet;
+
+                try (PreparedStatement preparedStatement = getConnection()
+                        .prepareStatement(PreparedQueryStatement.SELECT_NOTE.getQuery())) {
+                    preparedStatement.setInt(1, coursework.getId());
+                    resultSet = preparedStatement.executeQuery();
+
+                    if (!resultSet.next()) {
+                        preparedStatement.close();
+                        resultSet.close();
+                        releaseConnection();
+
+                        return;
+                    }
+
+                    // Calculate the current resulting row count
+                    int numberOfResultedRows = 0;
+                    resultSet.beforeFirst();
+                    while (resultSet.next()) {
+                        numberOfResultedRows += 1;
+                    }
+
+                    // Skips refreshing note buttons if the 
+                    // result returns the same number of previous notes.
+                    // Note that note cannot be deleted so comparing 
+                    // them by size is valid
+                    if (numberOfResultedRows == 0
+                            || (numberOfResultedRows == previousNoteCount)) {
+
+                        preparedStatement.close();
+                        resultSet.close();
+                        releaseConnection();
+                        return;
+                    }
+
+                    // Save it for the next round
+                    previousNoteCount = numberOfResultedRows;
+
+                    // Refresh scrollNoteLayout
+                    MainUI.get().access(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Clear previous buttons
+                            scrollNoteLayout.removeAllComponents();
+                            listOfNoteButtons = new HashMap<>();
+                        }
+                    });
+
+                    resultSet.beforeFirst();
+                    while (resultSet.next()) {
+                        final int noteId = resultSet.getInt(1);
+                        final int pageNum = resultSet.getInt(2);
+                        final boolean isStudentToLecturer = resultSet.getBoolean(4);
+
+                        MainUI.get().access(new Runnable() {
+                            @Override
+                            public void run() {
+                                String identifier = "";
+                                
+                                if (isStudentToLecturer) {
+                                    if (isStudentUser) {
+                                        identifier += "Me";
+                                    } else {
+                                        identifier += coursework
+                                                .getStudentUser()
+                                                .getFirstName();
+                                    }
+                                } else {
+                                    if (isStudentUser) {
+                                        identifier += coursework
+                                                .getClassTable()
+                                                .getLecturerUser()
+                                                .getFirstName();
+                                    } else {
+                                        identifier += "Me";
+                                    }
+                                }
+                                
+                                Button noteButton = new Button(
+                                        identifier + "  [p" + pageNum + "]");
+                                noteButton.setSizeFull();
+
+                                listOfNoteButtons.put(noteId, noteButton);
+                                scrollNoteLayout.addComponent(noteButton);
+
+                                noteButton.addClickListener(new NoteButtonListener(
+                                        courseworkView, pageNum));
+                            }
+                        });
+                    }
+                    
+                    preparedStatement.close();
+                    resultSet.close();
+                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(CourseworkView.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                } finally {
+                    releaseConnection();
+                }
+            }
+        }
+    }
 }

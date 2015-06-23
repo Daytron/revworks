@@ -27,7 +27,7 @@ import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
 import com.github.daytron.revworks.model.User;
-import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkView;
+import com.github.daytron.revworks.ui.dashboard.CourseworkView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
 import com.vaadin.data.util.BeanItemContainer;
@@ -180,6 +180,6 @@ public class StudentDataProviderImpl extends DataProviderAbstract
     public void receiveCourseworkDataFromTable(final StudentViewCourseworkEvent event) {
         setReceivedCoursework(event.getCoursework());
 
-        MainUI.get().getNavigator().navigateTo(StudentCourseworkView.VIEW_NAME);
+        MainUI.get().getNavigator().navigateTo(CourseworkView.VIEW_NAME);
     }
 }

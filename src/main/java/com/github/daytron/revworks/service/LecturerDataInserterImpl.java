@@ -70,7 +70,9 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
 
                 PreparedStatement preparedStatement2 = getConnection()
                         .prepareStatement(
-                                PreparedQueryStatement.LECTURER_INSERT_NEW_CLASSWIDE_ANNOUNCEMENT.getQuery());
+                                PreparedQueryStatement
+                                        .LECTURER_INSERT_NEW_CLASSWIDE_ANNOUNCEMENT
+                                        .getQuery());
 
                 preparedStatement2.setInt(1, newId);
                 preparedStatement2.setInt(2, event.getSelectedClass().getId());
@@ -104,75 +106,6 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
             notifyDataSendError();
         }
     }
-
-    @Subscribe
-    @Override
-    public void insertNewNote(SubmitNewNoteEvent event) {
-        if (reserveConnectionPool()) {
-            try {
-                PreparedStatement preparedStatementNote
-                        = getConnection().prepareStatement(
-                                PreparedQueryStatement.INSERT_NOTE.getQuery(),
-                                Statement.RETURN_GENERATED_KEYS);
-                preparedStatementNote.setInt(1, event.getPageNumber());
-                preparedStatementNote.setInt(2, event.getCourseworkId());
-
-                preparedStatementNote.executeUpdate();
-                getConnection().commit();
-
-                ResultSet resultSet = preparedStatementNote.getGeneratedKeys();
-                int generatedNoteId;
-
-                if (resultSet.next()) {
-                    generatedNoteId = resultSet.getInt(1);
-                } else {
-                    preparedStatementNote.close();
-                    resultSet.close();
-                    releaseConnection();
-
-                    notifyDataSendError();
-                    return;
-                }
-
-                PreparedStatement preparedStatementComment
-                        = getConnection().prepareStatement(
-                                PreparedQueryStatement.INSERT_COMMENT.getQuery());
-                preparedStatementComment.setString(1, event.getMessage());
-                preparedStatementComment.setBoolean(2, false);
-                preparedStatementComment.setInt(3, generatedNoteId);
-
-                preparedStatementComment.executeUpdate();
-                getConnection().commit();
-
-                preparedStatementNote.close();
-                resultSet.close();
-                preparedStatementComment.close();
-
-                event.getCourseworkView().getCommentLayout()
-                        .setNoteId(generatedNoteId);
-
-                // Create note button
-                final Button noteButton = new Button("p" + event.getPageNumber());
-                noteButton.setSizeFull();
-                
-                event.getCourseworkView().getListOfNoteButtons()
-                        .put(generatedNoteId, noteButton);
-                
-                event.getCourseworkView().getScrollNoteLayout()
-                        .addComponent(noteButton);
-                
-                noteButton.addClickListener(new NoteButtonListener(
-                    event.getCourseworkView(), event.getPageNumber()));
-            } catch (SQLException ex) {
-                Logger.getLogger(LecturerDataInserterImpl.class.getName())
-                        .log(Level.SEVERE, null, ex);
-                notifyDataSendError();
-            } finally {
-                releaseConnection();
-            }
-        } else {
-            notifyDataSendError();
-        }
-    }
+    
 
 }

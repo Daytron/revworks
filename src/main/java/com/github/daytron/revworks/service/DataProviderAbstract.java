@@ -25,7 +25,6 @@ import com.github.daytron.revworks.data.UserType;
 import com.github.daytron.revworks.model.Announcement;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
-import com.github.daytron.revworks.model.Note;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -177,66 +176,6 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
 
     }
     
-    @Override
-    public Coursework extractNotes() throws 
-            SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
-
-        if (reserveConnectionPool()) {
-            try {
-                PreparedStatement preparedStatementNote
-                        = getConnection().prepareStatement(
-                                PreparedQueryStatement.SELECT_NOTE.getQuery());
-
-                preparedStatementNote.setInt(1, this.receivedCoursework.getId());
-                ResultSet resultSetNote = preparedStatementNote.executeQuery();
-
-                // if no notes found, return the coursework
-                // By default, the list of notes is empty
-                if (!resultSetNote.next()) {
-                    preparedStatementNote.close();
-                    resultSetNote.close();
-                    releaseConnection();
-
-                    return this.receivedCoursework;
-                }
-
-                final List<Note> listOfNotes = new ArrayList<>();
-                resultSetNote.beforeFirst();
-
-                // Iterate through notes
-                while (resultSetNote.next()) {
-                    int noteId = resultSetNote.getInt(1);
-                    int pageNum = resultSetNote.getInt(2);
-
-                    Timestamp timestamp = resultSetNote.getTimestamp(3);
-                    LocalDateTime dateSubmittedNote = timestamp.toLocalDateTime();
-
-                    Note note = new Note(noteId, pageNum, 
-                            dateSubmittedNote);
-                    listOfNotes.add(note);
-                }
-                
-                preparedStatementNote.close();
-                resultSetNote.close();
-                
-                this.receivedCoursework.setListOfNotes(listOfNotes);
-                return this.receivedCoursework;
-
-            } catch (SQLException ex) {
-                Logger.getLogger(LecturerDataProviderImpl.class.getName())
-                        .log(Level.SEVERE, null, ex);
-                releaseConnection();
-                throw new SQLErrorQueryException(
-                        ExceptionMsg.SQL_ERROR_QUERY.getMsg());
-            } finally {
-                releaseConnection();
-            }
-        } else {
-            throw new SQLErrorRetrievingConnectionAndPoolException(
-                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
-        }
-
-    }
 
     public void setReceivedCoursework(Coursework receivedCoursework) {
         this.receivedCoursework = receivedCoursework;

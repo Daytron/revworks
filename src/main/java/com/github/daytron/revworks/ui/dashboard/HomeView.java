@@ -20,6 +20,7 @@ import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.model.Announcement;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
+import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -130,6 +131,12 @@ public class HomeView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
+        // Important!!
+        // shutdown and cleanup any previous threads created
+        // from coursework view and comment component if possible
+        CurrentUserSession.shutdownCourseworkViewExecutorService();
+        CurrentUserSession.shutdownCommentExectorService();
+        
         if (!initialised) {
             try {
 

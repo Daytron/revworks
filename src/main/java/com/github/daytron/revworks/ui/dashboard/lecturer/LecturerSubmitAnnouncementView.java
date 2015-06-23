@@ -55,6 +55,12 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
+        // Important!!
+        // shutdown and cleanup any previous threads created
+        // from coursework view and comment component if possible
+        CurrentUserSession.shutdownCourseworkViewExecutorService();
+        CurrentUserSession.shutdownCommentExectorService();
+        
         if (!isInitialised) {
             this.listOfClassTables = CurrentUserSession.getCurrentClassTables();
             initView();

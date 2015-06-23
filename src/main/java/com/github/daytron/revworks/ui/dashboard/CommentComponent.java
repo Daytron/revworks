@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.dashboard.lecturer;
+package com.github.daytron.revworks.ui.dashboard;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class LecturerCommentComponent extends CssLayout {
+public class CommentComponent extends CssLayout {
 
     private final ScheduledExecutorService scheduler
             = Executors.newScheduledThreadPool(1);
@@ -63,19 +63,17 @@ public class LecturerCommentComponent extends CssLayout {
     private boolean isFirstComment;
     private int noteId;
     private final int page;
-    private final LecturerCourseworkView courseworkView;
-    
+    private final CourseworkView courseworkView;
 
-    public LecturerCommentComponent(Coursework coursework,
-            boolean isFirstComment, int page, LecturerCourseworkView 
-                    courseworkView) {
+    public CommentComponent(Coursework coursework,
+            boolean isFirstComment, int page, CourseworkView courseworkView) {
         this(coursework, isFirstComment, page, 0, courseworkView);
-        
+
     }
 
-    public LecturerCommentComponent(Coursework coursework,
-            boolean isFirstComment, int page, int noteId, 
-            LecturerCourseworkView courseworkView) {
+    public CommentComponent(Coursework coursework,
+            boolean isFirstComment, int page, int noteId,
+            CourseworkView courseworkView) {
         this.coursework = coursework;
         this.isFirstComment = isFirstComment;
         this.page = page;
@@ -92,13 +90,10 @@ public class LecturerCommentComponent extends CssLayout {
 
         writerArea.focus();
 
-        runnableTask = new CommentsExtractorRunnable();
+        runnableTask = new CommentsExtractorRunnable(MainUI.get()
+                .getAccessControl().isUserAStudent());
         scheduledFuture = scheduler.scheduleWithFixedDelay(runnableTask,
                 0, 1, TimeUnit.SECONDS);
-        
-
-        CurrentUserSession.setCurrentExecutorService(scheduler);
-
     }
 
     private HorizontalLayout createHeader() {
@@ -120,8 +115,8 @@ public class LecturerCommentComponent extends CssLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                LecturerCommentComponent.this.shutdownScheduler();
-                LecturerCommentComponent.this.setVisible(false);
+                CommentComponent.this.shutdownCommentExecutor();
+                CommentComponent.this.setVisible(false);
             }
         });
         headerLayout.addComponent(closeLayoutButton);
@@ -168,11 +163,11 @@ public class LecturerCommentComponent extends CssLayout {
 
                     if (isFirstComment && noteId == 0) {
                         AppEventBus.post(new AppEvent.SubmitNewNoteEvent(
-                                coursework.getId(), page, messageString, 
-                        courseworkView));
+                                coursework.getId(), page, messageString,
+                                courseworkView));
                     } else {
-                        AppEventBus.post(new AppEvent.SubmitACommentEvent(
-                                noteId, messageString, false));
+                        AppEventBus.post(new AppEvent.SubmitNewCommentEvent(
+                                noteId, messageString));
                     }
 
                     isFirstComment = false;
@@ -204,7 +199,7 @@ public class LecturerCommentComponent extends CssLayout {
         return noteId;
     }
 
-    public void shutdownScheduler() {
+    public void shutdownCommentExecutor() {
         scheduledFuture.cancel(true);
         scheduler.shutdownNow();
     }
@@ -212,6 +207,12 @@ public class LecturerCommentComponent extends CssLayout {
     final class CommentsExtractorRunnable extends DataProviderAbstract implements Runnable {
 
         private int previousCommentCount = 0;
+        private final boolean isStudentUser;
+
+        public CommentsExtractorRunnable(boolean isStudentUser) {
+            this.isStudentUser = isStudentUser;
+        }
+        
 
         @Override
         public void run() {
@@ -221,7 +222,8 @@ public class LecturerCommentComponent extends CssLayout {
                         ResultSet resultSet;
                         StringBuilder stringBuilder;
                         try (PreparedStatement preparedStatement = getConnection()
-                                .prepareStatement(PreparedQueryStatement.SELECT_COMMENT_ASC.getQuery())) {
+                                .prepareStatement(PreparedQueryStatement
+                                        .SELECT_COMMENT.getQuery())) {
                             preparedStatement.setInt(1, noteId);
                             resultSet = preparedStatement.executeQuery();
                             if (!resultSet.next()) {
@@ -236,7 +238,6 @@ public class LecturerCommentComponent extends CssLayout {
                             while (resultSet.next()) {
                                 numberOfResultedRows += 1;
                             }
-
 
                             // Skips repainting comments on Label if the 
                             // result returns the same number of comments.
@@ -268,21 +269,43 @@ public class LecturerCommentComponent extends CssLayout {
                                 boolean isStudentToLecturer = resultSet.getBoolean(3);
 
                                 if (isStudentToLecturer) {
-                                    stringBuilder.append("<small><b>")
-                                            .append(coursework.getStudentUser()
-                                            .getFirstName())
-                                            .append("&nbsp;&nbsp;")
-                                            .append(dateString)
-                                            .append("</b></small>")
-                                            .append("<br>").append(message)
-                                            .append("<br>");
+                                    if (isStudentUser) {
+                                        stringBuilder.append("<small><b>")
+                                                .append("Me" + "&nbsp;&nbsp;")
+                                                .append(dateString)
+                                                .append("</b></small>")
+                                                .append("<br>").append(message)
+                                                .append("<br>");
+                                    } else {
+                                        stringBuilder.append("<small><b>")
+                                                .append(coursework.getStudentUser()
+                                                        .getFirstName())
+                                                .append("&nbsp;&nbsp;")
+                                                .append(dateString)
+                                                .append("</b></small>")
+                                                .append("<br>").append(message)
+                                                .append("<br>");
+                                    }
+
                                 } else {
-                                    stringBuilder.append("<small><b>")
-                                            .append("Me" + "&nbsp;&nbsp;")
-                                            .append(dateString)
-                                            .append("</b></small>")
-                                            .append("<br>").append(message)
-                                            .append("<br>");
+                                    if (isStudentUser) {
+                                        stringBuilder.append("<small><b>")
+                                                .append(coursework.getClassTable()
+                                                        .getLecturerUser()
+                                                        .getFirstName())
+                                                .append("&nbsp;&nbsp;")
+                                                .append(dateString)
+                                                .append("</b></small>")
+                                                .append("<br>").append(message)
+                                                .append("<br>");
+                                    } else {
+                                        stringBuilder.append("<small><b>")
+                                                .append("Me" + "&nbsp;&nbsp;")
+                                                .append(dateString)
+                                                .append("</b></small>")
+                                                .append("<br>").append(message)
+                                                .append("<br>");
+                                    }
                                 }
                             }
                         }
@@ -294,7 +317,6 @@ public class LecturerCommentComponent extends CssLayout {
                                 commentLabel.setValue(stringBuilder.toString());
                             }
                         });
-                        
 
                     } catch (Exception ex) {
                         Logger.getLogger(CommentsExtractorRunnable.class.getName())
@@ -302,7 +324,7 @@ public class LecturerCommentComponent extends CssLayout {
                     } finally {
                         releaseConnection();
                     }
-                } 
+                }
             }
         }
 

@@ -23,10 +23,10 @@ import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
-import com.github.daytron.revworks.ui.LoginScreen;
-import com.github.daytron.revworks.ui.dashboard.CommentComponent;
-import com.github.daytron.revworks.ui.dashboard.CourseworkView;
-import com.github.daytron.revworks.ui.dashboard.DashboardScreen;
+import com.github.daytron.revworks.view.LoginScreen;
+import com.github.daytron.revworks.view.dashboard.CommentComponent;
+import com.github.daytron.revworks.view.dashboard.CourseworkView;
+import com.github.daytron.revworks.view.dashboard.DashboardScreen;
 import com.vaadin.annotations.Push;
 import javax.servlet.annotation.WebServlet;
 

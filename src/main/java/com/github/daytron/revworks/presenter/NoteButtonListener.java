@@ -16,8 +16,8 @@
 package com.github.daytron.revworks.presenter;
 
 import com.github.daytron.revworks.service.CurrentUserSession;
-import com.github.daytron.revworks.ui.dashboard.CommentComponent;
-import com.github.daytron.revworks.ui.dashboard.CourseworkView;
+import com.github.daytron.revworks.view.dashboard.CommentComponent;
+import com.github.daytron.revworks.view.dashboard.CourseworkView;
 import com.vaadin.ui.Button;
 import java.util.Map;
 

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.dashboard;
+package com.github.daytron.revworks.view.dashboard;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.event.AppEvent.*;
-import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerCourseworkModuleView;
-import com.github.daytron.revworks.ui.dashboard.lecturer.LecturerSubmitAnnouncementView;
-import com.github.daytron.revworks.ui.dashboard.student.StudentCourseworkModuleView;
-import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkSucessView;
-import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkView;
+import com.github.daytron.revworks.view.dashboard.lecturer.LecturerCourseworkModuleView;
+import com.github.daytron.revworks.view.dashboard.lecturer.LecturerSubmitAnnouncementView;
+import com.github.daytron.revworks.view.dashboard.student.StudentCourseworkModuleView;
+import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkSucessView;
+import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkView;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;

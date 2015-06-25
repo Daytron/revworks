@@ -18,7 +18,7 @@ package com.github.daytron.revworks.service;
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.event.AppEvent.*;
-import com.github.daytron.revworks.ui.dashboard.student.StudentSubmitCourseworkSucessView;
+import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkSucessView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
 import java.io.DataInputStream;

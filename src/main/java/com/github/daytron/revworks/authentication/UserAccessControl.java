@@ -36,8 +36,8 @@ import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPool
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.service.LecturerDataInserterImpl;
 import com.github.daytron.revworks.service.StudentDataInserterImpl;
-import com.github.daytron.revworks.ui.AdminDashboardScreen;
-import com.github.daytron.revworks.ui.AdminLoginPopup;
+import com.github.daytron.revworks.view.AdminDashboardScreen;
+import com.github.daytron.revworks.view.AdminLoginPopup;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.Validator;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.dashboard;
+package com.github.daytron.revworks.view.dashboard;
 
 import com.github.daytron.revworks.data.ExternalLink;
 import com.vaadin.server.ExternalResource;

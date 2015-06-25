@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.ui.dashboard.lecturer;
+package com.github.daytron.revworks.view.dashboard.lecturer;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;

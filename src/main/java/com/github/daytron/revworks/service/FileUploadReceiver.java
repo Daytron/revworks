@@ -96,7 +96,15 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
 
         // Detect if the user has the right file extension
         String fileExtension = Files.getFileExtension(event.getFilename()).toLowerCase();
-        if (!(fileExtension.equalsIgnoreCase(PDF_EXTENSION))) {
+        if (fileExtension.isEmpty()) {
+            NotificationUtil.showError(
+                    ErrorMsg.STUDENT_FAILED_UPLOAD_COURSEWORK.getText(), 
+                    ErrorMsg.STUDENT_NO_FILE_UPLOAD.getText());
+            this.isCustomeError = true;
+            this.uploader.interruptUpload();
+            this.isUploaded = false;
+            this.isCustomeError = true;
+        } else if (!(fileExtension.equalsIgnoreCase(PDF_EXTENSION))) {
 
             NotificationUtil.showError(
                     ErrorMsg.STUDENT_FAILED_UPLOAD_COURSEWORK.getText(),

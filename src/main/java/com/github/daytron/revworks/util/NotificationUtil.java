@@ -113,7 +113,7 @@ public final class NotificationUtil {
         }
 
         newNotification.setHtmlContentAllowed(true);
-        newNotification.setStyleName("custom-tray-notifications-info");
+        newNotification.setStyleName("custom-tray-notification");
         newNotification.setDelayMsec(3000);
         newNotification.setPosition(Position.TOP_RIGHT);
         newNotification.show(Page.getCurrent());

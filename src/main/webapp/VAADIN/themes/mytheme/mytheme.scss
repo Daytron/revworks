@@ -183,8 +183,8 @@ $header-height: round($v-unit-size / 1.1) !default;
             color: #fff;
         }
     }
-    
-    .v-Notification.custom-tray-notifications-warning {
+
+    .v-Notification.custom-tray-notification {
         background:rgba(96,62,19,0.7);
         font-size: 0.8rem;
         color: #fff;
@@ -193,6 +193,13 @@ $header-height: round($v-unit-size / 1.1) !default;
         h1 {
             color: #fff;
         }
+    }
+
+    // override default error style to include
+    // visual indicator that it needs to be closed
+    .v-Notification.error {
+        @include valo-notification-error-style;
+        @include valo-notification-closable-style;
     }
 
     .dashboard-footer {

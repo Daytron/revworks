@@ -26,6 +26,7 @@ import com.github.daytron.revworks.util.StringUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import static com.vaadin.server.Sizeable.UNITS_EM;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
@@ -51,7 +52,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
 
     public static final String VIEW_NAME = "SubmitCourseworkView";
     public static final String VIEW_CAPTION = "Submit Coursework";
-    public static final String VIEW_TITLE = "Submit Coursework";
+    public static final String VIEW_TITLE = "Submit Your Coursework";
 
     private boolean isInitialised = false;
     private CopyOnWriteArrayList<ClassTable> listOfClasses;
@@ -97,7 +98,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         contentFormLayout.setMargin(true);
         contentFormLayout.setSpacing(true);
 
-        final ComboBox moduleComboBox = new ComboBox("Select class");
+        final ComboBox moduleComboBox = new ComboBox("Class");
         moduleComboBox.setWidth(25, UNITS_EM);
 
         for (ClassTable classItem : this.listOfClasses) {
@@ -114,18 +115,19 @@ public class StudentSubmitCourseworkView extends VerticalLayout
 
         // Title area
         final TextField titleTextField = new TextField("Title");
-        titleTextField.setWidth(25, UNITS_EM);
+        titleTextField.setWidth(25, Unit.EM);
         // As define in database constraints
         titleTextField.setMaxLength(150);
         contentFormLayout.addComponent(titleTextField);
 
-        Label spacerLabel = new Label("");
-        contentFormLayout.addComponent(spacerLabel);
+        Label gapLabel = new Label("&nbsp;",ContentMode.HTML);
+        gapLabel.setHeight(10, Unit.PIXELS);
+        contentFormLayout.addComponent(gapLabel);
 
         // Info label
-        Label uploadInformationLabel = new Label();
-        uploadInformationLabel.setValue("Upload your coursework PDF file here.");
-        contentFormLayout.addComponent(uploadInformationLabel);
+//        Label uploadInformationLabel = new Label();
+//        uploadInformationLabel.setValue("Upload your coursework PDF file here.");
+//        contentFormLayout.addComponent(uploadInformationLabel);
 
         // Upload area
         ProgressBar progressBar = new ProgressBar(0.0f);
@@ -133,8 +135,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         progressBar.setVisible(false);
         final FileUploadReceiver fileUploadReceiver
                 = new FileUploadReceiver(progressBar);
-        Upload fileUploader = new Upload("Upload your coursework",
-                fileUploadReceiver);
+        Upload fileUploader = new Upload("PDF file to upload", fileUploadReceiver);
         fileUploadReceiver.setUploader(fileUploader);
         fileUploader.addProgressListener(fileUploadReceiver);
         fileUploader.addFinishedListener(fileUploadReceiver);
@@ -144,8 +145,9 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         contentFormLayout.addComponent(fileUploader);
         contentFormLayout.addComponent(progressBar);
 
-        Label spaceLabel = new Label("");
-        contentFormLayout.addComponent(spaceLabel);
+        Label gapLabel2 = new Label("&nbsp;",ContentMode.HTML);
+        gapLabel2.setHeight(10, Unit.PIXELS);
+        contentFormLayout.addComponent(gapLabel2);
 
         Label termsLabel = new Label("By ticking the checkbox below, you agree "
                 + "to the terms and conditions and privacy policy enforced on this "
@@ -153,15 +155,16 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         contentFormLayout.addComponent(termsLabel);
 
         final CheckBox agreeBox
-                = new CheckBox("I agree to the terms and condition.");
+                = new CheckBox("I agree to the terms and conditions.");
         contentFormLayout.addComponent(agreeBox);
 
         layout.addComponent(contentFormLayout);
         layout.setWidth("100%");
         layout.setSpacing(true);
 
-        Label spacer2Label = new Label("");
-        layout.addComponent(spacer2Label);
+        Label gapLabel3 = new Label("&nbsp;",ContentMode.HTML);
+        gapLabel3.setHeight(5, Unit.PIXELS);
+        layout.addComponent(gapLabel3);
 
         final List<ClassTable> copyOfClassTables = this.listOfClasses;
         Button submitButton = new Button("Submit");

@@ -44,14 +44,9 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 import java.io.File;
 import java.security.Principal;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledExecutorService;
 import javax.servlet.ServletException;
 
 /**

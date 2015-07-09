@@ -20,8 +20,6 @@ import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
-import com.github.daytron.revworks.exception.SQLErrorQueryException;
-import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.presenter.NoteButtonListener;
 import com.github.daytron.revworks.service.CurrentUserSession;
@@ -264,7 +262,7 @@ public class CourseworkView extends VerticalLayout implements View {
                         FileResource fileResource
                                 = new FileResource(listOfPdfPages.get(page - 1));
                         Image image = new Image(null, fileResource);
-                        image.setSizeUndefined();
+                        image.setWidth("100%");
 
                         courseworkPagePanel.setContent(image);
                         currentPage = page;

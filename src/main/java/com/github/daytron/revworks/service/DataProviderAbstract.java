@@ -30,6 +30,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -62,16 +63,22 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
 
         if (reserveConnectionPool()) {
             try {
+                
+                // Extract the last 3 announcemnts and additional announcements
+                // that falls within the last 7 days
+                // Max 15 announcements
                 PreparedStatement preparedStatement;
                 if (MainUI.get().getAccessControl().isUserAStudent()) {
                     preparedStatement = getConnection().prepareStatement(
-                            PreparedQueryStatement.STUDENT_SELECT_ANNOUNCEMENT
+                            PreparedQueryStatement
+                            .STUDENT_SELECT_ANNOUNCEMENTS
                             .getQuery());
 
                 } else {
                     // Otherwise it's a lecturer
                     preparedStatement = getConnection().prepareStatement(
-                            PreparedQueryStatement.LECTURER_SELECT_ANNOUNCEMENT
+                            PreparedQueryStatement
+                            .LECTURER_SELECT_ANNOUNCEMENTS
                             .getQuery());
                 }
 
@@ -93,9 +100,21 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
 
                 this.listOfAnnouncements = new ArrayList<>();
 
+                int counter = 0;
                 while (resultSet.next()) {
+                    counter += 1;
+                    
                     Timestamp timestamp = resultSet.getTimestamp(4);
                     LocalDateTime dateSubmitted = timestamp.toLocalDateTime();
+                    
+                    if (counter > 3) {
+                        LocalDateTime now = LocalDateTime.now();
+                        int days = (int)ChronoUnit.DAYS.between(dateSubmitted, now);
+                        
+                        if (days > 7) {
+                            break;
+                        }
+                    }
 
                     AnnouncementType announcementType;
                     String announcementSource;
@@ -158,16 +177,17 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
 
                 preparedStatement.close();
                 resultSet.close();
-                releaseConnection();
+  
 
                 return listOfAnnouncements;
 
             } catch (SQLException ex) {
                 Logger.getLogger(DataProviderAbstract.class.getName())
                         .log(Level.SEVERE, null, ex);
-                releaseConnection();
                 throw new SQLErrorQueryException(
                         ExceptionMsg.SQL_ERROR_QUERY.getMsg());
+            } finally {
+                releaseConnection();
             }
         } else {
             throw new SQLErrorRetrievingConnectionAndPoolException(

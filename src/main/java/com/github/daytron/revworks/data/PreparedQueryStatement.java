@@ -46,7 +46,7 @@ public enum PreparedQueryStatement {
     SELECT_CURRENT_SEMESTER("SELECT Semester.id FROM Semester "
             + "WHERE (curdate() BETWEEN Semester.startDate "
             + "AND Semester.endDate);"),
-    STUDENT_SELECT_ANNOUNCEMENT("SELECT Announcement.id AS id, "
+    STUDENT_SELECT_ANNOUNCEMENTS("SELECT Announcement.id AS id, "
             + "Announcement.title AS title, "
             + "Announcement.message AS message,  "
             + "Announcement.date_submitted AS dateSubmitted, "
@@ -59,11 +59,11 @@ public enum PreparedQueryStatement {
             + "ON Class.id = ClassWideAnnouncement.class_id "
             + "LEFT JOIN StudentClass "
             + "ON StudentClass.class_id = Class.id "
-            + "WHERE (Announcement.announcement_type_id = 1 OR "
-            + "StudentClass.user_id = ?) AND "
-            + "DATE(Announcement.date_submitted)  >= (NOW() - INTERVAL 7 DAY) "
-            + "ORDER BY date_submitted DESC;"),
-    LECTURER_SELECT_ANNOUNCEMENT("SELECT Announcement.id AS id, "
+            + "WHERE Announcement.announcement_type_id = 1 OR "
+            + "StudentClass.user_id = ? "
+            + "ORDER BY date_submitted DESC "
+            + "LIMIT 15;"),
+    LECTURER_SELECT_ANNOUNCEMENTS("SELECT Announcement.id AS id, "
             + "Announcement.title AS title, "
             + "Announcement.message as message, "
             + "Announcement.date_submitted AS dateSubmitted, "
@@ -74,10 +74,10 @@ public enum PreparedQueryStatement {
             + "ON Announcement.id = ClassWideAnnouncement.id  "
             + "LEFT JOIN Class "
             + "ON Class.id = ClassWideAnnouncement.class_id "
-            + "WHERE (Announcement.announcement_type_id = 1 OR "
-            + "Class.lecturer_user_id = ?) AND "
-            + "DATE(Announcement.date_submitted)  >= (NOW() - INTERVAL 7 DAY) "
-            + "ORDER BY date_submitted DESC;"),
+            + "WHERE Announcement.announcement_type_id = 1 OR "
+            + "Class.lecturer_user_id = ? "
+            + "ORDER BY date_submitted DESC "
+            + "LIMIT 15;"),
     LECTURER_SELECT_CLASS("SELECT Class.id AS id, "
             + "Class.module_id AS moduleId, "
             + "Module.name AS moduldeName "

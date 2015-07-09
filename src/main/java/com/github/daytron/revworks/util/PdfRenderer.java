@@ -50,7 +50,7 @@ public final class PdfRenderer {
         PDFRenderer renderer = new PDFRenderer(document);
 
         for (int i = 0; i < pages.getCount(); i++) {
-            BufferedImage image = renderer.renderImageWithDPI(i, 100f);
+            BufferedImage image = renderer.renderImageWithDPI(i, 300f);
             File pageFile = new File("image-" + UUID.randomUUID()
                     + i + ".png");
 

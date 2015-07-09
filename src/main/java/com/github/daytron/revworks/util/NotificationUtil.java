@@ -113,7 +113,7 @@ public final class NotificationUtil {
         }
 
         newNotification.setHtmlContentAllowed(true);
-        newNotification.setStyleName("custom-tray-notification");
+        newNotification.setStyleName("custom-tray-notification-info");
         newNotification.setDelayMsec(3000);
         newNotification.setPosition(Position.TOP_RIGHT);
         newNotification.show(Page.getCurrent());
@@ -133,7 +133,7 @@ public final class NotificationUtil {
         }
 
         newNotification.setHtmlContentAllowed(true);
-        newNotification.setStyleName("custom-tray-notifications-warning");
+        newNotification.setStyleName("custom-tray-notification-warning");
         newNotification.setDelayMsec(3000);
         newNotification.setPosition(Position.TOP_RIGHT);
         newNotification.show(Page.getCurrent());

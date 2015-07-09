@@ -175,7 +175,7 @@ $header-height: round($v-unit-size / 1.1) !default;
         }
     }
 
-    .v-Notification.custom-tray-notifications-info {
+    .v-Notification.custom-tray-notification-info {
         background:rgba(19,47,99,0.7);
         font-size: 0.8rem;
         color: #fff;
@@ -186,8 +186,8 @@ $header-height: round($v-unit-size / 1.1) !default;
         }
     }
 
-    .v-Notification.custom-tray-notification {
-        background:rgba(96,62,19,0.7);
+    .v-Notification.custom-tray-notification-warning {
+        background:rgba(153,61,0,0.7);
         font-size: 0.8rem;
         color: #fff;
         border-radius: 5px;

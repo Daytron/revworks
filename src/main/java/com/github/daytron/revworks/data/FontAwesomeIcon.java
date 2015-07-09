@@ -22,6 +22,7 @@ package com.github.daytron.revworks.data;
  */
 public enum FontAwesomeIcon {
 
+    CHECK_CIRCLE("<i class=\"fa fa-check-circle "),
     CHECK_CIRCLE_O("<i class=\"fa fa-check-circle-o "),
     CLOUD_UPLOAD("<i class=\"fa fa-cloud-upload "),
     INFO_CIRCLE("<i class=\"fa fa-info-circle "),
@@ -56,6 +57,10 @@ public enum FontAwesomeIcon {
 
     public String get5xSize() {
         return code + "fa-5x\"></i>&nbsp;&nbsp;";
+    }
+    
+    public String get5xSizeWithNoSpace() {
+        return code + "fa-5x\"></i>";
     }
     
     public String getSpinner() {

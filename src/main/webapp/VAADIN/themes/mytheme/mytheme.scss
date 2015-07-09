@@ -62,11 +62,13 @@ $header-height: round($v-unit-size / 1.1) !default;
 @import "../valo/valo.scss";
 @import "views/announcement-view.scss";
 @import "views/lecturer-coursework-view.scss";
+@import "views/lecturer-submit-announcement-view.scss";
 
 @mixin mytheme {
     @include valo;
     @include announcement-view;
     @include lecturer-coursework-view;
+    @include lecturer-submit-announcement-view;
 
     // Login Screen
     .login-screen {

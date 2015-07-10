@@ -45,7 +45,7 @@ public class SQLConnectionManager {
             jbdcConnectionPool = new SimpleJDBCConnectionPool(
                     "com.mysql.jdbc.Driver",
                     "jdbc:mysql://localhost/appschema",
-                    "uservalidator", "sqluserpw", 2, 10);
+                    "uservalidator", "sqluserpw", 4, 10);
         }
         
         return jbdcConnectionPool;

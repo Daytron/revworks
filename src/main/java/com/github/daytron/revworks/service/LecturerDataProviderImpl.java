@@ -16,6 +16,7 @@
 package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.FilePath;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
@@ -23,9 +24,11 @@ import com.github.daytron.revworks.event.AppEvent.*;
 import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
+import com.github.daytron.revworks.exception.SQLErrorUpdateException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
+import com.github.daytron.revworks.util.NotificationUtil;
 import com.github.daytron.revworks.view.dashboard.CourseworkView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
@@ -62,7 +65,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
             SQLErrorQueryException, NoClassAttachedToLecturerException {
         CopyOnWriteArrayList<ClassTable> listOfClassTables
                 = CurrentUserSession.getCurrentClassTables();
-        
+
         // If somehow the lecturer is not registered to any classes
         // Better save resources and send back an empty class list 
         if (listOfClassTables.isEmpty()) {
@@ -74,8 +77,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                 // Pull courseworks for each class resulting
                 // to a BeanItemContainer and save it to a List object
                 // Then pass those opbjects to BeanItemContainer
-                final ConcurrentHashMap<ClassTable, BeanItemContainer> 
-                        listOfBeanItemContainers = new ConcurrentHashMap<>();
+                final ConcurrentHashMap<ClassTable, BeanItemContainer> listOfBeanItemContainers = new ConcurrentHashMap<>();
 
                 for (ClassTable classTable : listOfClassTables) {
                     final PreparedStatement preparedStatementCoursework
@@ -104,6 +106,68 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                     BeanItemContainer<Coursework> beanItemContainer
                             = new BeanItemContainer<>(Coursework.class);
                     while (resultSetCoursework.next()) {
+                        // Extract the coursework id
+                        int courseworkID = resultSetCoursework.getInt(1);
+
+                        // Then before extracting the remaining details
+                        // Check first if the corresponding notes are read 
+                        // or unread then update the coursework is_read field
+                        PreparedStatement preparedStatementNote
+                                = getConnection().prepareStatement(
+                                        PreparedQueryStatement.SELECT_NOTE.getQuery());
+                        preparedStatementNote.setInt(1, courseworkID);
+
+                        boolean isReadLecturerCoursework
+                                = resultSetCoursework.getBoolean(8);
+                        // Default true 
+                        // if all notes are true then this should be true
+                        // otherwise this is updated to false further 
+                        // down the code
+                        boolean isReadLecturerNote = true;
+
+                        ResultSet resultSetNote = preparedStatementNote
+                                .executeQuery();
+                        if (resultSetNote.next()) {
+                            resultSetNote.beforeFirst();
+
+                            while (resultSetNote.next()) {
+                                isReadLecturerNote
+                                        = resultSetNote.getBoolean(5);
+                                // If at least one of the note is not
+                                // read yet, override coursework 
+                                // is_read value and break
+                                if (isReadLecturerNote == false) {
+                                    isReadLecturerCoursework = false;
+                                    break;
+                                }
+                            }
+
+                            // Close first 
+                            preparedStatementNote.close();
+                            resultSetNote.close();
+
+                            // Then update coursework student is_read field
+                            if (isReadLecturerNote != isReadLecturerCoursework) {
+                                // Save it first
+                                isReadLecturerCoursework = isReadLecturerNote;
+
+                                // Then update
+                                try (PreparedStatement preparedStatementUpdate
+                                        = getConnection().prepareStatement(
+                                                PreparedQueryStatement
+                                                .LECTURER_UPDATE_COURSEWORK_IS_READ
+                                                .getQuery())) {
+                                            preparedStatementUpdate.setBoolean(1,
+                                                    isReadLecturerCoursework);
+                                            preparedStatementUpdate.setInt(2, 
+                                                    courseworkID);
+
+                                            preparedStatementUpdate.executeUpdate();
+                                            getConnection().commit();
+                                        }
+                            }
+                        }
+
                         // getPrincipal the bytes data from the resultset
                         byte[] pdfData = resultSetCoursework.getBytes(4);
 
@@ -137,7 +201,8 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                             CurrentUserSession.getFileTrashBin().add(pdfFile);
 
                         } catch (IOException ex) {
-                            Logger.getLogger(LecturerDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(LecturerDataProviderImpl.class
+                                    .getName()).log(Level.SEVERE, null, ex);
 
                             // If unable to recreate the file,
                             // skip to next coursework
@@ -150,17 +215,19 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
 
                         StudentUser studentUser = new StudentUser(
                                 resultSetCoursework.getInt(6),
-                                Integer.toString(resultSetCoursework.getInt(7)),
-                                resultSetCoursework.getString(8),
-                                resultSetCoursework.getString(9));
+                                Integer.toString(resultSetCoursework.getInt(9)),
+                                resultSetCoursework.getString(10),
+                                resultSetCoursework.getString(11));
 
                         beanItemContainer.addBean(new Coursework(
-                                resultSetCoursework.getInt(1),
+                                courseworkID,
                                 resultSetCoursework.getString(2),
                                 dateSubmitted,
                                 pdfFile, fileExtension,
                                 classTable,
-                                studentUser));
+                                studentUser,
+                                resultSetCoursework.getBoolean(7),
+                                isReadLecturerCoursework));
 
                     }
 
@@ -189,6 +256,67 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
     @Subscribe
     public void receiveCourseworkDataFromTable(final LecturerViewCourseworkEvent event) {
         setReceivedCoursework(event.getCoursework());
+
+        /*
+         Before switching to coursework view
+         Set is_read field to true.
+        
+         This turn to true by default regardless of note is_read field
+         whenever user open this coursework because some courseworks
+         may not have notes in it.
+        
+         The courseworks is-read fields are re-evaluated or updated properly 
+         when user view goes (back) to coursework table view.
+        
+         Non-fatal SIDE EFFECT: coursework is_read field is not properly
+         updated until user open coursework table view. No issues for users since 
+         it is updated when they open the table view.
+        
+         Reason for this decision: it is expensive to implement real-time 
+         coursework update while there are already real-time updates on 
+         notes (both updating is_read field and retrieving data) 
+         (spawning new threads) and real-time updates on notifications in placed.
+        
+         Until the server is upgraded to support huge real-time thread 
+         operations, the current feature is suffice. 
+         */
+        if (reserveConnectionPool()) {
+            try (PreparedStatement preparedStatementUpdate
+                    = getConnection().prepareStatement(
+                            PreparedQueryStatement.LECTURER_UPDATE_COURSEWORK_IS_READ
+                            .getQuery())) {
+                        preparedStatementUpdate.setBoolean(1, true);
+                        preparedStatementUpdate.setInt(2,
+                                event.getCoursework().getId());
+
+                        preparedStatementUpdate.executeUpdate();
+                        getConnection().commit();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(LecturerDataProviderImpl.class
+                                .getName()).log(Level.SEVERE, null, ex);
+
+                        NotificationUtil.showError(
+                                ErrorMsg.DATA_UPDATE_ERROR.getText(),
+                                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                        releaseConnection();
+                        
+                        return;
+                    } finally {
+                        releaseConnection();
+                    }
+        } else {
+            SQLErrorUpdateException ex = new SQLErrorUpdateException(
+                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
+            Logger.getLogger(LecturerDataProviderImpl.class.getName())
+                    .log(Level.SEVERE, null, ex);
+
+            NotificationUtil.showError(
+                    ErrorMsg.DATA_UPDATE_ERROR.getText(),
+                    ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+
+            return;
+
+        }
 
         MainUI.get().getNavigator().navigateTo(CourseworkView.VIEW_NAME);
     }

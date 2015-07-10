@@ -176,7 +176,7 @@ $header-height: round($v-unit-size / 1.1) !default;
             .v-label.welcome-text { font-size: 0.8rem }
         }
     }
-
+    
     .v-Notification.custom-tray-notification-info {
         background:rgba(19,47,99,0.7);
         font-size: 0.8rem;
@@ -217,5 +217,15 @@ $header-height: round($v-unit-size / 1.1) !default;
         }
     }
 
+    .v-table-row.v-table-row-unread, 
+    .v-table-row-odd.v-table-row-unread {
+        font-weight: bolder;
+        background-color: #fff;
+    }
+    
+    .v-table-row.v-table-row-read, 
+    .v-table-row-odd.v-table-row-read {
+        background-color: #efefef;
+    }
 
 }

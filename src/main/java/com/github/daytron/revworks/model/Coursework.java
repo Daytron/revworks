@@ -17,8 +17,6 @@ package com.github.daytron.revworks.model;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Coursework model class for coursework table.
@@ -35,10 +33,12 @@ public class Coursework {
     private final File courseworkFile;
     private final ClassTable classTable;
     private final StudentUser studentUser;
+    private final Boolean readStudent;
+    private final Boolean readLecturer;
 
     public Coursework(int id, String title, LocalDateTime dateSubmitted,
             File courseworkFile, String fileExtension, ClassTable classTable, 
-            StudentUser studentUser) {
+            StudentUser studentUser, boolean isReadStudent, boolean isReadLecturer) {
         this.id = id;
         this.title = title;
         this.dateSubmitted = dateSubmitted;
@@ -46,6 +46,8 @@ public class Coursework {
         this.courseworkFile = courseworkFile;
         this.classTable = classTable;
         this.studentUser = studentUser;
+        this.readStudent = isReadStudent;
+        this.readLecturer = isReadLecturer;
     }
 
     public ClassTable getClassTable() {
@@ -75,5 +77,14 @@ public class Coursework {
     public String getFileExtension() {
         return fileExtension;
     }
+
+    public boolean isReadLecturer() {
+        return readLecturer;
+    }
+
+    public boolean isReadStudent() {
+        return readStudent;
+    }
+    
     
 }

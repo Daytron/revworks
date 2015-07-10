@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright 2015 Ryan Gilera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,23 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.service;
-
-import com.github.daytron.revworks.exception.SQLErrorQueryException;
-import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.model.Announcement;
-import java.util.List;
+package com.github.daytron.revworks.exception;
 
 /**
- * The base template for common SQL data retrieval process for
- * both student and lecturer users.
+ * A custom exception when updating data in the database fails.
  *
  * @author Ryan Gilera
  */
-public interface DataProvider {
+public class SQLErrorUpdateException extends Exception {
 
-    public List<Announcement> populateHomeViewWithData() throws
-            SQLErrorQueryException, 
-            SQLErrorRetrievingConnectionAndPoolException;
+    public SQLErrorUpdateException(String msg, Throwable t) {
 
+        super(msg, t);
+    }
+
+    public SQLErrorUpdateException(String msg) {
+
+        super(msg);
+    }
+
+    public SQLErrorUpdateException(Throwable t) {
+
+        super(t);
+    }
 }

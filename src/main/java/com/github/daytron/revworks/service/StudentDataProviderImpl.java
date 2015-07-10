@@ -16,17 +16,20 @@
 package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.FilePath;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.event.AppEvent.*;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
+import com.github.daytron.revworks.exception.SQLErrorUpdateException;
 import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
 import com.github.daytron.revworks.model.User;
+import com.github.daytron.revworks.util.NotificationUtil;
 import com.github.daytron.revworks.view.dashboard.CourseworkView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
@@ -60,7 +63,7 @@ public class StudentDataProviderImpl extends DataProviderAbstract
     }
 
     @Override
-    public BeanItemContainer<Coursework> extractCourseworkData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, 
+    public BeanItemContainer<Coursework> extractCourseworkData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException,
             SQLNoResultFoundException, FileNotFoundException, IOException {
         CopyOnWriteArrayList<ClassTable> listOfClassTables
                 = CurrentUserSession.getCurrentClassTables();
@@ -80,70 +83,130 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                                     .getQuery());
 
                     preparedStatement.setInt(1, classTable.getId());
-                    preparedStatement.setInt(2, 
-                                ((User)CurrentUserSession.getPrincipal()).getId());
+                    preparedStatement.setInt(2,
+                            ((User) CurrentUserSession.getPrincipal()).getId());
 
-                    // Skip to the next class if there are no coursework 
-                    // submitted for this class
                     try (ResultSet resultSet = preparedStatement.executeQuery()) {
                         // Skip to the next class if there are no coursework
                         // submitted for this class
                         if (!resultSet.next()) {
                             preparedStatement.close();
                             resultSet.close();
-                            
+
                             continue;
                         }
-                        
+
                         resultSet.beforeFirst();
-                        
+
                         // Cycle through the SQL query result
                         while (resultSet.next()) {
-                            
-                            // getPrincipal the bytes data from the resultset
+
+                            // Extract the coursework id
+                            int courseworkID = resultSet.getInt(1);
+
+                            // Then before extracting the remaining details
+                            // Check first if the corresponding notes are read 
+                            // or unread then update the coursework is_read field
+                            PreparedStatement preparedStatementNote
+                                    = getConnection().prepareStatement(
+                                            PreparedQueryStatement.SELECT_NOTE.getQuery());
+                            preparedStatementNote.setInt(1, courseworkID);
+
+                            boolean isReadStudentCoursework = resultSet.getBoolean(6);
+
+                            // Default true 
+                            // if all notes are true then this should be true
+                            // otherwise this is updated to false further 
+                            // down the code
+                            boolean isReadStudentNote = true;
+
+                            ResultSet resultSetNote = preparedStatementNote
+                                    .executeQuery();
+                            if (resultSetNote.next()) {
+                                resultSetNote.beforeFirst();
+
+                                while (resultSetNote.next()) {
+                                    isReadStudentNote
+                                            = resultSetNote.getBoolean(4);
+                                    // If at least one of the note is not
+                                    // read yet, override coursework 
+                                    // is_read value and break
+                                    if (isReadStudentNote == false) {
+                                        isReadStudentCoursework = false;
+                                        break;
+                                    }
+                                }
+
+                                // Close first 
+                                preparedStatementNote.close();
+                                resultSetNote.close();
+
+                                // Then update coursework student is_read field
+                                if (isReadStudentNote != isReadStudentCoursework) {
+                                    // Save it first
+                                    isReadStudentCoursework = isReadStudentNote;
+
+                                    // Then update
+                                    try (PreparedStatement preparedStatementUpdate
+                                            = getConnection().prepareStatement(
+                                                    PreparedQueryStatement.STUDENT_UPDATE_COURSEWORK_IS_READ
+                                                    .getQuery())) {
+                                                preparedStatementUpdate.setBoolean(1,
+                                                        isReadStudentCoursework);
+                                                preparedStatementUpdate.setInt(2, courseworkID);
+
+                                                preparedStatementUpdate.executeUpdate();
+                                                getConnection().commit();
+                                            }
+                                }
+                            }
+
+                            // Get the bytes data (pdf) from the resultset
                             byte[] pdfData = resultSet.getBytes(4);
-                            
+
                             // Retrieve file extension
                             String fileExtension = resultSet.getString(5);
-                            
+
                             // Prepare destination path of the pdf file
                             String basePath = VaadinService.getCurrent()
                                     .getBaseDirectory().getAbsolutePath()
                                     + FilePath.TEMP_FILE_HOLDER.getPath();
-                            
+
                             // Generate random filename
                             // so it won't overwrite by the next retrieve file
                             String randomStringForFilename = UUID.randomUUID().toString();
-                            
+
                             String pdfFilename = basePath
                                     + FilePath.FILE_OUTPUT_NAME.getPath()
                                     + "/" + randomStringForFilename + "."
                                     + fileExtension;
-                            
+
                             File pdfFile = new File(pdfFilename);
                             pdfFile.getParentFile().mkdirs();
                             pdfFile.createNewFile();
-                            
+
                             // Begin file write from the bytes retrieved to the newly
                             // created file with random UUID as filename
                             Files.write(pdfData, pdfFile);
-                            
+
                             // Add to trashbin for later file cleanup
                             CurrentUserSession.getFileTrashBin().add(pdfFile);
-                            
+
                             // Convert SQL DATETIME datatype to Java 8's LocalDateTime
                             Timestamp timestamp = resultSet.getTimestamp(3);
                             LocalDateTime dateSubmitted = timestamp.toLocalDateTime();
-                            
-                            listOfCourseworks.add(new Coursework(resultSet.getInt(1),
+
+                            listOfCourseworks.add(new Coursework(courseworkID,
                                     resultSet.getString(2),
                                     dateSubmitted,
                                     pdfFile,
                                     fileExtension,
                                     classTable,
-                                    (StudentUser) CurrentUserSession.getPrincipal()));
+                                    (StudentUser) CurrentUserSession.getPrincipal(),
+                                    isReadStudentCoursework,
+                                    resultSet.getBoolean(7)));
                         }
-                        
+
                         preparedStatement.close();
                     }
                 }
@@ -175,11 +238,73 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                     ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
         }
     }
-    
+
     @Subscribe
     public void receiveCourseworkDataFromTable(final StudentViewCourseworkEvent event) {
         setReceivedCoursework(event.getCoursework());
 
+        /*
+         Before switching to coursework view
+         Set is_read field to true.
+        
+         This turn to true by default regardless of note is_read field
+         whenever user open this coursework because some courseworks
+         may not have notes in it.
+        
+         The courseworks is-read fields are re-evaluated or updated properly 
+         when user view goes (back) to coursework table view.
+        
+         Non-fatal SIDE EFFECT: coursework is_read field is not properly
+         updated until user open coursework table view. No issues for users since 
+         it is updated when they open the table view.
+        
+         Reason for this decision: it is expensive to implement real-time 
+         coursework update while there are already real-time updates on 
+         notes (both updating is_read field and retrieving data) 
+         (spawning new threads) and real-time updates on notifications in placed.
+        
+         Until the server is upgraded to support huge real-time thread 
+         operations, the current feature is suffice. 
+         */
+        if (reserveConnectionPool()) {
+            try (PreparedStatement preparedStatementUpdate
+                    = getConnection().prepareStatement(
+                            PreparedQueryStatement.STUDENT_UPDATE_COURSEWORK_IS_READ
+                            .getQuery())) {
+                        preparedStatementUpdate.setBoolean(1, true);
+                        preparedStatementUpdate.setInt(2,
+                                event.getCoursework().getId());
+
+                        preparedStatementUpdate.executeUpdate();
+                        getConnection().commit();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(StudentDataProviderImpl.class
+                                .getName()).log(Level.SEVERE, null, ex);
+
+                        NotificationUtil.showError(
+                                ErrorMsg.DATA_UPDATE_ERROR.getText(),
+                                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                        releaseConnection();
+                        
+                        return;
+                    } finally {
+                        releaseConnection();
+                    }
+        } else {
+            SQLErrorUpdateException ex = new SQLErrorUpdateException(
+                    ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
+            Logger.getLogger(StudentDataProviderImpl.class.getName())
+                    .log(Level.SEVERE, null, ex);
+
+            NotificationUtil.showError(
+                    ErrorMsg.DATA_UPDATE_ERROR.getText(),
+                    ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+
+            return;
+
+        }
+
         MainUI.get().getNavigator().navigateTo(CourseworkView.VIEW_NAME);
     }
+
 }

@@ -53,8 +53,10 @@ implements StudentDataInserter {
                 fileExtension = fileExtension.toLowerCase();
                 preparedStatement.setString(3, fileExtension);
                 
-                preparedStatement.setInt(4, MainUI.get().getAccessControl().getUserId());
-                preparedStatement.setInt(5, event.getClassTable().getId());
+                preparedStatement.setBoolean(4, false);
+                preparedStatement.setBoolean(5, false);
+                preparedStatement.setInt(6, MainUI.get().getAccessControl().getUserId());
+                preparedStatement.setInt(7, event.getClassTable().getId());
                 
                 // Prepare pdf file to be inserted to the database
                 byte[] pdfByte = new byte[(int)event.getCourseworkFile().length()];

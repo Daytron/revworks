@@ -29,6 +29,8 @@ import com.github.daytron.revworks.presenter.StudentIdColumnGenerator;
 import com.github.daytron.revworks.presenter.StudentNameColumnGenerator;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.util.NotificationUtil;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
@@ -73,7 +75,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
         // from coursework view and comment component if possible
         CurrentUserSession.shutdownCourseworkViewExecutorService();
         CurrentUserSession.shutdownCommentExectorService();
-        
+
         if (!isInitialised) {
             try {
                 this.listOfNBeanItemContainers
@@ -169,10 +171,10 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
                 footerTableLabel.setValue("No coursework submitted yet.");
             } else {
                 if (items == 1) {
-                    footerTableLabel.setValue(listOfNBeanItemContainers.size() 
+                    footerTableLabel.setValue(listOfNBeanItemContainers.size()
                             + " item found.");
                 } else {
-                    footerTableLabel.setValue(listOfNBeanItemContainers.size() 
+                    footerTableLabel.setValue(listOfNBeanItemContainers.size()
                             + " items found.");
                 }
 
@@ -216,6 +218,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
             moduleTable.addGeneratedColumn("dateSubmitted",
                     new LocalDateTimeColumnGenerator());
             moduleTable.setColumnHeader("dateSubmitted", "Date Submitted");
+            moduleTable.setColumnHeader("readLecturer", "Read");
 
             // Arrange columns order
             moduleTable.setVisibleColumns((Object[]) new String[]{"id",
@@ -224,6 +227,28 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
             moduleTable.setColumnAlignments(new Table.Align[]{Table.ALIGN_LEFT,
                 Table.Align.CENTER, Table.Align.CENTER, Table.Align.CENTER,
                 Table.Align.CENTER});
+
+            moduleTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
+
+                @Override
+                public String getStyle(Table source, Object itemId, Object propertyId) {
+                    if (propertyId == null) {
+                        Item item = source.getItem(itemId);
+
+                        Property<Boolean> isRead = item.getItemProperty("readLecturer");
+                        boolean isReadStudent = isRead.getValue();
+
+                        // If it is unread then make text bolder
+                        if (!isReadStudent) {
+                            return "unread";
+                        } else {
+                            return "read";
+                        }
+                    } else {
+                        return null;
+                    }
+                }
+            });
 
             // Sort by date and module id
             moduleTable.setSortEnabled(true);
@@ -268,15 +293,14 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
 
                 @Override
                 public void buttonClick(Button.ClickEvent event) {
-                    if (beanItemContainer.size() < 1 
+                    if (beanItemContainer.size() < 1
                             || selectedCoursework == null) {
                         NotificationUtil.showInformation(
-                                "No table item selected.", 
+                                "No table item selected.",
                                 "No item found.");
                         event.getButton().setEnabled(true);
                     } else {
-                        AppEventBus.post(new AppEvent
-                                .LecturerViewCourseworkEvent(selectedCoursework));
+                        AppEventBus.post(new AppEvent.LecturerViewCourseworkEvent(selectedCoursework));
                     }
                 }
             });

@@ -29,6 +29,8 @@ import com.github.daytron.revworks.presenter.ModuleIDColumnGenerator;
 import com.github.daytron.revworks.presenter.ModuleNameColumnGenerator;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.util.NotificationUtil;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
@@ -160,6 +162,8 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         courseworksTable.addGeneratedColumn("lecturer",
                 new LecturerNameColumnGenerator());
         courseworksTable.setColumnHeader("lecturer", "Lecturer");
+        
+        courseworksTable.setColumnHeader("readStudent", "Read");
 
         // Arrange columns order
         courseworksTable.setVisibleColumns((Object[]) new String[]{"id",
@@ -168,6 +172,28 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         courseworksTable.setColumnAlignments(new Table.Align[]{Table.ALIGN_LEFT,
             Table.Align.CENTER, Table.Align.CENTER, Table.Align.CENTER,
             Table.Align.CENTER, Table.Align.CENTER});
+        
+        courseworksTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
+
+            @Override
+            public String getStyle(Table source, Object itemId, Object propertyId) {
+                if (propertyId == null) {
+                    Item item = source.getItem(itemId);
+                    
+                    Property<Boolean> isRead = item.getItemProperty("readStudent");
+                    boolean isReadStudent = isRead.getValue();
+                    
+                    // If it is unread then make text bolder
+                    if (!isReadStudent) {
+                        return "unread";
+                    } else {
+                        return "read";
+                    }
+                } else {
+                    return null;
+                }
+            }
+        });
 
         // Sort by date and module id
         courseworksTable.setSortEnabled(true);

@@ -28,7 +28,8 @@ public enum ErrorMsg {
     SIGNIN_FAILED_CAPTION("Sign-In failed!"),
     NO_USER_SIGNIN("No login user found. The session has been reset. "),
     DATA_FETCH_ERROR("Failed retrieving user data."),
-    DATA_SEND_ERROR("Failed sending data."),
+    DATA_SEND_ERROR("Failed to send data."),
+    DATA_UPDATE_ERROR("Failed to update data."),
     
     // For coursework upload
     STUDENT_FAILED_UPLOAD_COURSEWORK("Failed upload."),

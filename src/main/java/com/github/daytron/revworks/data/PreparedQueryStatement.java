@@ -102,13 +102,16 @@ public enum PreparedQueryStatement {
     LECTURER_INSERT_NEW_CLASSWIDE_ANNOUNCEMENT("INSERT INTO "
             + "ClassWideAnnouncement VALUES (?,?);"),
     STUDENT_INSERT_NEW_COURSEWORK("INSERT INTO Coursework "
-            + "(title,date_submitted,file,file_extension,student_user_id,"
-            + "class_id) VALUES (?,now(),?,?,?,?);"),
+            + "(title,date_submitted,file,file_extension,"
+            + "is_read_student,is_read_lecturer,student_user_id,"
+            + "class_id) VALUES (?,now(),?,?,?,?,?,?);"),
     STUDENT_SELECT_COURSEWORK("SELECT Coursework.id AS coursework_id, "
             + "Coursework.title AS title, "
             + "Coursework.date_submitted AS date_submitted, "
             + "Coursework.file AS file, "
-            + "Coursework.file_extension AS file_extension "
+            + "Coursework.file_extension AS file_extension, "
+            + "Coursework.is_read_student AS is_read_s, "
+            + "Coursework.is_read_lecturer AS is_read_l "
             + "FROM Coursework "
             + "INNER JOIN Class ON Class.id = Coursework.class_id "
             + "INNER JOIN Module ON Module.id = Class.module_id "
@@ -116,12 +119,17 @@ public enum PreparedQueryStatement {
             + "INNER JOIN User ON User.id = Lecturer.user_id "
             + "WHERE Coursework.class_id = ? AND "
             + "Coursework.student_user_id = ?;"),
+    STUDENT_UPDATE_COURSEWORK_IS_READ("UPDATE Coursework "
+            + "SET is_read_student = ? "
+            + "WHERE id = ?;"),
     LECTURER_SELECT_COURSEWORK("SELECT Coursework.id AS id, "
             + "Coursework.title AS title, "
             + "Coursework.date_submitted AS dateSubmitted, "
             + "Coursework.file AS file, "
             + "Coursework.file_extension As fileExtension, "
             + "Coursework.student_user_id AS studentUserID, "
+            + "Coursework.is_read_student AS is_read_s, "
+            + "Coursework.is_read_lecturer AS is_read_l, "
             + "Student.student_id AS studentID, "
             + "User.first_name AS studentFirstName, "
             + "User.last_name AS studentLastName "
@@ -129,9 +137,14 @@ public enum PreparedQueryStatement {
             + "INNER JOIN Student ON Student.user_id = Coursework.student_user_id "
             + "INNER JOIN User ON User.id = Coursework.student_user_id "
             + "WHERE Coursework.class_id = ?;"),
+    LECTURER_UPDATE_COURSEWORK_IS_READ("UPDATE Coursework "
+            + "SET is_read_lecturer = ? "
+            + "WHERE id = ?;"),
     SELECT_NOTE("SELECT n.id, n.page_num, "
             + "n.date_submitted, "
-            + "n.is_student_to_lecturer "
+            + "n.is_student_to_lecturer, "
+            + "n.is_read_student, "
+            + "n.is_read_lecturer "
             + "FROM Note n "
             + "WHERE n.coursework_id = ? "
             + "ORDER BY n.page_num ASC;"),

@@ -132,12 +132,10 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
 
                             while (resultSetNote.next()) {
                                 isReadLecturerNote
-                                        = resultSetNote.getBoolean(5);
+                                        = resultSetNote.getBoolean(6);
                                 // If at least one of the note is not
-                                // read yet, override coursework 
-                                // is_read value and break
+                                // read yet, break
                                 if (isReadLecturerNote == false) {
-                                    isReadLecturerCoursework = false;
                                     break;
                                 }
                             }

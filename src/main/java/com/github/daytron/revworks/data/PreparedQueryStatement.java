@@ -140,7 +140,8 @@ public enum PreparedQueryStatement {
     LECTURER_UPDATE_COURSEWORK_IS_READ("UPDATE Coursework "
             + "SET is_read_lecturer = ? "
             + "WHERE id = ?;"),
-    SELECT_NOTE("SELECT n.id, n.page_num, "
+    SELECT_NOTE("SELECT n.id, "
+            + "n.page_num, "
             + "n.date_submitted, "
             + "n.is_student_to_lecturer, "
             + "n.is_read_student, "
@@ -155,9 +156,23 @@ public enum PreparedQueryStatement {
             + "FROM Comment  "
             + "WHERE Comment.note_id = ? "
             + "ORDER BY Comment.date_submitted ASC; "),
-     INSERT_NOTE("INSERT INTO Note(page_num,date_submitted, "
-             + "is_student_to_lecturer,coursework_id) "
-             + "VALUES (?,now(),?,?);"),
+     INSERT_NOTE("INSERT INTO Note(page_num,"
+             + "date_submitted,"
+             + "is_student_to_lecturer,"
+             + "is_read_student,"
+             + "is_read_lecturer,"
+             + "coursework_id) "
+             + "VALUES (?,now(),?,?,?,?);"),
+     UPDATE_NOTE("UPDATE Note "
+             + "SET is_read_student = ?, "
+             + "is_read_lecturer = ? "
+             + "WHERE id = ?;"),
+     STUDENT_UPDATE_NOTE("UPDATE Note "
+             + "SET is_read_student = ? "
+             + "WHERE id = ?;"),
+     LECTURER_UPDATE_NOTE("UPDATE Note "
+             + "SET is_read_lecturer = ? "
+             + "WHERE id = ?;"),
      INSERT_COMMENT("INSERT INTO Comment(message,date_submitted,"
              + "is_student_to_lecturer,note_id) "
              + "VALUES (?,now(),?,?);");

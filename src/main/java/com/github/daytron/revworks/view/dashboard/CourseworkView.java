@@ -26,6 +26,7 @@ import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.DataProviderAbstract;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.github.daytron.revworks.util.PdfRenderer;
+import com.mysql.jdbc.Util;
 import com.vaadin.data.Property;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -482,7 +483,7 @@ public class CourseworkView extends VerticalLayout implements View {
         @Override
         public void run() {
             if (reserveConnectionPool()) {
-                ResultSet resultSet;
+                final ResultSet resultSet;
 
                 try (PreparedStatement preparedStatement = getConnection()
                         .prepareStatement(PreparedQueryStatement.SELECT_NOTE.getQuery())) {
@@ -535,12 +536,14 @@ public class CourseworkView extends VerticalLayout implements View {
                         final int noteId = resultSet.getInt(1);
                         final int pageNum = resultSet.getInt(2);
                         final boolean isStudentToLecturer = resultSet.getBoolean(4);
-
+                        final boolean isReadStudent = resultSet.getBoolean(5);
+                        final boolean isReadLecturer = resultSet.getBoolean(6);
+                        
+                        
                         MainUI.get().access(new Runnable() {
                             @Override
                             public void run() {
                                 String identifier = "";
-                                
                                 if (isStudentToLecturer) {
                                     if (isStudentUser) {
                                         identifier += "Me";
@@ -560,9 +563,23 @@ public class CourseworkView extends VerticalLayout implements View {
                                     }
                                 }
                                 
+                                boolean isRead;
+                                if (isStudentUser) {
+                                    isRead = isReadStudent;
+                                } else {
+                                    isRead = isReadLecturer;
+                                }
+                                
                                 Button noteButton = new Button(
                                         identifier + "  [p" + pageNum + "]");
                                 noteButton.setSizeFull();
+                                
+                                // Apply style
+                                if (isRead) {
+                                    noteButton.addStyleName("note-read");
+                                } else {
+                                    noteButton.addStyleName("note-unread");
+                                }
 
                                 listOfNoteButtons.put(noteId, noteButton);
                                 scrollNoteLayout.addComponent(noteButton);

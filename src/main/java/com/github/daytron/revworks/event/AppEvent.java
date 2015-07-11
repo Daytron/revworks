@@ -253,7 +253,8 @@ public abstract class AppEvent {
         public CourseworkView getCourseworkView() {
             return courseworkView;
         }
-
+        
+        
     }
 
     public static final class SubmitNewCommentEvent {
@@ -272,6 +273,25 @@ public abstract class AppEvent {
 
         public String getMessage() {
             return message;
+        }
+        
+    }
+    
+    public static final class UpdateNoteIsReadWhenClick {
+        private final int noteId;
+        private final Button button;
+
+        public UpdateNoteIsReadWhenClick(int noteId, Button button) {
+            this.noteId = noteId;
+            this.button = button;
+        }
+
+        public int getNoteId() {
+            return noteId;
+        }
+
+        public Button getButton() {
+            return button;
         }
         
     }

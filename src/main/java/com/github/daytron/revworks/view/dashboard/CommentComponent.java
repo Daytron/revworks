@@ -20,7 +20,6 @@ import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.model.Coursework;
-import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.DataProviderAbstract;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;

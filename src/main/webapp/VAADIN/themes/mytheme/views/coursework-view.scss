@@ -18,7 +18,7 @@ limitations under the License.
     Author     : Ryan Gilera
 */
 
-@mixin lecturer-coursework-view {
+@mixin coursework-view {
     .wrapper-layout {
         display: block;
         padding: round($view-padding / 3);
@@ -39,10 +39,22 @@ limitations under the License.
     }
 
     .comment-label {
-            padding: 5px !important;
-            font-family: Arial, Helvetica, sans-serif !important;
-            white-space: normal;
-       
+        padding: 5px !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        white-space: normal;
+
+    }
+
+    .v-button-note-unread   {
+        background-color: #fff !important;
+        
+        .v-button-caption {
+          font-weight: bolder !important;  
+        }
+    }
+
+    .v-button-note-read  {
+        background-color: #efefef !important;
     }
 
 

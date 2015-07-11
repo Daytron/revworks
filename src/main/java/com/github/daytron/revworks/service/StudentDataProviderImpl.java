@@ -113,13 +113,13 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                             preparedStatementNote.setInt(1, courseworkID);
 
                             boolean isReadStudentCoursework = resultSet.getBoolean(6);
-
+                            
                             // Default true 
                             // if all notes are true then this should be true
                             // otherwise this is updated to false further 
                             // down the code
                             boolean isReadStudentNote = true;
-
+                            
                             ResultSet resultSetNote = preparedStatementNote
                                     .executeQuery();
                             if (resultSetNote.next()) {
@@ -127,12 +127,11 @@ public class StudentDataProviderImpl extends DataProviderAbstract
 
                                 while (resultSetNote.next()) {
                                     isReadStudentNote
-                                            = resultSetNote.getBoolean(4);
+                                            = resultSetNote.getBoolean(5);
+
                                     // If at least one of the note is not
-                                    // read yet, override coursework 
-                                    // is_read value and break
+                                    // read yet, break
                                     if (isReadStudentNote == false) {
-                                        isReadStudentCoursework = false;
                                         break;
                                     }
                                 }
@@ -140,12 +139,14 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                                 // Close first 
                                 preparedStatementNote.close();
                                 resultSetNote.close();
-
+                                
                                 // Then update coursework student is_read field
+                                // If isReadStudentCoursework is not up to date,
+                                // update it with isReadStudentNote
                                 if (isReadStudentNote != isReadStudentCoursework) {
                                     // Save it first
                                     isReadStudentCoursework = isReadStudentNote;
-
+                                    
                                     // Then update
                                     try (PreparedStatement preparedStatementUpdate
                                             = getConnection().prepareStatement(
@@ -285,7 +286,7 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                                 ErrorMsg.DATA_UPDATE_ERROR.getText(),
                                 ErrorMsg.CONSULT_YOUR_ADMIN.getText());
                         releaseConnection();
-                        
+
                         return;
                     } finally {
                         releaseConnection();

@@ -15,6 +15,8 @@
  */
 package com.github.daytron.revworks.presenter;
 
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.view.dashboard.CommentComponent;
 import com.github.daytron.revworks.view.dashboard.CourseworkView;
@@ -85,6 +87,9 @@ public class NoteButtonListener implements Button.ClickListener {
         
         courseworkView.flipToPage(associatedPage);
         
+        // Trigger update note is_read fields via event bus
+        AppEventBus.post(new AppEvent.UpdateNoteIsReadWhenClick(noteId,
+            event.getButton()));
     }
 
 }

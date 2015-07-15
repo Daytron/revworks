@@ -212,7 +212,15 @@ public enum PreparedQueryStatement {
             + "ON Coursework.id = NotificationsCoursework.coursework_id "
             + "WHERE to_user_id = ? AND "
             + "is_read = 1 "
-            + "LIMIT 30;");
+            + "LIMIT 30;"),
+    UPDATE_NOTIFICATION_TO_READ("UPDATE UserNotification "
+            + "SET is_read = 1 "
+            + "WHERE id = ?;"),
+    INSERT_NOTIFICATION("INSERT INTO UserNotification(id,"
+            + "title,message,date_submitted,"
+            + "is_read,notification_type_id,"
+            + "to_user_id,from_user_id) "
+            + "VALUES (?,?,?,now(),?,?,?,?);");
 
     private final String query;
 

@@ -17,6 +17,7 @@ package com.github.daytron.revworks.event;
 
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
+import com.github.daytron.revworks.model.UserNotification;
 import com.github.daytron.revworks.view.AdminLoginPopup;
 import com.github.daytron.revworks.view.dashboard.CourseworkView;
 import com.vaadin.ui.Button;
@@ -26,6 +27,7 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
 import java.io.File;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Collection events for Guava's EventBus as inner classes
@@ -308,5 +310,20 @@ public abstract class AppEvent {
         }
         
     }
+    
+    public static final class UpdateNotificationToRead {
+        private final CopyOnWriteArrayList<UserNotification> listOfUserNotifications;
+
+        public UpdateNotificationToRead(CopyOnWriteArrayList<UserNotification> 
+                listOfUserNotifications) {
+            this.listOfUserNotifications = listOfUserNotifications;
+        }
+
+        public CopyOnWriteArrayList<UserNotification> getListOfUserNotifications() {
+            return listOfUserNotifications;
+        }
+        
+    }
+    
     
 }

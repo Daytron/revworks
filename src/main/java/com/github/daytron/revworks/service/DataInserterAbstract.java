@@ -37,13 +37,6 @@ import java.util.logging.Logger;
  */
 public class DataInserterAbstract extends QueryManagerAbstract implements DataInserter {
 
-    @Override
-    public void notifyDataSendError() {
-        NotificationUtil.showError(
-                ErrorMsg.DATA_SEND_ERROR.getText(),
-                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
-    }
-
     @Subscribe
     @Override
     public void insertNewComment(final AppEvent.SubmitNewCommentEvent event) {

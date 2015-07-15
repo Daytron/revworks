@@ -16,6 +16,8 @@
 package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
+import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -59,6 +61,12 @@ public class QueryManagerAbstract {
 
     public JDBCConnectionPool getConnectionPool() {
         return connectionPool;
+    }
+    
+    public void notifyDataSendError() {
+        NotificationUtil.showError(
+                ErrorMsg.DATA_SEND_ERROR.getText(),
+                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
     }
 
 

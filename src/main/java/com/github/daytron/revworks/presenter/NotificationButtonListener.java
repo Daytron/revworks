@@ -113,6 +113,7 @@ public class NotificationButtonListener implements Button.ClickListener {
         }
         
         // Update unread to read (database)
+        AppEventBus.post(new AppEvent.UpdateNotificationToRead(lisOfUserNotifications));
     }
     
 }

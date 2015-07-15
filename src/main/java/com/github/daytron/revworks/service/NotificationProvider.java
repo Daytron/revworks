@@ -24,12 +24,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author Ryan Gilera
  */
-public class NotificationsProvider extends QueryManagerAbstract {
+public class NotificationProvider extends QueryManagerAbstract {
 
     private CopyOnWriteArrayList<UserNotification> listOfNotifications;
     private boolean pause;
     
-    public NotificationsProvider() {
+    public NotificationProvider() {
         this.listOfNotifications = new CopyOnWriteArrayList<>();
         this.pause = false;
     }

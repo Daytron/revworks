@@ -21,7 +21,7 @@ import com.github.daytron.revworks.authentication.UserAuthentication;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.LecturerDataProviderImpl;
-import com.github.daytron.revworks.service.NotificationsProvider;
+import com.github.daytron.revworks.service.NotificationProvider;
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.view.LoginScreen;
@@ -60,14 +60,20 @@ import javax.servlet.ServletException;
 @Widgetset("com.github.daytron.revworks.MyAppWidgetset")
 public class MainUI extends UI {
 
-    private final AccessControl accessControl = new UserAccessControl();
-    private final AppEventBus appEventBus = new AppEventBus();
-    private final SQLConnectionManager connectionManager = new SQLConnectionManager();
-    private final LecturerDataProviderImpl lecturerDataProvider = new LecturerDataProviderImpl();
-    private final StudentDataProviderImpl studentDataProvider = new StudentDataProviderImpl();
-    private final UserAuthentication userAuthentication = new UserAuthentication();
-    private final NotificationsProvider notificationsProvider = 
-            new NotificationsProvider();
+    private final AccessControl accessControl = 
+            new UserAccessControl();
+    private final AppEventBus appEventBus = 
+            new AppEventBus();
+    private final SQLConnectionManager connectionManager = 
+            new SQLConnectionManager();
+    private final LecturerDataProviderImpl lecturerDataProvider = 
+            new LecturerDataProviderImpl();
+    private final StudentDataProviderImpl studentDataProvider = 
+            new StudentDataProviderImpl();
+    private final UserAuthentication userAuthentication = 
+            new UserAuthentication();
+    private final NotificationProvider notificationsProvider = 
+            new NotificationProvider();
     
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -113,10 +119,10 @@ public class MainUI extends UI {
         return userAuthentication;
     }
 
-    public NotificationsProvider getNotificationsProvider() {
+    public NotificationProvider getNotificationsProvider() {
         return notificationsProvider;
     }
-
+    
     public void showDashboardScreen() {
         // Register it first before building dashboardscreen
         // Before it runs a new thread for updating user notifications

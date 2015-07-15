@@ -88,7 +88,7 @@ public class NoteButtonListener implements Button.ClickListener {
         courseworkView.flipToPage(associatedPage);
         
         // Trigger update note is_read fields via event bus
-        AppEventBus.post(new AppEvent.UpdateNoteIsReadWhenClick(noteId,
+        AppEventBus.post(new AppEvent.UpdateNoteIsReadWhenClickEvent(noteId,
             event.getButton()));
     }
 

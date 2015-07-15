@@ -21,11 +21,13 @@ import com.github.daytron.revworks.authentication.UserAuthentication;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.LecturerDataProviderImpl;
+import com.github.daytron.revworks.service.NotificationsProvider;
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.view.LoginScreen;
 import com.github.daytron.revworks.view.dashboard.CommentComponent;
 import com.github.daytron.revworks.view.dashboard.CourseworkView;
+import com.github.daytron.revworks.view.dashboard.DashboardHeader;
 import com.github.daytron.revworks.view.dashboard.DashboardScreen;
 import com.vaadin.annotations.Push;
 import javax.servlet.annotation.WebServlet;
@@ -64,7 +66,9 @@ public class MainUI extends UI {
     private final LecturerDataProviderImpl lecturerDataProvider = new LecturerDataProviderImpl();
     private final StudentDataProviderImpl studentDataProvider = new StudentDataProviderImpl();
     private final UserAuthentication userAuthentication = new UserAuthentication();
-
+    private final NotificationsProvider notificationsProvider = 
+            new NotificationsProvider();
+    
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         // Set max session timeout after 10 minutes
@@ -109,7 +113,15 @@ public class MainUI extends UI {
         return userAuthentication;
     }
 
+    public NotificationsProvider getNotificationsProvider() {
+        return notificationsProvider;
+    }
+
     public void showDashboardScreen() {
+        // Register it first before building dashboardscreen
+        // Before it runs a new thread for updating user notifications
+        AppEventBus.register(notificationsProvider);
+        
         DashboardScreen dashboardScreen = new DashboardScreen(MainUI.this);
         AppEventBus.register(dashboardScreen);
 
@@ -244,6 +256,12 @@ public class MainUI extends UI {
                         commentComponent.shutdownCommentExecutor();
                     }
                     
+                    // Shutdown executor service for notification in
+                    // the dashboard header
+                    DashboardHeader dashboardHeader = 
+                            (DashboardHeader) event.getSession().getAttribute(
+                                CurrentUserSession.CURRENT_DASHBOARD_HEADER);
+                    dashboardHeader.shutdownNotificationExecutor();
 
                     // Remove the closed session from list
                     listOfUserSessions.remove(user.getName());

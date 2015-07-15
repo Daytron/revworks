@@ -17,9 +17,9 @@ package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.model.ClassTable;
-import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.view.dashboard.CommentComponent;
 import com.github.daytron.revworks.view.dashboard.CourseworkView;
+import com.github.daytron.revworks.view.dashboard.DashboardHeader;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.server.VaadinService;
@@ -27,7 +27,6 @@ import com.vaadin.server.VaadinSession;
 import java.io.File;
 import java.security.Principal;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * A static class for handling user in a session.
@@ -68,6 +67,11 @@ public class CurrentUserSession {
      * The attribute key used to store the current executor service for notes.
      */
     public static final String CURRENT_COURSEWORK_VIEW = "NoteExecutor";
+    
+    /**
+     * The attribute key used for to store dashboard header view
+     */
+    public static final String CURRENT_DASHBOARD_HEADER = "NotificationExecutor";
 
     private CurrentUserSession() {
     }
@@ -175,6 +179,30 @@ public class CurrentUserSession {
         CourseworkView oldCourseworkView = getCurrentCourseworkView();
         if (oldCourseworkView != null) {
             oldCourseworkView.shutdownNoteExecutor();
+        }
+    }
+    
+    public static void setDashboardHeader(DashboardHeader dashboardHeader) {        
+        try {
+            VaadinSession vaadinSession = VaadinSession.getCurrent();
+            vaadinSession.getLockInstance().lock();
+            vaadinSession.setAttribute(CURRENT_DASHBOARD_HEADER, dashboardHeader);
+
+        } finally {
+            VaadinSession.getCurrent().getLockInstance().unlock();
+        }
+    }
+    
+    public static DashboardHeader getDashboardHeader() {
+        DashboardHeader dashboardHeader = (DashboardHeader) VaadinSession
+                .getCurrent().getAttribute(CURRENT_DASHBOARD_HEADER);
+        return dashboardHeader;
+    }
+    
+    public static void shutdownDashboardHeaderExecutorService() {
+        DashboardHeader dashboardHeader = getDashboardHeader();
+        if (dashboardHeader != null) {
+            dashboardHeader.shutdownNotificationExecutor();
         }
     }
 

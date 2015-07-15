@@ -413,3 +413,8 @@ INSERT INTO `appschema`.`ClassWideAnnouncement` VALUES (2,1);
 INSERT INTO `appschema`.`ClassWideAnnouncement` VALUES (3,2);
 INSERT INTO `appschema`.`ClassWideAnnouncement` VALUES (4,4);
 INSERT INTO `appschema`.`ClassWideAnnouncement` VALUES (5,6);
+
+# Notification Type
+INSERT INTO `appschema`.`NotificationType` VALUES (1,'Coursework');
+INSERT INTO `appschema`.`NotificationType` VALUES (2,'Note');
+INSERT INTO `appschema`.`NotificationType` VALUES (3,'Comment');

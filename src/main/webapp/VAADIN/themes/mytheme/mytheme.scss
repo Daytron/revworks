@@ -175,8 +175,26 @@ $header-height: round($v-unit-size / 1.1) !default;
 
             .v-label.welcome-text { font-size: 0.8rem }
         }
+
+        .valo-menu .valo-menu-badge,
+        .notifications.unread .v-button-caption {
+            @include valo-badge-style;
+            position: absolute;
+            right: round($v-unit-size/3);
+            font-size: round($v-font-size * 0.9);
+            pointer-events: none;
+            color: #fff;
+        }
+
+        .notifications.unread .v-button-caption {
+            display: block;
+            top: round($v-unit-size / -3);
+            right: round($v-unit-size / -3);
+            display: block;
+            z-index: 1;
+        }
     }
-    
+
     .v-Notification.custom-tray-notification-info {
         background:rgba(19,47,99,0.7);
         font-size: 0.8rem;
@@ -222,7 +240,7 @@ $header-height: round($v-unit-size / 1.1) !default;
         font-weight: bolder;
         background-color: #fff;
     }
-    
+
     .v-table-row.v-table-row-read, 
     .v-table-row-odd.v-table-row-read {
         background-color: #efefef;

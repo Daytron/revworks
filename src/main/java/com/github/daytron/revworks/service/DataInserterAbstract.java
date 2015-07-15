@@ -180,7 +180,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
 
     @Subscribe
     @Override
-    public void updateNoteIsReadWhenClicked(AppEvent.UpdateNoteIsReadWhenClick event) {
+    public void updateNoteIsReadWhenClicked(AppEvent.UpdateNoteIsReadWhenClickEvent event) {
         Button button = event.getButton();
 
         if (reserveConnectionPool()) {

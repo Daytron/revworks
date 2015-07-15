@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.service;
-
-import com.github.daytron.revworks.event.AppEvent;
+package com.github.daytron.revworks.data;
 
 /**
- * The base template for common SQL data insertion and update process for users.
- *
+ *  Collection of types of user notification.
+ * 
  * @author Ryan Gilera
  */
-public interface DataInserter {
-    public void notifyDataSendError();
-    public void insertNewComment(final AppEvent.SubmitNewCommentEvent event);
-    public void insertNewNote(AppEvent.SubmitNewNoteEvent event);
-    public void updateNoteIsReadWhenClicked(AppEvent.UpdateNoteIsReadWhenClickEvent event);
+public enum UserNotificationType {
+    COURSEWORK,
+    NOTE,
+    COMMENT;
 }

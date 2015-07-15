@@ -17,6 +17,7 @@ package com.github.daytron.revworks.view.dashboard;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.event.AppEvent.*;
+import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.view.dashboard.lecturer.LecturerCourseworkModuleView;
 import com.github.daytron.revworks.view.dashboard.lecturer.LecturerSubmitAnnouncementView;
 import com.github.daytron.revworks.view.dashboard.student.StudentCourseworkModuleView;
@@ -36,7 +37,7 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class DashboardScreen extends VerticalLayout {
 
-    private final HorizontalLayout headerLayout;
+    private final DashboardHeader headerLayout;
     private final NavigationMenu menu;
     private final CssLayout viewContainer;
     private final DashboardFooter dashboardFooter;
@@ -45,6 +46,10 @@ public class DashboardScreen extends VerticalLayout {
 
         setMargin(true);
         headerLayout = new DashboardHeader();
+        // Save it in the session 
+        // to be used for shutting down the executor service
+        // when user logout
+        CurrentUserSession.setDashboardHeader(headerLayout);
 
         viewContainer = new CssLayout();
         viewContainer.addStyleName("valo-content");

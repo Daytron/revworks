@@ -149,33 +149,70 @@ public enum PreparedQueryStatement {
             + "FROM Note n "
             + "WHERE n.coursework_id = ? "
             + "ORDER BY n.page_num ASC;"),
-     SELECT_COMMENT("SELECT "
+    SELECT_COMMENT("SELECT "
             + "Comment.message AS message, "
             + "Comment.date_submitted AS dateSubmitted, "
             + "Comment.is_student_to_lecturer AS isStudentToLecturer  "
             + "FROM Comment  "
             + "WHERE Comment.note_id = ? "
             + "ORDER BY Comment.date_submitted ASC; "),
-     INSERT_NOTE("INSERT INTO Note(page_num,"
-             + "date_submitted,"
-             + "is_student_to_lecturer,"
-             + "is_read_student,"
-             + "is_read_lecturer,"
-             + "coursework_id) "
-             + "VALUES (?,now(),?,?,?,?);"),
-     UPDATE_NOTE("UPDATE Note "
-             + "SET is_read_student = ?, "
-             + "is_read_lecturer = ? "
-             + "WHERE id = ?;"),
-     STUDENT_UPDATE_NOTE("UPDATE Note "
-             + "SET is_read_student = ? "
-             + "WHERE id = ?;"),
-     LECTURER_UPDATE_NOTE("UPDATE Note "
-             + "SET is_read_lecturer = ? "
-             + "WHERE id = ?;"),
-     INSERT_COMMENT("INSERT INTO Comment(message,date_submitted,"
-             + "is_student_to_lecturer,note_id) "
-             + "VALUES (?,now(),?,?);");
+    INSERT_NOTE("INSERT INTO Note(page_num,"
+            + "date_submitted,"
+            + "is_student_to_lecturer,"
+            + "is_read_student,"
+            + "is_read_lecturer,"
+            + "coursework_id) "
+            + "VALUES (?,now(),?,?,?,?);"),
+    UPDATE_NOTE("UPDATE Note "
+            + "SET is_read_student = ?, "
+            + "is_read_lecturer = ? "
+            + "WHERE id = ?;"),
+    STUDENT_UPDATE_NOTE("UPDATE Note "
+            + "SET is_read_student = ? "
+            + "WHERE id = ?;"),
+    LECTURER_UPDATE_NOTE("UPDATE Note "
+            + "SET is_read_lecturer = ? "
+            + "WHERE id = ?;"),
+    INSERT_COMMENT("INSERT INTO Comment(message,date_submitted,"
+            + "is_student_to_lecturer,note_id) "
+            + "VALUES (?,now(),?,?);"),
+    SELECT_USER_NOTIFICATION_UNREAD("SELECT UserNotification.id, "
+            + "UserNotification.title, "
+            + "UserNotification.message, "
+            + "UserNotification.date_submitted, "
+            + "UserNotification.is_read, "
+            + "UserNotification.notification_type_id, "
+            + "User.first_name, "
+            + "Coursework.id, "
+            + "Coursework.title "
+            + "FROM UserNotification "
+            + "LEFT JOIN User "
+            + "ON User.id = UserNotification.from_user_id "
+            + "LEFT JOIN NotificationsCoursework "
+            + "ON NotificationsCoursework.user_notification_id = UserNotification.id "
+            + "LEFT JOIN Coursework "
+            + "ON Coursework.id = NotificationsCoursework.coursework_id "
+            + "WHERE to_user_id = ? AND "
+            + "is_read = 0;"),
+    SELECT_USER_NOTIFICATION_READ("SELECT UserNotification.id, "
+            + "UserNotification.title, "
+            + "UserNotification.message, "
+            + "UserNotification.date_submitted, "
+            + "UserNotification.is_read, "
+            + "UserNotification.notification_type_id, "
+            + "User.first_name, "
+            + "Coursework.id, "
+            + "Coursework.title "
+            + "FROM UserNotification "
+            + "LEFT JOIN User "
+            + "ON User.id = UserNotification.from_user_id "
+            + "LEFT JOIN NotificationsCoursework "
+            + "ON NotificationsCoursework.user_notification_id = UserNotification.id "
+            + "LEFT JOIN Coursework "
+            + "ON Coursework.id = NotificationsCoursework.coursework_id "
+            + "WHERE to_user_id = ? AND "
+            + "is_read = 1 "
+            + "LIMIT 30;");
 
     private final String query;
 

@@ -277,11 +277,11 @@ public abstract class AppEvent {
         
     }
     
-    public static final class UpdateNoteIsReadWhenClick {
+    public static final class UpdateNoteIsReadWhenClickEvent {
         private final int noteId;
         private final Button button;
 
-        public UpdateNoteIsReadWhenClick(int noteId, Button button) {
+        public UpdateNoteIsReadWhenClickEvent(int noteId, Button button) {
             this.noteId = noteId;
             this.button = button;
         }
@@ -292,6 +292,19 @@ public abstract class AppEvent {
 
         public Button getButton() {
             return button;
+        }
+        
+    }
+    
+    public static final class UpdateNotificationButtonBadgeCountEvent {
+        private final int count;
+
+        public UpdateNotificationButtonBadgeCountEvent(int count) {
+            this.count = count;
+        }
+
+        public int getCount() {
+            return count;
         }
         
     }

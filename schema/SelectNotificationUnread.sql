@@ -4,6 +4,7 @@ UserNotification.message,
 UserNotification.date_submitted, 
 UserNotification.is_read, 
 UserNotification.notification_type_id, 
+UserNotification.from_user_id,
 User.first_name, 
 Coursework.id, 
 Coursework.title 
@@ -14,5 +15,5 @@ LEFT JOIN NotificationsCoursework
 ON NotificationsCoursework.user_notification_id = UserNotification.id 
 LEFT JOIN Coursework 
 ON Coursework.id = NotificationsCoursework.coursework_id 
-WHERE to_user_id = 1 AND 
-is_read = 0;
+WHERE UserNotification.to_user_id = 49 AND 
+UserNotification.is_read = 0;

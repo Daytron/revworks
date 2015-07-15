@@ -26,6 +26,7 @@ import com.github.daytron.revworks.model.UserNotification;
 import com.github.daytron.revworks.presenter.NotificationButtonListener;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.DataProviderAbstract;
+import com.vaadin.event.FieldEvents;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -81,7 +82,6 @@ public class DashboardHeader extends HorizontalLayout {
         notificationButton.addClickListener(
                 new NotificationButtonListener(notificationsWindow));
         AppEventBus.register(notificationButton);
-        notificationButton.updateUnreadBadge(3);
 
         Button logOutButton = new Button();
         logOutButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
@@ -102,32 +102,32 @@ public class DashboardHeader extends HorizontalLayout {
         toolbar.setComponentAlignment(welcomeUserLabel, Alignment.BOTTOM_LEFT);
 
         addComponent(toolbar);
-        
+
         runnableTask = new NotificationsExtractorRunnable();
         scheduledFuture = scheduler.scheduleWithFixedDelay(runnableTask,
                 0, 3, TimeUnit.SECONDS);
 
     }
-    
+
     public void shutdownNotificationExecutor() {
         scheduledFuture.cancel(true);
         scheduler.shutdownNow();
     }
 
-    final class NotificationsExtractorRunnable extends DataProviderAbstract 
-    implements Runnable {
+    final class NotificationsExtractorRunnable extends DataProviderAbstract
+            implements Runnable {
 
         private int previousUnreadCount = 0;
         private int previousReadCount = 0;
 
         @Override
         public void run() {
-            
+
             // Skip retrieval if notification button is pressed
             if (MainUI.get().getNotificationsProvider().isPause()) {
                 return;
             }
-            
+
             CopyOnWriteArrayList<UserNotification> listOfUserNotifications
                     = new CopyOnWriteArrayList<>();
             if (reserveConnectionPool()) {
@@ -194,9 +194,10 @@ public class DashboardHeader extends HorizontalLayout {
                                                 submittedDateTime,
                                                 resultSetUnread.getBoolean(5),
                                                 userNotificationType,
-                                                resultSetUnread.getString(7),
-                                                resultSetUnread.getInt(8),
-                                                resultSetUnread.getString(9));
+                                                resultSetUnread.getInt(7),
+                                                resultSetUnread.getString(8),
+                                                resultSetUnread.getInt(9),
+                                                resultSetUnread.getString(10));
 
                                 listOfUserNotifications.add(userNotification);
 
@@ -207,7 +208,7 @@ public class DashboardHeader extends HorizontalLayout {
                         } else {
                             // else empty
                             // get last 30 notifications (aggregate later on)
-                            
+
                             // close first
                             preparedStatementUnread.close();
                             resultSetUnread.close();
@@ -215,21 +216,20 @@ public class DashboardHeader extends HorizontalLayout {
                             // Begin extraction of read notificaitons
                             PreparedStatement preparedStatementRead
                                     = getConnection().prepareStatement(
-                                            PreparedQueryStatement
-                                                    .SELECT_USER_NOTIFICATION_READ
-                                                    .getQuery());
-                            preparedStatementRead.setInt(1, 
+                                            PreparedQueryStatement.SELECT_USER_NOTIFICATION_READ
+                                            .getQuery());
+                            preparedStatementRead.setInt(1,
                                     ((User) CurrentUserSession.getPrincipal()).getId());
-                            ResultSet resultSetRead = 
-                                    preparedStatementRead.executeQuery();
-                            
+                            ResultSet resultSetRead
+                                    = preparedStatementRead.executeQuery();
+
                             if (!resultSetRead.next()) {
                                 preparedStatementRead.close();
                                 resultSetRead.close();
                                 releaseConnection();
                                 return;
                             }
-                            
+
                             // Calculate the current resulting row count
                             int numberOfResultedRows = 0;
                             resultSetRead.beforeFirst();
@@ -247,7 +247,7 @@ public class DashboardHeader extends HorizontalLayout {
 
                             // save new unread count
                             previousReadCount = numberOfResultedRows;
-                            
+
                             resultSetRead.beforeFirst();
                             DateTimeFormatter formatter
                                     = DateTimeFormatter.ofPattern("dd-MMM hh:mm a");
@@ -283,9 +283,10 @@ public class DashboardHeader extends HorizontalLayout {
                                                 submittedDateTime,
                                                 resultSetRead.getBoolean(5),
                                                 userNotificationType,
-                                                resultSetRead.getString(7),
-                                                resultSetRead.getInt(8),
-                                                resultSetRead.getString(9));
+                                                resultSetRead.getInt(7),
+                                                resultSetRead.getString(8),
+                                                resultSetRead.getInt(9),
+                                                resultSetRead.getString(10));
 
                                 listOfUserNotifications.add(userNotification);
 
@@ -297,7 +298,7 @@ public class DashboardHeader extends HorizontalLayout {
                         }
 
                     }
-                    
+
                     MainUI.get().getNotificationsProvider()
                             .setListOfNotifications(listOfUserNotifications);
 

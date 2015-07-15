@@ -26,7 +26,6 @@ import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.DataProviderAbstract;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.github.daytron.revworks.util.PdfRenderer;
-import com.mysql.jdbc.Util;
 import com.vaadin.data.Property;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -405,16 +404,16 @@ public class CourseworkView extends VerticalLayout implements View {
         scrollLayout.addComponent(headerLayout);
 
         // Content
-        Panel scrollPanel = new Panel();
-        scrollPanel.setWidth("100%");
-        scrollPanel.setHeight("565px");
+        Panel notesPanel = new Panel();
+        notesPanel.setWidth("100%");
+        notesPanel.setHeight("565px");
 
         scrollNoteLayout = new VerticalLayout();
         scrollNoteLayout.setWidth("100%");
         scrollNoteLayout.setHeight(null);
 
-        scrollPanel.setContent(scrollNoteLayout);
-        scrollLayout.addComponent(scrollPanel);
+        notesPanel.setContent(scrollNoteLayout);
+        scrollLayout.addComponent(notesPanel);
 
         return scrollLayout;
 

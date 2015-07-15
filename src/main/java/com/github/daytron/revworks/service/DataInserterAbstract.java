@@ -16,10 +16,11 @@
 package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
-import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
+import com.github.daytron.revworks.data.UserNotificationType;
 import com.github.daytron.revworks.event.AppEvent;
-import com.github.daytron.revworks.util.NotificationUtil;
+import com.github.daytron.revworks.event.AppEventBus;
+import com.github.daytron.revworks.model.Coursework;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.ui.Button;
 import java.sql.PreparedStatement;
@@ -78,6 +79,22 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
 
                         preparedStatementNote.close();
 
+                        // Create new user notification for the corresponding user
+                        final Coursework coursework = event.getCoursework();
+                        if (MainUI.get().getAccessControl().isUserAStudent()) {
+                            AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                                    " has sent you a comment",
+                                    "on ", UserNotificationType.COMMENT,
+                                    coursework.getClassTable().getLecturerUser().getId(),
+                                    coursework.getId()));
+                        } else {
+                            AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                                    " has sent you a comment",
+                                    "on ", UserNotificationType.COMMENT,
+                                    coursework.getStudentUser().getId(),
+                                    coursework.getId()));
+                        }
+
                     } catch (SQLException ex) {
                         Logger.getLogger(LecturerDataInserterImpl.class.getName())
                                 .log(Level.SEVERE, null, ex);
@@ -117,7 +134,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
                     preparedStatementNote.setBoolean(4, true);
                 }
 
-                preparedStatementNote.setInt(5, event.getCourseworkId());
+                preparedStatementNote.setInt(5, event.getCoursework().getId());
 
                 preparedStatementNote.executeUpdate();
                 getConnection().commit();
@@ -159,6 +176,22 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
                 event.getCourseworkView().getCommentLayout()
                         .setNoteId(generatedNoteId);
 
+                // Create new user notification for the corresponding user
+                final Coursework coursework = event.getCoursework();
+                if (MainUI.get().getAccessControl().isUserAStudent()) {
+                    AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                            " has created a note",
+                            "on ", UserNotificationType.NOTE,
+                            coursework.getClassTable().getLecturerUser().getId(),
+                            coursework.getId()));
+                } else {
+                    AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                            " has created a note",
+                            "on ", UserNotificationType.NOTE,
+                            coursework.getStudentUser().getId(),
+                            coursework.getId()));
+                }
+
             } catch (SQLException ex) {
                 Logger.getLogger(LecturerDataInserterImpl.class.getName())
                         .log(Level.SEVERE, null, ex);
@@ -183,7 +216,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
                     preparedStatementNote
                             = getConnection().prepareStatement(
                                     PreparedQueryStatement.STUDENT_UPDATE_NOTE
-                                            .getQuery());
+                                    .getQuery());
 
                     preparedStatementNote.setBoolean(1, true);
                     preparedStatementNote.setInt(2, event.getNoteId());
@@ -192,7 +225,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
                     preparedStatementNote
                             = getConnection().prepareStatement(
                                     PreparedQueryStatement.LECTURER_UPDATE_NOTE
-                                            .getQuery());
+                                    .getQuery());
 
                     preparedStatementNote.setBoolean(1, true);
                     preparedStatementNote.setInt(2, event.getNoteId());

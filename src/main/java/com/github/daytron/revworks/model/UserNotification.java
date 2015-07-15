@@ -30,6 +30,7 @@ public class UserNotification {
     private final LocalDateTime dateSubmitted;
     private final boolean read;
     private final UserNotificationType userNotificationType;
+    private final int fromUserID;
     private final String fromUserName;
     private final Integer courseworkID;
     private final String courseworkTitle;
@@ -37,7 +38,7 @@ public class UserNotification {
     public UserNotification(int id, String title, String message,
             LocalDateTime dateSubmitted, boolean read,
             UserNotificationType userNotificationType,
-            String fromUserName, int courseworkID,
+            int fromUserID, String fromUserName, int courseworkID,
             String courseworkTitle) {
         this.id = id;
         this.title = title;
@@ -45,6 +46,7 @@ public class UserNotification {
         this.dateSubmitted = dateSubmitted;
         this.read = read;
         this.userNotificationType = userNotificationType;
+        this.fromUserID = fromUserID;
         this.fromUserName = fromUserName;
         this.courseworkID = courseworkID;
         this.courseworkTitle = courseworkTitle;
@@ -74,6 +76,10 @@ public class UserNotification {
         return userNotificationType;
     }
 
+    public int getFromUserID() {
+        return fromUserID;
+    }
+    
     public String getFromUserName() {
         return fromUserName;
     }

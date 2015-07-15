@@ -42,14 +42,17 @@ limitations under the License.
         padding: 5px !important;
         font-family: Arial, Helvetica, sans-serif !important;
         white-space: normal;
+    }
 
+    .right-align-comment {
+        text-align: right; 
     }
 
     .v-button-note-unread   {
         background-color: #fff !important;
-        
+
         .v-button-caption {
-          font-weight: bolder !important;  
+            font-weight: bolder !important;  
         }
     }
 

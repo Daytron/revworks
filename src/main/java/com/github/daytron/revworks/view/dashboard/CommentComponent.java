@@ -131,7 +131,9 @@ public class CommentComponent extends CssLayout {
         // Comment Viewer
         Panel commentContainerPanel = new Panel();
 
-        commentLabel.setSizeFull();
+        commentLabel.setWidth("100%");
+       
+        commentLabel.setHeightUndefined();
         commentLabel.addStyleName("comment-label");
         commentContainerPanel.setContent(commentLabel);
         commentContainerPanel.setHeight("493px");
@@ -162,11 +164,11 @@ public class CommentComponent extends CssLayout {
 
                     if (isFirstComment && noteId == 0) {
                         AppEventBus.post(new AppEvent.SubmitNewNoteEvent(
-                                coursework.getId(), page, messageString,
+                                coursework, page, messageString,
                                 courseworkView));
                     } else {
                         AppEventBus.post(new AppEvent.SubmitNewCommentEvent(
-                                noteId, messageString));
+                                coursework,noteId, messageString));
                     }
 
                     isFirstComment = false;
@@ -269,26 +271,27 @@ public class CommentComponent extends CssLayout {
 
                                 if (isStudentToLecturer) {
                                     if (isStudentUser) {
-                                        stringBuilder.append("<small><b>")
+                                        stringBuilder.append("<div class=\"right-align-comment\"><small><b>")
                                                 .append("Me" + "&nbsp;&nbsp;")
                                                 .append(dateString)
                                                 .append("</b></small>")
-                                                .append("<br>").append(message)
-                                                .append("<br>");
+                                                .append("<br>")
+                                                .append(message)
+                                                .append("</div><br>");
                                     } else {
-                                        stringBuilder.append("<small><b>")
+                                        stringBuilder.append("<div><small><b>")
                                                 .append(coursework.getStudentUser()
                                                         .getFirstName())
                                                 .append("&nbsp;&nbsp;")
                                                 .append(dateString)
                                                 .append("</b></small>")
                                                 .append("<br>").append(message)
-                                                .append("<br>");
+                                                .append("</div><br>");
                                     }
 
                                 } else {
                                     if (isStudentUser) {
-                                        stringBuilder.append("<small><b>")
+                                        stringBuilder.append("<div><small><b>")
                                                 .append(coursework.getClassTable()
                                                         .getLecturerUser()
                                                         .getFirstName())
@@ -296,14 +299,15 @@ public class CommentComponent extends CssLayout {
                                                 .append(dateString)
                                                 .append("</b></small>")
                                                 .append("<br>").append(message)
-                                                .append("<br>");
+                                                .append("</div><br>");
                                     } else {
-                                        stringBuilder.append("<small><b>")
+                                        stringBuilder.append("<div class=\"right-align-comment\"><small><b>")
                                                 .append("Me" + "&nbsp;&nbsp;")
                                                 .append(dateString)
                                                 .append("</b></small>")
-                                                .append("<br>").append(message)
-                                                .append("<br>");
+                                                .append("<br>")
+                                                .append(message)
+                                                .append("</div><br>");
                                     }
                                 }
                             }

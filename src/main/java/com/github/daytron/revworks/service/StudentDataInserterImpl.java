@@ -17,7 +17,10 @@ package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
-import com.github.daytron.revworks.event.AppEvent.*;
+import com.github.daytron.revworks.data.UserNotificationType;
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEvent.StudentSubmitCourseworkEvent;
+import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkSucessView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
@@ -26,7 +29,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +50,9 @@ implements StudentDataInserter {
         if (reserveConnectionPool()) {
             try {
                 PreparedStatement preparedStatement = getConnection()
-                        .prepareStatement(PreparedQueryStatement.STUDENT_INSERT_NEW_COURSEWORK.getQuery());
+                        .prepareStatement(PreparedQueryStatement
+                                .STUDENT_INSERT_NEW_COURSEWORK.getQuery(),
+                                Statement.RETURN_GENERATED_KEYS);
                 
                 preparedStatement.setString(1, event.getTitle());
                 
@@ -71,7 +78,29 @@ implements StudentDataInserter {
                 preparedStatement.executeUpdate();
                 getConnection().commit();
                 
+                ResultSet resultSet = preparedStatement.getGeneratedKeys();
+                int generatedCourseworkId;
+
+                if (resultSet.next()) {
+                    generatedCourseworkId = resultSet.getInt(1);
+                } else {
+                    preparedStatement.close();
+                    resultSet.close();
+                    releaseConnection();
+
+                    notifyDataSendError();
+                    return;
+                }
+                
                 preparedStatement.close();
+                resultSet.close();
+                
+                // Create new user notification for the corresponding user
+                AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                                    " has submitted a coursework",
+                                    "", UserNotificationType.COURSEWORK,
+                                    event.getClassTable().getLecturerUser().getId(),
+                                    generatedCourseworkId));
                 
                 
                 // switch view to success page

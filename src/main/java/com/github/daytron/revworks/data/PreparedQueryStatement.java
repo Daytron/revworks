@@ -182,6 +182,7 @@ public enum PreparedQueryStatement {
             + "UserNotification.date_submitted, "
             + "UserNotification.is_read, "
             + "UserNotification.notification_type_id, "
+            + "UserNotification.from_user_id, "
             + "User.first_name, "
             + "Coursework.id, "
             + "Coursework.title "
@@ -192,14 +193,15 @@ public enum PreparedQueryStatement {
             + "ON NotificationsCoursework.user_notification_id = UserNotification.id "
             + "LEFT JOIN Coursework "
             + "ON Coursework.id = NotificationsCoursework.coursework_id "
-            + "WHERE to_user_id = ? AND "
-            + "is_read = 0;"),
+            + "WHERE UserNotification.to_user_id = ? AND "
+            + "UserNotification.is_read = 0;"),
     SELECT_USER_NOTIFICATION_READ("SELECT UserNotification.id, "
             + "UserNotification.title, "
             + "UserNotification.message, "
             + "UserNotification.date_submitted, "
             + "UserNotification.is_read, "
             + "UserNotification.notification_type_id, "
+            + "UserNotification.from_user_id, "
             + "User.first_name, "
             + "Coursework.id, "
             + "Coursework.title "
@@ -210,17 +212,20 @@ public enum PreparedQueryStatement {
             + "ON NotificationsCoursework.user_notification_id = UserNotification.id "
             + "LEFT JOIN Coursework "
             + "ON Coursework.id = NotificationsCoursework.coursework_id "
-            + "WHERE to_user_id = ? AND "
-            + "is_read = 1 "
-            + "LIMIT 30;"),
+            + "WHERE UserNotification.to_user_id = ? AND "
+            + "UserNotification.is_read = 1 "
+            + "LIMIT 5;"),
     UPDATE_NOTIFICATION_TO_READ("UPDATE UserNotification "
             + "SET is_read = 1 "
             + "WHERE id = ?;"),
-    INSERT_NOTIFICATION("INSERT INTO UserNotification(id,"
+    INSERT_NOTIFICATION("INSERT INTO UserNotification("
             + "title,message,date_submitted,"
             + "is_read,notification_type_id,"
             + "to_user_id,from_user_id) "
-            + "VALUES (?,?,?,now(),?,?,?,?);");
+            + "VALUES (?,?,now(),?,?,?,?);"),
+    INSERT_NOTIFICATIONS_COURSEWORK("INSERT INTO NotificationsCoursework("
+            + "user_notification_id,coursework_id) "
+            + "VALUES (?,?);");
 
     private final String query;
 

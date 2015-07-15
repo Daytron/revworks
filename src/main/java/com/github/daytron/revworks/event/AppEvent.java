@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.event;
 
+import com.github.daytron.revworks.data.UserNotificationType;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.UserNotification;
@@ -227,21 +228,21 @@ public abstract class AppEvent {
 
     public static final class SubmitNewNoteEvent {
 
-        private final int courseworkId;
+        private final Coursework coursework;
         private final int pageNumber;
         private final String message;
         private final CourseworkView courseworkView;
 
-        public SubmitNewNoteEvent(int courseworkId, int pageNumber,
+        public SubmitNewNoteEvent(Coursework coursework, int pageNumber,
                 String message, CourseworkView courseworkView) {
-            this.courseworkId = courseworkId;
+            this.coursework = coursework;
             this.pageNumber = pageNumber;
             this.message = message;
             this.courseworkView = courseworkView;
         }
 
-        public int getCourseworkId() {
-            return courseworkId;
+        public Coursework getCoursework() {
+            return coursework;
         }
 
         public int getPageNumber() {
@@ -263,10 +264,17 @@ public abstract class AppEvent {
 
         private final int noteId;
         private final String message;
+        private final Coursework coursework;
 
-        public SubmitNewCommentEvent(int noteID, String message) {
+        public SubmitNewCommentEvent(Coursework coursework, 
+                int noteID, String message) {
             this.noteId = noteID;
             this.message = message;
+            this.coursework = coursework;
+        }
+
+        public Coursework getCoursework() {
+            return coursework;
         }
 
         public int getNoteId() {
@@ -311,10 +319,10 @@ public abstract class AppEvent {
         
     }
     
-    public static final class UpdateNotificationToRead {
+    public static final class UpdateNotificationToReadEvent {
         private final CopyOnWriteArrayList<UserNotification> listOfUserNotifications;
 
-        public UpdateNotificationToRead(CopyOnWriteArrayList<UserNotification> 
+        public UpdateNotificationToReadEvent(CopyOnWriteArrayList<UserNotification> 
                 listOfUserNotifications) {
             this.listOfUserNotifications = listOfUserNotifications;
         }
@@ -322,6 +330,47 @@ public abstract class AppEvent {
         public CopyOnWriteArrayList<UserNotification> getListOfUserNotifications() {
             return listOfUserNotifications;
         }
+        
+    }
+    
+    public static final class InsertNotificationNewNoteEvent {
+        
+        private final String title;
+        private final String message;
+        private final UserNotificationType userNotificationType;
+        private final int toUserId;
+        private final int courseworkId;
+
+        public InsertNotificationNewNoteEvent(String title, String message,
+                UserNotificationType userNotificationType, 
+                int toUserId, int courseworkId) {
+            this.title = title;
+            this.message = message;
+            this.userNotificationType = userNotificationType;
+            this.toUserId = toUserId;
+            this.courseworkId = courseworkId;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public UserNotificationType getUserNotificationType() {
+            return userNotificationType;
+        }
+
+        public int getToUserId() {
+            return toUserId;
+        }
+
+        public int getCourseworkId() {
+            return courseworkId;
+        }
+        
         
     }
     

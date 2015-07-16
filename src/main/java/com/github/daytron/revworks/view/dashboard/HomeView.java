@@ -17,6 +17,7 @@ package com.github.daytron.revworks.view.dashboard;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.model.Announcement;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
@@ -60,16 +61,16 @@ public class HomeView extends VerticalLayout implements View {
         final CssLayout wrapperItem = new CssLayout();
         wrapperItem.setWidth("100%");
         wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
-
+        wrapperItem.addStyleName("announcement-wrapper-custom");
+        
         wrapperItem.addComponent(createPanelHeader(announcement.getTitle(),
                 announcement.getDateTimeSubmitted()));
 
         VerticalLayout contentLayout = new VerticalLayout();
         contentLayout.setSizeFull();
-        contentLayout.setMargin(true);
-        contentLayout.setSpacing(true);
 
         HorizontalLayout contentMetaDataBar = new HorizontalLayout();
+        contentMetaDataBar.addStyleName("content-sub-header");
         contentMetaDataBar.setWidth("100%");
         contentMetaDataBar.setSpacing(true);
 
@@ -96,10 +97,15 @@ public class HomeView extends VerticalLayout implements View {
 
         contentLayout.addComponent(contentMetaDataBar);
 
+        VerticalLayout messageLayout = new VerticalLayout();
+        messageLayout.setWidth("100%");
+        messageLayout.addStyleName("content-message");
+        
         Label message = new Label(announcement.getMessage(), ContentMode.HTML);
-        contentLayout.addComponent(message);
+        messageLayout.addComponent(message);
+        contentLayout.addComponent(messageLayout);
 
-        contentLayout.setExpandRatio(message, 1);
+        contentLayout.setExpandRatio(messageLayout, 1);
 
         wrapperItem.addComponent(contentLayout);
 
@@ -110,7 +116,7 @@ public class HomeView extends VerticalLayout implements View {
             LocalDateTime dateString) {
         final HorizontalLayout layoutHeader = new HorizontalLayout();
         layoutHeader.addStyleName("v-panel-caption");
-        //layoutHeader.addStyleName("announcement-header");
+        layoutHeader.addStyleName("announcement-header");
         layoutHeader.setWidth("100%");
 
         Label titleLabel = new Label(title);
@@ -121,7 +127,10 @@ public class HomeView extends VerticalLayout implements View {
         DateTimeFormatter dateTimeFormatter
                 = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
 
-        Label dateLabel = new Label(dateString.format(dateTimeFormatter));
+        Label dateLabel = new Label(
+                FontAwesomeIcon.CALENDAR.getLgSize() + "&nbsp;&nbsp;" +
+                        dateString.format(dateTimeFormatter),
+                ContentMode.HTML);
         dateLabel.setSizeUndefined();
         dateLabel.setStyleName(ValoTheme.LABEL_SMALL);
         layoutHeader.addComponent(dateLabel);

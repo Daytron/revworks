@@ -28,6 +28,7 @@ public enum FontAwesomeIcon {
     INFO_CIRCLE("<i class=\"fa fa-info-circle "),
     THUMBS_O_UP("<i class=\"fa fa-thumbs-o-up "),
     EXCLAMATION_CIRCLE("<i class=\"fa fa-exclamation-circle "),
+    CALENDAR("<i class=\"fa fa-calendar "),
     
     // NONE SIZEABLE - SPINNERS
     REFRESHER_SPIN("<i class=\"fa fa-refresh fa-spin\"></i>")

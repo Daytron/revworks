@@ -374,5 +374,8 @@ public abstract class AppEvent {
         
     }
     
+    public static final class CloseAllWindowsEvent {
+    }
+    
     
 }

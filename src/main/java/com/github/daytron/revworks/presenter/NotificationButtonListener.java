@@ -128,20 +128,6 @@ public class NotificationButtonListener implements Button.ClickListener {
             notificationsWindow.setDraggable(false);
             notificationsWindow.setCloseShortcut(KeyboardEvent.KeyCode.ESC, null);
             notificationsWindow.setContent(popupLayout);
-
-            notificationsWindow.addBlurListener(new FieldEvents.BlurListener() {
-
-                @Override
-                public void blur(FieldEvents.BlurEvent event) {
-                    if (notificationsWindow != null) {
-                        notificationsWindow.close();
-                        notificationsWindow = null;
-
-                        // Unpause the auto retrieve notification after closing window
-                        MainUI.get().getNotificationsProvider().setPause(false);
-                    }
-                }
-            });
         }
 
         if (!notificationsWindow.isAttached()) {

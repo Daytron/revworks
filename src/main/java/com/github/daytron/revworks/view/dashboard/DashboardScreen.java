@@ -17,6 +17,7 @@ package com.github.daytron.revworks.view.dashboard;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.event.AppEvent.*;
+import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.view.dashboard.lecturer.LecturerCourseworkModuleView;
 import com.github.daytron.revworks.view.dashboard.lecturer.LecturerSubmitAnnouncementView;
@@ -24,10 +25,10 @@ import com.github.daytron.revworks.view.dashboard.student.StudentCourseworkModul
 import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkSucessView;
 import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkView;
 import com.google.common.eventbus.Subscribe;
+import com.vaadin.event.LayoutEvents;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -106,6 +107,14 @@ public class DashboardScreen extends VerticalLayout {
         setWidth("100%");
         
         navigator.navigateTo(HomeView.VIEW_NAME);
+        
+        addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
+
+            @Override
+            public void layoutClick(LayoutEvents.LayoutClickEvent event) {
+                AppEventBus.post(new CloseAllWindowsEvent());
+            }
+        });
     }
     
     @Subscribe

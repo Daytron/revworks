@@ -18,6 +18,7 @@ package com.github.daytron.revworks;
 import com.github.daytron.revworks.authentication.AccessControl;
 import com.github.daytron.revworks.authentication.UserAccessControl;
 import com.github.daytron.revworks.authentication.UserAuthentication;
+import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.LecturerDataProviderImpl;
@@ -29,6 +30,7 @@ import com.github.daytron.revworks.view.dashboard.CommentComponent;
 import com.github.daytron.revworks.view.dashboard.CourseworkView;
 import com.github.daytron.revworks.view.dashboard.DashboardHeader;
 import com.github.daytron.revworks.view.dashboard.DashboardScreen;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Push;
 import javax.servlet.annotation.WebServlet;
 
@@ -44,6 +46,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
 import java.io.File;
 import java.security.Principal;
 import java.util.Map;
@@ -60,21 +63,21 @@ import javax.servlet.ServletException;
 @Widgetset("com.github.daytron.revworks.MyAppWidgetset")
 public class MainUI extends UI {
 
-    private final AccessControl accessControl = 
-            new UserAccessControl();
-    private final AppEventBus appEventBus = 
-            new AppEventBus();
-    private final SQLConnectionManager connectionManager = 
-            new SQLConnectionManager();
-    private final LecturerDataProviderImpl lecturerDataProvider = 
-            new LecturerDataProviderImpl();
-    private final StudentDataProviderImpl studentDataProvider = 
-            new StudentDataProviderImpl();
-    private final UserAuthentication userAuthentication = 
-            new UserAuthentication();
-    private final NotificationProvider notificationsProvider = 
-            new NotificationProvider();
-    
+    private final AccessControl accessControl
+            = new UserAccessControl();
+    private final AppEventBus appEventBus
+            = new AppEventBus();
+    private final SQLConnectionManager connectionManager
+            = new SQLConnectionManager();
+    private final LecturerDataProviderImpl lecturerDataProvider
+            = new LecturerDataProviderImpl();
+    private final StudentDataProviderImpl studentDataProvider
+            = new StudentDataProviderImpl();
+    private final UserAuthentication userAuthentication
+            = new UserAuthentication();
+    private final NotificationProvider notificationsProvider
+            = new NotificationProvider();
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         // Set max session timeout after 10 minutes
@@ -122,12 +125,12 @@ public class MainUI extends UI {
     public NotificationProvider getNotificationsProvider() {
         return notificationsProvider;
     }
-    
+
     public void showDashboardScreen() {
         // Register it first before building dashboardscreen
         // Before it runs a new thread for updating user notifications
         AppEventBus.register(notificationsProvider);
-        
+
         DashboardScreen dashboardScreen = new DashboardScreen(MainUI.this);
         AppEventBus.register(dashboardScreen);
 
@@ -141,6 +144,18 @@ public class MainUI extends UI {
 
     private void registerEventHandlers() {
         AppEventBus.register(accessControl);
+        AppEventBus.register(this);
+    }
+
+    @Subscribe
+    public void closeAllWindows(AppEvent.CloseAllWindowsEvent event) {
+        for (Window window : getWindows()) {
+            window.close();
+            window = null;
+
+            // Unpause the auto retrieve notification after closing window
+            MainUI.get().getNotificationsProvider().setPause(false);
+        }
     }
 
     @WebServlet(urlPatterns = "/*", name = "MainUIServlet", asyncSupported = true)
@@ -249,24 +264,20 @@ public class MainUI extends UI {
                     }
 
                     // Shutdown the remaining service threads
-                    CourseworkView courseworkView = (CourseworkView) 
-                            event.getSession().getAttribute(CurrentUserSession
-                            .CURRENT_COURSEWORK_VIEW);
-                    CommentComponent commentComponent = (CommentComponent)
-                            event.getSession().getAttribute(CurrentUserSession
-                            .CURRENT_COMMENT_COMPONENT);
+                    CourseworkView courseworkView = (CourseworkView) event.getSession().getAttribute(CurrentUserSession.CURRENT_COURSEWORK_VIEW);
+                    CommentComponent commentComponent = (CommentComponent) event.getSession().getAttribute(CurrentUserSession.CURRENT_COMMENT_COMPONENT);
                     if (courseworkView != null) {
                         courseworkView.shutdownNoteExecutor();
                     }
                     if (commentComponent != null) {
                         commentComponent.shutdownCommentExecutor();
                     }
-                    
+
                     // Shutdown executor service for notification in
                     // the dashboard header
-                    DashboardHeader dashboardHeader = 
-                            (DashboardHeader) event.getSession().getAttribute(
-                                CurrentUserSession.CURRENT_DASHBOARD_HEADER);
+                    DashboardHeader dashboardHeader
+                            = (DashboardHeader) event.getSession().getAttribute(
+                                    CurrentUserSession.CURRENT_DASHBOARD_HEADER);
                     dashboardHeader.shutdownNotificationExecutor();
 
                     // Remove the closed session from list

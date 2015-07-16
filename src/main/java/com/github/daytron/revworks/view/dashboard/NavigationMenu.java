@@ -15,12 +15,17 @@
  */
 package com.github.daytron.revworks.view.dashboard;
 
+import com.github.daytron.revworks.view.dashboard.lecturer.LecturerCourseworkModuleView;
+import com.github.daytron.revworks.view.dashboard.lecturer.LecturerSubmitAnnouncementView;
+import com.github.daytron.revworks.view.dashboard.student.StudentCourseworkModuleView;
+import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkView;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * The ui component for dashboard's main menu. It also acts as a wrapper for
@@ -34,6 +39,9 @@ public class NavigationMenu extends HorizontalLayout {
 
     private final Navigator navigator;
     private final MenuBar menuBar;
+    private final MenuBar.Command clickCommand;
+    
+    private MenuBar.MenuItem homeMenuItem;
 
     public NavigationMenu(Navigator navigator) {
         this.navigator = navigator;
@@ -43,8 +51,11 @@ public class NavigationMenu extends HorizontalLayout {
 
         this.menuBar = new MenuBar();
         menuBar.setWidth("100%");
+        menuBar.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
 
         addComponent(menuBar);
+        
+        this.clickCommand = new MenuItemClickBehaviour();
     }
 
     /**
@@ -73,9 +84,15 @@ public class NavigationMenu extends HorizontalLayout {
      */
     private void addMenuItem(final String name, String caption,
             Resource icon) {
-        Command click = new MenuItemClickBehaviour(name);
+        homeMenuItem = menuBar.addItem(caption, clickCommand);
 
-        final MenuBar.MenuItem homeMenuItem = menuBar.addItem(caption, click);
+        // Default view is Home view
+        if (name.equalsIgnoreCase(HomeView.VIEW_NAME)) {
+            homeMenuItem.setStyleName("clicked");
+            
+            ((MenuItemClickBehaviour)clickCommand).setPreviousItem(homeMenuItem);
+        }
+        
         homeMenuItem.setIcon(icon);
 
     }
@@ -101,17 +118,42 @@ public class NavigationMenu extends HorizontalLayout {
      * Inner class that implements {@link Command} interface to define the menu
      * item's click behaviour.
      */
-    class MenuItemClickBehaviour implements Command {
+    class MenuItemClickBehaviour implements MenuBar.Command {
 
-        private final String viewName;
+        // default is home
+        private MenuBar.MenuItem previousItem = null;
 
-        public MenuItemClickBehaviour(String viewName) {
-            this.viewName = viewName;
+        public MenuItemClickBehaviour() {
         }
 
+        public void setPreviousItem(MenuBar.MenuItem previousItem) {
+            this.previousItem = previousItem;
+        }
+        
         @Override
         public void menuSelected(MenuBar.MenuItem selectedItem) {
-            navigator.navigateTo(viewName);
+            if (previousItem != null) {
+                previousItem.setStyleName(null);
+            }
+
+            selectedItem.setStyleName("clicked");
+            previousItem = selectedItem;
+            
+            System.out.println("getText: " + selectedItem.getText());
+
+            if (selectedItem.getText().equalsIgnoreCase("home")) {
+                navigator.navigateTo(HomeView.VIEW_NAME);
+            } else if (selectedItem.getText().equalsIgnoreCase("submit coursework")) {
+                navigator.navigateTo(StudentSubmitCourseworkView.VIEW_NAME);
+            } else if (selectedItem.getText().equalsIgnoreCase("New Announcement")){
+                navigator.navigateTo(LecturerSubmitAnnouncementView.VIEW_NAME);
+            } else if (selectedItem.getText().equalsIgnoreCase("My Courseworks")){
+                navigator.navigateTo(StudentCourseworkModuleView.VIEW_NAME);
+            } else {
+                navigator.navigateTo(LecturerCourseworkModuleView.VIEW_NAME);
+            }
+            
+            
         }
 
     }

@@ -110,6 +110,7 @@ public class HomeView extends VerticalLayout implements View {
             LocalDateTime dateString) {
         final HorizontalLayout layoutHeader = new HorizontalLayout();
         layoutHeader.addStyleName("v-panel-caption");
+        //layoutHeader.addStyleName("announcement-header");
         layoutHeader.setWidth("100%");
 
         Label titleLabel = new Label(title);

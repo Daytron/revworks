@@ -29,6 +29,7 @@ import com.vaadin.event.LayoutEvents;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -58,6 +59,7 @@ public class DashboardScreen extends VerticalLayout {
 
         final Navigator navigator = new Navigator(mainUI, viewContainer);
         navigator.setErrorView(ErrorView.class);
+        
         menu = new NavigationMenu(navigator);
         
         if (mainUI.getAccessControl().isUserAStudent()) {
@@ -96,6 +98,7 @@ public class DashboardScreen extends VerticalLayout {
         } else {
             // Admin
         }
+        
 
         addComponent(headerLayout);
         addComponent(menu);

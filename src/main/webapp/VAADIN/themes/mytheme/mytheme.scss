@@ -64,6 +64,7 @@ $header-height: round($v-unit-size / 1.1) !default;
 @import "views/coursework-view.scss";
 @import "views/lecturer-submit-announcement-view.scss";
 @import "views/student-submit-success-view.scss";
+@import "views/home-view.scss";
 
 @mixin mytheme {
     @include valo;
@@ -71,6 +72,7 @@ $header-height: round($v-unit-size / 1.1) !default;
     @include coursework-view;
     @include lecturer-submit-announcement-view;
     @include student-submit-success-view;
+    @include home-view;
 
     // Login Screen
     .login-screen {
@@ -194,6 +196,44 @@ $header-height: round($v-unit-size / 1.1) !default;
             z-index: 1;
         }
     }
+
+
+    .v-menubar .v-menubar-menuitem {
+        margin-left: 5px;
+        margin-right: 5px;
+        background: #dbdeff !important;
+        border: 1px solid rgba(53,93,129,0.4) !important;
+
+        .v-menubar-menuitem-caption {
+            color: #000;
+            font-size: 1rem;
+        }
+
+    }
+    .v-menubar .v-menubar-menuitem:hover {
+        background-color: #355d81 !important;
+        
+        .v-menubar-menuitem-caption {
+            color: #fff !important;
+        }
+    }
+
+    .v-menubar .v-menubar-menuitem-selected {
+        background: #dbdeff !important;
+        
+        .v-menubar-menuitem-caption {
+            color: #000 !important;
+        }
+    }
+    
+    .v-menubar .v-menubar-menuitem-clicked {
+        background-color: #355d81 !important;
+        
+        .v-menubar-menuitem-caption {
+            color: #fff !important;
+        }
+    }
+
 
     .v-Notification.custom-tray-notification-info {
         background:rgba(19,47,99,0.7);

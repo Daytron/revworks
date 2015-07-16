@@ -138,8 +138,6 @@ public class NavigationMenu extends HorizontalLayout {
 
             selectedItem.setStyleName("clicked");
             previousItem = selectedItem;
-            
-            System.out.println("getText: " + selectedItem.getText());
 
             if (selectedItem.getText().equalsIgnoreCase("home")) {
                 navigator.navigateTo(HomeView.VIEW_NAME);

@@ -181,10 +181,9 @@ public class HomeView extends VerticalLayout implements View {
             whatsNewLabel = new Label(VIEW_TITLE);
         }
         
-        whatsNewLabel.setStyleName(ValoTheme.LABEL_H3);
-        whatsNewLabel.setStyleName(ValoTheme.LABEL_BOLD);
+        whatsNewLabel.setStyleName(ValoTheme.LABEL_H2);
+        whatsNewLabel.addStyleName(ValoTheme.LABEL_BOLD);
         VerticalLayout contentLayout = new VerticalLayout();
-        contentLayout.setMargin(true);
         contentLayout.setSpacing(true);
 
         addComponent(whatsNewLabel);

@@ -78,8 +78,8 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         setSpacing(true);
 
         Label viewTitleLabel = new Label(VIEW_TITLE);
-        viewTitleLabel.setStyleName(ValoTheme.LABEL_H3);
-        viewTitleLabel.setStyleName(ValoTheme.LABEL_BOLD);
+        viewTitleLabel.setStyleName(ValoTheme.LABEL_H2);
+        viewTitleLabel.addStyleName(ValoTheme.LABEL_BOLD);
 
         Component contentLayout = createSubmitCourseworkForm();
 

@@ -115,7 +115,7 @@ public class DashboardScreen extends VerticalLayout {
 
             @Override
             public void layoutClick(LayoutEvents.LayoutClickEvent event) {
-                AppEventBus.post(new CloseAllWindowsEvent());
+                AppEventBus.post(new CloseNotificationWindowEvent());
             }
         });
     }

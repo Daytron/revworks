@@ -61,7 +61,7 @@ public class HomeView extends VerticalLayout implements View {
         final CssLayout wrapperItem = new CssLayout();
         wrapperItem.setWidth("100%");
         wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
-        wrapperItem.addStyleName("announcement-wrapper-custom");
+        wrapperItem.addStyleName("panel-wrapper-custom");
         
         wrapperItem.addComponent(createPanelHeader(announcement.getTitle(),
                 announcement.getDateTimeSubmitted()));
@@ -116,7 +116,7 @@ public class HomeView extends VerticalLayout implements View {
             LocalDateTime dateString) {
         final HorizontalLayout layoutHeader = new HorizontalLayout();
         layoutHeader.addStyleName("v-panel-caption");
-        layoutHeader.addStyleName("announcement-header");
+        layoutHeader.addStyleName("panel-header");
         layoutHeader.setWidth("100%");
 
         Label titleLabel = new Label(title);

@@ -132,7 +132,7 @@ public class CommentComponent extends CssLayout {
         Panel commentContainerPanel = new Panel();
 
         commentLabel.setWidth("100%");
-       
+
         commentLabel.setHeightUndefined();
         commentLabel.addStyleName("comment-label");
         commentContainerPanel.setContent(commentLabel);
@@ -169,7 +169,7 @@ public class CommentComponent extends CssLayout {
                                 courseworkView));
                     } else {
                         AppEventBus.post(new AppEvent.SubmitNewCommentEvent(
-                                coursework,noteId, messageString));
+                                coursework, noteId, messageString));
                     }
 
                     isFirstComment = false;
@@ -214,7 +214,6 @@ public class CommentComponent extends CssLayout {
         public CommentsExtractorRunnable(boolean isStudentUser) {
             this.isStudentUser = isStudentUser;
         }
-        
 
         @Override
         public void run() {
@@ -224,8 +223,7 @@ public class CommentComponent extends CssLayout {
                         ResultSet resultSet;
                         StringBuilder stringBuilder;
                         try (PreparedStatement preparedStatement = getConnection()
-                                .prepareStatement(PreparedQueryStatement
-                                        .SELECT_COMMENT.getQuery())) {
+                                .prepareStatement(PreparedQueryStatement.SELECT_COMMENT.getQuery())) {
                             preparedStatement.setInt(1, noteId);
                             resultSet = preparedStatement.executeQuery();
                             if (!resultSet.next()) {
@@ -261,7 +259,10 @@ public class CommentComponent extends CssLayout {
                             resultSet.beforeFirst();
                             DateTimeFormatter formatter
                                     = DateTimeFormatter.ofPattern("dd-MMM hh:mm a");
+
+                            int counter = 0;
                             while (resultSet.next()) {
+                                counter += 1;
                                 String message = resultSet.getString(1);
 
                                 Timestamp timestamp = resultSet.getTimestamp(2);
@@ -270,9 +271,14 @@ public class CommentComponent extends CssLayout {
 
                                 boolean isStudentToLecturer = resultSet.getBoolean(3);
 
+                                // Only add hr line after 1st comment
+                                if (counter > 1) {
+                                    stringBuilder.append("<hr>");
+                                }
+
                                 if (isStudentToLecturer) {
                                     if (isStudentUser) {
-                                        stringBuilder.append("<hr><div class=\"right-align-comment\"><small><b>")
+                                        stringBuilder.append("<div class=\"right-align-comment\"><small><b>")
                                                 .append("Me" + "&nbsp;&nbsp;")
                                                 .append(dateString)
                                                 .append("</b></small>")
@@ -280,7 +286,7 @@ public class CommentComponent extends CssLayout {
                                                 .append(message)
                                                 .append("</div>");
                                     } else {
-                                        stringBuilder.append("<hr><div><small><b>")
+                                        stringBuilder.append("<div><small><b>")
                                                 .append(coursework.getStudentUser()
                                                         .getFirstName())
                                                 .append("&nbsp;&nbsp;")
@@ -292,7 +298,7 @@ public class CommentComponent extends CssLayout {
 
                                 } else {
                                     if (isStudentUser) {
-                                        stringBuilder.append("<hr><div><small><b>")
+                                        stringBuilder.append("<div><small><b>")
                                                 .append(coursework.getClassTable()
                                                         .getLecturerUser()
                                                         .getFirstName())
@@ -302,7 +308,7 @@ public class CommentComponent extends CssLayout {
                                                 .append("<br>").append(message)
                                                 .append("</div>");
                                     } else {
-                                        stringBuilder.append("<hr><div class=\"right-align-comment\"><small><b>")
+                                        stringBuilder.append("<div class=\"right-align-comment\"><small><b>")
                                                 .append("Me" + "&nbsp;&nbsp;")
                                                 .append(dateString)
                                                 .append("</b></small>")

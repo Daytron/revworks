@@ -43,6 +43,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -109,7 +110,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
             addComponent(emptyNoticeLabel);
         } else {
             addComponent(tabSheet);
-            tabSheet.setStyleName(ValoTheme.TABSHEET_FRAMED);
+            tabSheet.setStyleName(Reindeer.TABSHEET_BORDERLESS);
             
 
             for (Map.Entry<ClassTable, BeanItemContainer> entry
@@ -155,6 +156,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
             final CssLayout wrapperItem = new CssLayout();
             wrapperItem.setWidth("100%");
             wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
+            wrapperItem.addStyleName("panel-wrapper-custom");
             wrapperItem.addComponent(createPanelHeader());
 
             VerticalLayout contentLayout = new VerticalLayout();
@@ -281,6 +283,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
             layoutHeader.setWidth("100%");
             layoutHeader.setSpacing(true);
             layoutHeader.setMargin(true);
+            layoutHeader.addStyleName("panel-header");
 
             Label titleLabel = new Label(VIEW_TITLE);
             titleLabel.setStyleName(ValoTheme.LABEL_BOLD);

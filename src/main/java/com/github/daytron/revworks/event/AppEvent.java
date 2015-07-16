@@ -374,7 +374,7 @@ public abstract class AppEvent {
         
     }
     
-    public static final class CloseAllWindowsEvent {
+    public static final class CloseNotificationWindowEvent {
     }
     
     

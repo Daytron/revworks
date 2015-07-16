@@ -279,6 +279,10 @@ $header-height: round($v-unit-size / 1.1) !default;
         background: #315A8E;
         color: #eaf3ff;
     }
+    
+    .v-table {
+        border: 1px solid #427fc9;
+    }
 
     
     .v-table-row.v-table-row-unread, 
@@ -296,9 +300,9 @@ $header-height: round($v-unit-size / 1.1) !default;
         height: 20px;
         line-height: 16px;
         font-weight: bold;
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
-
+    
     hr {
         width: 95%;
         margin-left: auto;

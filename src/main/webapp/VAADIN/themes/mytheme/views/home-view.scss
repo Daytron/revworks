@@ -20,13 +20,13 @@ limitations under the License.
 
 @mixin home-view {
 
-    .announcement-header {
+    .panel-header {
         background: #315A8E !important;
         color: #eaf3ff;
         border-bottom: 1px solid #aad0ff !important;
     }
     
-    .announcement-wrapper-custom {
+    .panel-wrapper-custom {
         padding-top: 0px;
         border-top: 1px solid #fff !important;
         border-bottom: 1px solid #315A8E !important;
@@ -37,9 +37,9 @@ limitations under the License.
     }
     
     .content-sub-header {
-        background: #aad0ff;
+        background: #d1e5ff;
         border-bottom: 1px solid #87b1e5;
-        padding: 10px 21px 7px 21px !important;
+        padding: 8px 21px 5px 21px !important;
     }
     
     .content-message {

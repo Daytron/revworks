@@ -59,7 +59,6 @@ public class DashboardHeader extends HorizontalLayout {
             = Executors.newScheduledThreadPool(1);
     private final Runnable runnableTask;
     private final ScheduledFuture scheduledFuture;
-    private Window notificationsWindow;
 
     public DashboardHeader() {
         setSpacing(true);
@@ -79,7 +78,7 @@ public class DashboardHeader extends HorizontalLayout {
         final NotificationButton notificationButton
                 = new NotificationButton();
         notificationButton.addClickListener(
-                new NotificationButtonListener(notificationsWindow));
+                new NotificationButtonListener(MainUI.get().getNotificationsWindow()));
         AppEventBus.register(notificationButton);
 
         Button logOutButton = new Button();

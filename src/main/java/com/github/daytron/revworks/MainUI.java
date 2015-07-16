@@ -77,7 +77,8 @@ public class MainUI extends UI {
             = new UserAuthentication();
     private final NotificationProvider notificationsProvider
             = new NotificationProvider();
-
+    private Window notificationsWindow = null;
+    
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         // Set max session timeout after 10 minutes
@@ -147,11 +148,17 @@ public class MainUI extends UI {
         AppEventBus.register(this);
     }
 
+    public Window getNotificationsWindow() {
+        return notificationsWindow;
+    }
+
     @Subscribe
-    public void closeAllWindows(AppEvent.CloseAllWindowsEvent event) {
-        for (Window window : getWindows()) {
-            window.close();
-            window = null;
+    public void closeAllWindows(AppEvent.CloseNotificationWindowEvent event) {
+        
+        
+        if (notificationsWindow != null) {
+            notificationsWindow.close();
+            notificationsWindow = null;
 
             // Unpause the auto retrieve notification after closing window
             MainUI.get().getNotificationsProvider().setPause(false);

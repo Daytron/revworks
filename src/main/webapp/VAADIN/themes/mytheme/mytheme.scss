@@ -212,7 +212,7 @@ $header-height: round($v-unit-size / 1.1) !default;
     }
     .v-menubar .v-menubar-menuitem:hover {
         background-color: #355d81 !important;
-        
+
         .v-menubar-menuitem-caption {
             color: #fff !important;
         }
@@ -220,15 +220,15 @@ $header-height: round($v-unit-size / 1.1) !default;
 
     .v-menubar .v-menubar-menuitem-selected {
         background: #dbdeff !important;
-        
+
         .v-menubar-menuitem-caption {
             color: #000 !important;
         }
     }
-    
+
     .v-menubar .v-menubar-menuitem-clicked {
         background-color: #355d81 !important;
-        
+
         .v-menubar-menuitem-caption {
             color: #fff !important;
         }
@@ -291,6 +291,14 @@ $header-height: round($v-unit-size / 1.1) !default;
         line-height: 16px;
         font-weight: bold;
         font-size: 1.2rem;
+    }
+
+    hr {
+        width: 95%;
+        margin-left: auto;
+        margin-right: auto;
+        border:0px none white; 
+        border-top:1px solid rgba(0,0,0,0.15);
     }
 
 }

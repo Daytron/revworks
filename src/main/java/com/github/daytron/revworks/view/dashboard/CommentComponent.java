@@ -272,27 +272,27 @@ public class CommentComponent extends CssLayout {
 
                                 if (isStudentToLecturer) {
                                     if (isStudentUser) {
-                                        stringBuilder.append("<div class=\"right-align-comment\"><small><b>")
+                                        stringBuilder.append("<hr><div class=\"right-align-comment\"><small><b>")
                                                 .append("Me" + "&nbsp;&nbsp;")
                                                 .append(dateString)
                                                 .append("</b></small>")
                                                 .append("<br>")
                                                 .append(message)
-                                                .append("</div><br>");
+                                                .append("</div>");
                                     } else {
-                                        stringBuilder.append("<div><small><b>")
+                                        stringBuilder.append("<hr><div><small><b>")
                                                 .append(coursework.getStudentUser()
                                                         .getFirstName())
                                                 .append("&nbsp;&nbsp;")
                                                 .append(dateString)
                                                 .append("</b></small>")
                                                 .append("<br>").append(message)
-                                                .append("</div><br>");
+                                                .append("</div>");
                                     }
 
                                 } else {
                                     if (isStudentUser) {
-                                        stringBuilder.append("<div><small><b>")
+                                        stringBuilder.append("<hr><div><small><b>")
                                                 .append(coursework.getClassTable()
                                                         .getLecturerUser()
                                                         .getFirstName())
@@ -300,15 +300,15 @@ public class CommentComponent extends CssLayout {
                                                 .append(dateString)
                                                 .append("</b></small>")
                                                 .append("<br>").append(message)
-                                                .append("</div><br>");
+                                                .append("</div>");
                                     } else {
-                                        stringBuilder.append("<div class=\"right-align-comment\"><small><b>")
+                                        stringBuilder.append("<hr><div class=\"right-align-comment\"><small><b>")
                                                 .append("Me" + "&nbsp;&nbsp;")
                                                 .append(dateString)
                                                 .append("</b></small>")
                                                 .append("<br>")
                                                 .append(message)
-                                                .append("</div><br>");
+                                                .append("</div>");
                                     }
                                 }
                             }

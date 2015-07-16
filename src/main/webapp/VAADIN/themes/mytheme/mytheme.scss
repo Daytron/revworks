@@ -275,6 +275,12 @@ $header-height: round($v-unit-size / 1.1) !default;
         }
     }
 
+    .v-table .v-table-header-wrap .v-table-header {
+        background: #315A8E;
+        color: #eaf3ff;
+    }
+
+    
     .v-table-row.v-table-row-unread, 
     .v-table-row-odd.v-table-row-unread {
         font-weight: bolder;

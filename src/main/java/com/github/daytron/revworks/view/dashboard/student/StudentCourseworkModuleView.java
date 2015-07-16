@@ -98,6 +98,7 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         final CssLayout wrapperItem = new CssLayout();
         wrapperItem.setWidth("100%");
         wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
+        wrapperItem.addStyleName("announcement-wrapper-custom");
         wrapperItem.addComponent(createPanelHeader());
 
         VerticalLayout contentLayout = new VerticalLayout();
@@ -143,7 +144,9 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         courseworksTable.setEditable(false);
         courseworksTable.setSelectable(true);
         courseworksTable.setWidth("100%");
-
+        
+        
+        
         // Set column data properties and names
         courseworksTable.setColumnHeader("id", "ID");
         courseworksTable.setColumnHeader("title", "Title");
@@ -225,6 +228,7 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         layoutHeader.setWidth("100%");
         layoutHeader.setSpacing(true);
         layoutHeader.setMargin(true);
+        layoutHeader.addStyleName("announcement-header");
 
         Label titleLabel = new Label(VIEW_TITLE);
         titleLabel.setStyleName(ValoTheme.LABEL_BOLD);

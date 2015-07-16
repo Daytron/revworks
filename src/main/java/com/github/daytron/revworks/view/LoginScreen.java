@@ -168,6 +168,7 @@ public final class LoginScreen extends CssLayout {
         // For login button
         loginButton = new Button(
                 LoginString.FORM_LOGIN_BUTTON.getText());
+        loginButton.setDescription("Sign in");
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         loginButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
 

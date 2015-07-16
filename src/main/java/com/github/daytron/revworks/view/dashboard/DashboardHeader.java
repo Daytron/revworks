@@ -26,7 +26,6 @@ import com.github.daytron.revworks.model.UserNotification;
 import com.github.daytron.revworks.presenter.NotificationButtonListener;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.DataProviderAbstract;
-import com.vaadin.event.FieldEvents;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -84,6 +83,7 @@ public class DashboardHeader extends HorizontalLayout {
         AppEventBus.register(notificationButton);
 
         Button logOutButton = new Button();
+        logOutButton.setDescription("Sign out");
         logOutButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
         logOutButton.addStyleName(ValoTheme.BUTTON_SMALL);
         logOutButton.setIcon(FontAwesome.SIGN_OUT);

@@ -168,6 +168,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
 
         final List<ClassTable> copyOfClassTables = this.listOfClasses;
         Button submitButton = new Button("Submit");
+        submitButton.setDescription("Submit the coursework.");
         submitButton.setDisableOnClick(true);
         submitButton.addClickListener(new Button.ClickListener() {
 

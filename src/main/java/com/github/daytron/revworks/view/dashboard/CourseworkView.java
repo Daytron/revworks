@@ -163,6 +163,7 @@ public class CourseworkView extends VerticalLayout implements View {
         toolbarLayout.addComponent(contentLabel);
 
         final Button expanderButton = new Button();
+        expanderButton.setDescription("Maximise view");
         expanderButton.setIcon(FontAwesome.EXPAND);
         expanderButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         expanderButton.addStyleName(ValoTheme.BUTTON_BORDERLESS);
@@ -174,11 +175,13 @@ public class CourseworkView extends VerticalLayout implements View {
                     event.getButton().setIcon(FontAwesome.COMPRESS);
                     AppEventBus.post(new AppEvent.ToggleCourseworkViewEvent(
                             expanderLayout, true));
+                    expanderButton.setDescription("Minimise view");
                 } else {
                     expanderLayout.removeStyleName("max");
                     event.getButton().setIcon(FontAwesome.EXPAND);
                     AppEventBus.post(new AppEvent.ToggleCourseworkViewEvent(
                             expanderLayout, false));
+                    expanderButton.setDescription("Maximise view");
                 }
             }
         });
@@ -201,7 +204,7 @@ public class CourseworkView extends VerticalLayout implements View {
         CssLayout viewerLayout = createCourseworkViewer();
 
         // Scroll Layout
-        CssLayout scrollLayout = createScrollComponent();
+        CssLayout scrollLayout = createNoteComponent();
 
         // Comment Layout
         // By default it is a placeholder hidden with noteId 0
@@ -277,6 +280,7 @@ public class CourseworkView extends VerticalLayout implements View {
         });
 
         Button leftButton = new Button();
+        leftButton.setDescription("Flip to the previous page");
         leftButton.setIcon(FontAwesome.ARROW_LEFT);
         leftButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         leftButton.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -305,6 +309,7 @@ public class CourseworkView extends VerticalLayout implements View {
         });
 
         Button rightButton = new Button();
+        rightButton.setDescription("Flip to the next page");
         rightButton.setIcon(FontAwesome.ARROW_RIGHT);
         rightButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         rightButton.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -361,10 +366,10 @@ public class CourseworkView extends VerticalLayout implements View {
         return viewerLayout;
     }
 
-    private CssLayout createScrollComponent() {
-        final CssLayout scrollLayout = new CssLayout();
-        scrollLayout.setWidth("100%");
-        scrollLayout.setStyleName(ValoTheme.LAYOUT_CARD);
+    private CssLayout createNoteComponent() {
+        final CssLayout noteLayout = new CssLayout();
+        noteLayout.setWidth("100%");
+        noteLayout.setStyleName(ValoTheme.LAYOUT_CARD);
 
         // Header
         final HorizontalLayout headerLayout = new HorizontalLayout();
@@ -377,6 +382,8 @@ public class CourseworkView extends VerticalLayout implements View {
         headerLayout.addComponent(titleLabel);
 
         Button addNoteButton = new Button("Add");
+        addNoteButton.setDescription("Create a new note. This opens "
+                + "a new comment section.");
         addNoteButton.setIcon(FontAwesome.PLUS_CIRCLE);
         addNoteButton.addStyleName(ValoTheme.BUTTON_BORDERLESS);
         addNoteButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
@@ -401,7 +408,7 @@ public class CourseworkView extends VerticalLayout implements View {
         headerLayout.addComponent(addNoteButton);
 
         headerLayout.setExpandRatio(titleLabel, 1);
-        scrollLayout.addComponent(headerLayout);
+        noteLayout.addComponent(headerLayout);
 
         // Content
         Panel notesPanel = new Panel();
@@ -413,9 +420,9 @@ public class CourseworkView extends VerticalLayout implements View {
         scrollNoteLayout.setHeight(null);
 
         notesPanel.setContent(scrollNoteLayout);
-        scrollLayout.addComponent(notesPanel);
+        noteLayout.addComponent(notesPanel);
 
-        return scrollLayout;
+        return noteLayout;
 
     }
 

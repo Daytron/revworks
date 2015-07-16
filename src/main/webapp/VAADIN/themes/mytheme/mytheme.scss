@@ -246,4 +246,11 @@ $header-height: round($v-unit-size / 1.1) !default;
         background-color: #efefef;
     }
 
+    .v-tabsheet-tabitem .v-captiontext {
+        height: 20px;
+        line-height: 16px;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
 }

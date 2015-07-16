@@ -104,8 +104,8 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
         CssLayout rightLayout = createPreviewSection();
         horizontalLayout.addComponent(rightLayout);
         
-        horizontalLayout.setExpandRatio(leftLayout, 1);
-        horizontalLayout.setExpandRatio(rightLayout, 1);
+        horizontalLayout.setExpandRatio(leftLayout, 6);
+        horizontalLayout.setExpandRatio(rightLayout, 4);
         
         return horizontalLayout;
     }
@@ -201,8 +201,11 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
         // Create buttons
         HorizontalLayout buttonBar = new HorizontalLayout();
         Button submitButton = new Button("Submit");
+        submitButton.setDescription("Submits the announcement");
         Button resetButton = new Button("Reset");
+        resetButton.setDescription("Clears text area editor");
         Button previewButton = new Button("Preview");
+        previewButton.setDescription("Shows/Updates the message preview");
 
         final List<ClassTable> copyOfClassTables = this.listOfClassTables;
         submitButton.setDisableOnClick(true);

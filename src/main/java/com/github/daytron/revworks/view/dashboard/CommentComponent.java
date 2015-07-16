@@ -152,6 +152,7 @@ public class CommentComponent extends CssLayout {
         writerLayout.addComponent(writerArea);
 
         Button sendButton = new Button("Send");
+        sendButton.setDescription("Send comment");
         sendButton.setHeight("100%");
         sendButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         sendButton.addClickListener(new Button.ClickListener() {

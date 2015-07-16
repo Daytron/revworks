@@ -232,6 +232,7 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         layoutHeader.addComponent(titleLabel);
 
         Button openFileButton = new Button("View Coursework");
+        openFileButton.setDescription("Opens the selected coursework");
         openFileButton.setStyleName(ValoTheme.BUTTON_SMALL);
         openFileButton.setDisableOnClick(true);
         openFileButton.addClickListener(new Button.ClickListener() {
@@ -253,6 +254,7 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         layoutHeader.addComponent(openFileButton);
 
         Button submitButton = new Button("Submit New Coursework");
+        submitButton.setDescription("Submit a new coursework. Opens a new page.");
         submitButton.setStyleName(ValoTheme.BUTTON_SMALL);
         submitButton.addClickListener(new Button.ClickListener() {
 

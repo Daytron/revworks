@@ -110,6 +110,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
         } else {
             addComponent(tabSheet);
             tabSheet.setStyleName(ValoTheme.TABSHEET_FRAMED);
+            
 
             for (Map.Entry<ClassTable, BeanItemContainer> entry
                     : this.listOfNBeanItemContainers.entrySet()) {
@@ -287,6 +288,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
             layoutHeader.addComponent(titleLabel);
 
             Button openFileButton = new Button("View Coursework");
+            openFileButton.setDescription("Opens the selected coursework");
             openFileButton.setDisableOnClick(true);
             openFileButton.setStyleName(ValoTheme.BUTTON_SMALL);
             openFileButton.addClickListener(new Button.ClickListener() {

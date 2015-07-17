@@ -19,7 +19,6 @@ import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.model.UserNotification;
-import com.vaadin.event.FieldEvents;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
@@ -52,9 +51,10 @@ public class NotificationButtonListener implements Button.ClickListener {
         popupLayout.setSpacing(true);
 
         Label popupTitle = new Label("Notifications");
-        popupTitle.addStyleName(ValoTheme.LABEL_H2);
+        popupTitle.addStyleName(ValoTheme.LABEL_H3);
         popupTitle.addStyleName(ValoTheme.LABEL_BOLD);
         popupTitle.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        popupTitle.addStyleName("notifications-window-title-layout");
         popupLayout.addComponent(popupTitle);
 
         final CopyOnWriteArrayList<UserNotification> lisOfUserNotifications

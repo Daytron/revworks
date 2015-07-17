@@ -315,5 +315,13 @@ $header-height: round($v-unit-size / 1.1) !default;
         border:0px none white; 
         border-top:1px solid rgba(0,0,0,0.15);
     }
+    
+    .notifications-window-title-layout {
+        background: #315A8E !important;
+        color: #eaf3ff !important;
+        text-align: center !important;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
 
 }

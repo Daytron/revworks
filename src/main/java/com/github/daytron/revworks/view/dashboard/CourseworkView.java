@@ -384,7 +384,7 @@ public class CourseworkView extends VerticalLayout implements View {
         headerLayout.addStyleName("coursework-panel-header");
         headerLayout.setWidth("100%");
 
-        Label titleLabel = new Label("Note");
+        Label titleLabel = new Label("Notes");
         titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
         titleLabel.setSizeFull();
         headerLayout.addComponent(titleLabel);
@@ -489,12 +489,14 @@ public class CourseworkView extends VerticalLayout implements View {
         private final boolean isStudentUser;
         private final CourseworkView courseworkView;
         private boolean isFirstRun;
+        private boolean isNewNoteAdded;
 
         public NotesExtractorRunnable(boolean isStudentUser,
                 CourseworkView courseworkView) {
             this.isStudentUser = isStudentUser;
             this.courseworkView = courseworkView;
             this.isFirstRun = true;
+            isNewNoteAdded = false;
         }
 
         @Override
@@ -522,33 +524,30 @@ public class CourseworkView extends VerticalLayout implements View {
                         numberOfResultedRows += 1;
                     }
 
-                    // Skips refreshing note buttons if the 
-                    // result returns the same number of previous notes.
-                    // Note that note cannot be deleted so comparing 
-                    // them by size is valid
+                    // detect if there is a new note added
+                    // this feature is used for detecting a note added
+                    // by this user to apply clicked css style later on
                     if (numberOfResultedRows == 0
                             || (numberOfResultedRows == previousNoteCount)) {
 
-                        preparedStatement.close();
-                        resultSet.close();
-                        releaseConnection();
-                        return;
+                        isNewNoteAdded = false;
+                    } else {
+                        isNewNoteAdded = true;
+                        // Save it for the next round
+                        previousNoteCount = numberOfResultedRows;
                     }
-                    
-                    // Save it for the next round
-                    previousNoteCount = numberOfResultedRows;
 
                     // Refresh scrollNoteLayout
-                    MainUI.get().access(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Clear previous buttons
-                            scrollNoteLayout.removeAllComponents();
-                            listOfNoteButtons = new HashMap<>();
-                        }
-                    });
-
+//                    MainUI.get().access(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            // Clear previous buttons
+//                            scrollNoteLayout.removeAllComponents();
+//                            listOfNoteButtons = new HashMap<>();
+//                        }
+//                    });
                     int lastNoteIdForActivatingClickedStyle = -1;
+                    boolean lastIsStudentToLecturer = false;
 
                     resultSet.beforeFirst();
                     while (resultSet.next()) {
@@ -556,87 +555,159 @@ public class CourseworkView extends VerticalLayout implements View {
                         lastNoteIdForActivatingClickedStyle = noteId;
 
                         final int pageNum = resultSet.getInt(2);
+
                         final boolean isStudentToLecturer = resultSet.getBoolean(4);
+                        lastIsStudentToLecturer = isStudentToLecturer;
+
                         final boolean isReadStudent = resultSet.getBoolean(5);
                         final boolean isReadLecturer = resultSet.getBoolean(6);
 
                         MainUI.get().access(new Runnable() {
                             @Override
                             public void run() {
-                                String identifier = "";
-                                if (isStudentToLecturer) {
-                                    if (isStudentUser) {
-                                        identifier += "Me";
-                                    } else {
-                                        identifier += coursework
-                                                .getStudentUser()
-                                                .getFirstName();
+                                boolean alreadyInTheListButton = false;
+                                for (Map.Entry<Integer, Button> entry
+                                        : courseworkView.getListOfNoteButtons()
+                                        .entrySet()) {
+                                    if (entry.getKey() == noteId) {
+                                        // Detect if the note is not currently open
+                                        if (!(commentLayout.getNoteId() == noteId
+                                                && commentLayout.isVisible())) {
+                                            if (isStudentUser) {
+                                                if (!isReadStudent) {
+                                                    entry.getValue()
+                                                            .addStyleName("note-unread");
+                                                }
+                                            } else {
+                                                if (!isReadLecturer) {
+                                                    entry.getValue()
+                                                            .addStyleName("note-unread");
+                                                }
+                                            }
+                                        }
+
+                                        alreadyInTheListButton = true;
+                                        break;
                                     }
-                                } else {
-                                    if (isStudentUser) {
-                                        identifier += coursework
-                                                .getClassTable()
-                                                .getLecturerUser()
-                                                .getFirstName();
+                                }
+
+                                // Otherwise add a new note button
+                                if (!alreadyInTheListButton) {
+
+                                    String identifier = "";
+                                    if (isStudentToLecturer) {
+                                        if (isStudentUser) {
+                                            identifier += "Me";
+                                        } else {
+                                            identifier += coursework
+                                                    .getStudentUser()
+                                                    .getFirstName();
+                                        }
                                     } else {
-                                        identifier += "Me";
+                                        if (isStudentUser) {
+                                            identifier += coursework
+                                                    .getClassTable()
+                                                    .getLecturerUser()
+                                                    .getFirstName();
+                                        } else {
+                                            identifier += "Me";
+                                        }
                                     }
+
+                                    boolean isRead;
+                                    if (isStudentUser) {
+                                        isRead = isReadStudent;
+                                    } else {
+                                        isRead = isReadLecturer;
+                                    }
+
+                                    Button noteButton = new Button(
+                                            identifier + "  [p" + pageNum + "]");
+                                    noteButton.setSizeFull();
+                                    noteButton.addStyleName("coursework-panel-border");
+
+                                    // Apply style
+                                    if (isRead) {
+                                        noteButton.addStyleName("note-read");
+                                    } else {
+                                        noteButton.addStyleName("note-unread");
+                                    }
+
+                                    listOfNoteButtons.put(noteId, noteButton);
+                                    scrollNoteLayout.addComponent(noteButton);
+
+                                    noteButton.addClickListener(new NoteButtonListener(
+                                            courseworkView, pageNum));
                                 }
 
-                                boolean isRead;
-                                if (isStudentUser) {
-                                    isRead = isReadStudent;
-                                } else {
-                                    isRead = isReadLecturer;
-                                }
-
-                                Button noteButton = new Button(
-                                        identifier + "  [p" + pageNum + "]");
-                                noteButton.setSizeFull();
-                                noteButton.addStyleName("coursework-panel-border");
-
-                                // Apply style
-                                if (isRead) {
-                                    noteButton.addStyleName("note-read");
-                                } else {
-                                    noteButton.addStyleName("note-unread");
-                                }
-
-                                listOfNoteButtons.put(noteId, noteButton);
-                                scrollNoteLayout.addComponent(noteButton);
-
-                                noteButton.addClickListener(new NoteButtonListener(
-                                        courseworkView, pageNum));
                             }
                         });
                     }
 
-                    // Only triggered after the first run
-                    if (!isFirstRun) {
+                    // Only triggered if there is a new note added and this method 
+                    // run after the first one and there is a last note id
+                    if (isNewNoteAdded && !isFirstRun
+                            && lastNoteIdForActivatingClickedStyle > 0) {
                         // Logically, the last note button added is 
                         // a newly created opened comment, since it is only updated
                         // if there is a new note added to list
                         // So it is safe to say that this note must also have clicked
                         // style added to it
-                        final int copyOfLastNoteId = lastNoteIdForActivatingClickedStyle;
-                        MainUI.get().access(new Runnable() {
 
-                            @Override
-                            public void run() {
+                        // Make sure first that the newly added note button
+                        // is created by the corresponding user
+                        // It is possible to add a new button from other user
+                        if ((isStudentUser && lastIsStudentToLecturer)
+                                || (!isStudentUser && !lastIsStudentToLecturer)) {
 
-                                for (Map.Entry<Integer, Button> entry
-                                        : courseworkView.getListOfNoteButtons().entrySet()) {
-                                    if (entry.getKey() == copyOfLastNoteId) {
-                                        entry.getValue().removeStyleName("note-unread");
-                                        entry.getValue().addStyleName("note-clicked");
-                                        break;
+                            final int copyOfLastNoteId = lastNoteIdForActivatingClickedStyle;
+                            MainUI.get().access(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    for (Map.Entry<Integer, Button> entry
+                                            : courseworkView.getListOfNoteButtons()
+                                            .entrySet()) {
+                                        if (entry.getKey() == copyOfLastNoteId) {
+                                            entry.getValue().removeStyleName("note-unread");
+                                            entry.getValue().addStyleName("note-clicked");
+                                            break;
+                                        }
+
                                     }
-
                                 }
-                            }
-                        });
+                            });
+                        } else {
+                            // Otherwise retain current clicked style to the 
+                            // currently opened comment layout
+                            // Possible scenarion when this user is reading a note
+                            // then suddenly the other user sent a new note
+                            MainUI.get().access(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    int currentOpenPageNoteId = commentLayout.getNoteId();
+
+                                    if (commentLayout.isVisible()) {
+                                        for (Map.Entry<Integer, Button> entry
+                                                : courseworkView.getListOfNoteButtons()
+                                                .entrySet()) {
+                                            if (currentOpenPageNoteId == entry.getKey()) {
+                                                // remove any unread style
+                                                entry.getValue().removeStyleName("note-unread");
+
+                                                entry.getValue().addStyleName("note-clicked");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+
                     }
-                    
+
                     isFirstRun = false;
 
                     preparedStatement.close();

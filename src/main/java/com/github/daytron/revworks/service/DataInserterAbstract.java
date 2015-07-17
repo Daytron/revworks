@@ -27,6 +27,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -111,6 +112,13 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
     @Override
     public void insertNewNote(AppEvent.SubmitNewNoteEvent event) {
         if (reserveConnectionPool()) {
+            // Must clear previous style clicked on note buttons
+            // because that style must now fall to the new button
+            for (Map.Entry<Integer, Button> entry
+                    : event.getCourseworkView().getListOfNoteButtons().entrySet()) {
+                entry.getValue().removeStyleName("note-clicked");
+            }
+
             try {
                 PreparedStatement preparedStatementNote
                         = getConnection().prepareStatement(

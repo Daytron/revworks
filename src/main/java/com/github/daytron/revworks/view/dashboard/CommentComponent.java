@@ -81,13 +81,19 @@ public class CommentComponent extends CssLayout {
 
         setWidth("100%");
         setStyleName(ValoTheme.LAYOUT_CARD);
+        addStyleName("coursework-panel-wrapper");
+        addStyleName("coursework-panel-border");
 
         this.commentLabel = new Label("", ContentMode.HTML);
         this.writerArea = new TextArea();
         addComponent(createHeader());
         addComponent(createContent());
 
-        writerArea.focus();
+        // Only focus to writerArea if creating a comment for the first time
+        if (isFirstComment) {
+            writerArea.focus();
+        }
+        
 
         runnableTask = new CommentsExtractorRunnable(MainUI.get()
                 .getAccessControl().isUserAStudent());
@@ -98,6 +104,7 @@ public class CommentComponent extends CssLayout {
     private HorizontalLayout createHeader() {
         final HorizontalLayout headerLayout = new HorizontalLayout();
         headerLayout.addStyleName("v-panel-caption");
+        headerLayout.addStyleName("coursework-panel-header");
         headerLayout.setWidth("100%");
         headerLayout.setSpacing(true);
 
@@ -132,12 +139,14 @@ public class CommentComponent extends CssLayout {
         Panel commentContainerPanel = new Panel();
 
         commentLabel.setWidth("100%");
+        
 
         commentLabel.setHeightUndefined();
         commentLabel.addStyleName("comment-label");
         commentContainerPanel.setContent(commentLabel);
         commentContainerPanel.setHeight("493px");
         commentContainerPanel.setWidth("100%");
+        commentContainerPanel.addStyleName("coursework-panel-border");
 
         // TODO Fille with old contents for commentLabel
         // if (isFirstCommentt == false ) {}
@@ -146,14 +155,19 @@ public class CommentComponent extends CssLayout {
         // Comment Writer
         HorizontalLayout writerLayout = new HorizontalLayout();
         writerLayout.setWidth("100%");
+        writerLayout.addStyleName("coursework-panel-border");
 
         writerArea.setRows(3);
         writerArea.setWidth("100%");
+        writerArea.addStyleName("coursework-panel-border");
         writerLayout.addComponent(writerArea);
 
         Button sendButton = new Button("Send");
+        sendButton.addStyleName("coursework-panel-border");
+        sendButton.addStyleName("send");
         sendButton.setDescription("Send comment");
         sendButton.setHeight("100%");
+        sendButton.setWidthUndefined();
         sendButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         sendButton.addClickListener(new Button.ClickListener() {
 

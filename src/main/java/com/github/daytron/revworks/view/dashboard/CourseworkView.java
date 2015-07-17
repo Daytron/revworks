@@ -143,6 +143,7 @@ public class CourseworkView extends VerticalLayout implements View {
         CssLayout contentLayout = new CssLayout();
         contentLayout.setSizeFull();
         contentLayout.addStyleName(ValoTheme.LAYOUT_CARD);
+        contentLayout.addStyleName("coursework-view-wrapper-content-layout");
 
         contentLayout.addComponent(createHeaderView(expanderWraperLayout));
         contentLayout.addComponent(createContentLayout());
@@ -234,10 +235,13 @@ public class CourseworkView extends VerticalLayout implements View {
         final CssLayout viewerLayout = new CssLayout();
         viewerLayout.setWidth("100%");
         viewerLayout.setStyleName(ValoTheme.LAYOUT_CARD);
+        viewerLayout.addStyleName("coursework-panel-wrapper");
+        viewerLayout.addStyleName("coursework-panel-border");
 
         // Header
         final HorizontalLayout headerLayout = new HorizontalLayout();
         headerLayout.addStyleName("v-panel-caption");
+        headerLayout.addStyleName("coursework-panel-header");
         headerLayout.setWidth("100%");
         headerLayout.setSpacing(true);
 
@@ -341,6 +345,7 @@ public class CourseworkView extends VerticalLayout implements View {
         courseworkPagePanel = new Panel();
         courseworkPagePanel.setWidth("100%");
         courseworkPagePanel.setHeight("565px");
+        courseworkPagePanel.addStyleName("coursework-panel-border");
 
         listOfPdfPages = PdfRenderer.extractPages(coursework);
 
@@ -370,10 +375,13 @@ public class CourseworkView extends VerticalLayout implements View {
         final CssLayout noteLayout = new CssLayout();
         noteLayout.setWidth("100%");
         noteLayout.setStyleName(ValoTheme.LAYOUT_CARD);
+        noteLayout.addStyleName("coursework-panel-wrapper");
+        noteLayout.addStyleName("coursework-panel-border");
 
         // Header
         final HorizontalLayout headerLayout = new HorizontalLayout();
         headerLayout.addStyleName("v-panel-caption");
+        headerLayout.addStyleName("coursework-panel-header");
         headerLayout.setWidth("100%");
 
         Label titleLabel = new Label("Note");
@@ -412,6 +420,7 @@ public class CourseworkView extends VerticalLayout implements View {
 
         // Content
         Panel notesPanel = new Panel();
+        notesPanel.addStyleName("coursework-panel-border");
         notesPanel.setWidth("100%");
         notesPanel.setHeight("565px");
 
@@ -579,6 +588,7 @@ public class CourseworkView extends VerticalLayout implements View {
                                 Button noteButton = new Button(
                                         identifier + "  [p" + pageNum + "]");
                                 noteButton.setSizeFull();
+                                noteButton.addStyleName("coursework-panel-border");
                                 
                                 // Apply style
                                 if (isRead) {

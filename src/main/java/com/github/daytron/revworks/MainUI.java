@@ -277,13 +277,7 @@ public class MainUI extends UI {
                     CopyOnWriteArrayList<File> listOfFilesToDelete
                             = (CopyOnWriteArrayList<File>) event.getSession()
                             .getAttribute(CurrentUserSession.TRASH_CAN_FOR_FILES_KEY);
-                    // Explicitly cleanup all available or reserve connections 
-                    // in the connection pool to free up MYSQL connection load
-                    JDBCConnectionPool jdbccp = ((JDBCConnectionPool) event.getSession()
-                            .getAttribute(CurrentUserSession.JDBC_CONNECTION_POOL_KEY));
-                    if (jdbccp != null) {
-                        jdbccp.destroy();
-                    }
+                    
 
                     // Shutdown the remaining service threads
                     CourseworkView courseworkView = (CourseworkView) event.getSession().getAttribute(CurrentUserSession.CURRENT_COURSEWORK_VIEW);
@@ -302,6 +296,15 @@ public class MainUI extends UI {
                                     CurrentUserSession.CURRENT_DASHBOARD_HEADER);
                     dashboardHeader.shutdownNotificationExecutor();
 
+                    // Explicitly cleanup all available or reserve connections 
+                    // in the connection pool to free up MYSQL connection load
+                    JDBCConnectionPool jdbccp = ((JDBCConnectionPool) event.getSession()
+                            .getAttribute(CurrentUserSession.JDBC_CONNECTION_POOL_KEY));
+                    if (jdbccp != null) {
+                        jdbccp.destroy();
+                    }
+                    
+                    
                     // Remove the closed session from list
                     listOfUserSessions.remove(user.getName());
 

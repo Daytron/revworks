@@ -85,7 +85,10 @@ public class NoteButtonListener implements Button.ClickListener {
         // Store new comment component to this session
         CurrentUserSession.setCurrentCommentComponent(lcc);
         
-        courseworkView.flipToPage(associatedPage);
+        // Only flip page is the current page is not the associated page
+        if (courseworkView.getCurrentPage() != associatedPage) {
+            courseworkView.flipToPage(associatedPage);
+        }
         
         // Clear previous clicked style to note buttons
         for (Map.Entry<Integer, Button> entry

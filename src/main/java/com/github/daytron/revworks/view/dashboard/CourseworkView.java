@@ -507,7 +507,8 @@ public class CourseworkView extends VerticalLayout implements View {
                         preparedStatement.close();
                         resultSet.close();
                         releaseConnection();
-
+                        
+                        isFirstRun = false;
                         return;
                     }
 

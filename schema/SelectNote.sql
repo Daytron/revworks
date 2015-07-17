@@ -5,4 +5,4 @@ n.is_read_student,
 n.is_read_lecturer  
 FROM Note n 
 WHERE n.id = 3 
-ORDER BY n.page_num ASC;
+ORDER BY n.date_submitted ASC;

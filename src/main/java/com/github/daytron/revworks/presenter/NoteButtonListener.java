@@ -87,6 +87,11 @@ public class NoteButtonListener implements Button.ClickListener {
         
         courseworkView.flipToPage(associatedPage);
         
+        // Clear previous clicked style to note buttons
+        for (Map.Entry<Integer, Button> entry
+                : courseworkView.getListOfNoteButtons().entrySet()) {
+            entry.getValue().removeStyleName("note-clicked");
+        }
         // Trigger update note is_read fields via event bus
         AppEventBus.post(new AppEvent.UpdateNoteIsReadWhenClickEvent(noteId,
             event.getButton()));

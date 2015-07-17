@@ -238,6 +238,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
 
                 button.removeStyleName("note-unread");
                 button.addStyleName("note-read");
+                button.addStyleName("note-clicked");
             } catch (SQLException ex) {
                 Logger.getLogger(DataInserterAbstract.class.getName())
                         .log(Level.SEVERE, null, ex);

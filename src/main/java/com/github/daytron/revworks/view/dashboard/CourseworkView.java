@@ -102,7 +102,7 @@ public class CourseworkView extends VerticalLayout implements View {
                 coursework = MainUI.get().getLecturerDataProvider()
                         .getReceivedCoursework();
             }
-            
+
             if (coursework == null) {
                 NotificationUtil.showError(
                         ErrorMsg.DATA_FETCH_ERROR.getText(),
@@ -119,7 +119,7 @@ public class CourseworkView extends VerticalLayout implements View {
                         this);
                 noteScheduledFuture = noteScheduler.scheduleWithFixedDelay(
                         noteRunnableTask, 0, 1, TimeUnit.SECONDS);
-                
+
                 // Store coursework view to this session
                 CurrentUserSession.setCurrentCourseworkView(this);
             } catch (Exception ex) {
@@ -212,7 +212,7 @@ public class CourseworkView extends VerticalLayout implements View {
         commentLayout
                 = new CommentComponent(coursework, true, currentPage,
                         this);
-        
+
         // Store new comment component to this session
         CurrentUserSession.setCurrentCommentComponent(commentLayout);
         commentLayout.setVisible(false);
@@ -405,10 +405,10 @@ public class CourseworkView extends VerticalLayout implements View {
                 CommentComponent lcc
                         = new CommentComponent(coursework,
                                 true, currentPage, CourseworkView.this);
-                
+
                 coreContentLayout.replaceComponent(commentLayout, lcc);
                 commentLayout = lcc;
-                
+
                 // Store new comment component to this session
                 CurrentUserSession.setCurrentCommentComponent(lcc);
             }
@@ -446,7 +446,7 @@ public class CourseworkView extends VerticalLayout implements View {
     public Map<Integer, Button> getListOfNoteButtons() {
         return listOfNoteButtons;
     }
-    
+
     public void shutdownNoteExecutor() {
         noteScheduledFuture.cancel(true);
         noteScheduler.shutdownNow();
@@ -488,11 +488,13 @@ public class CourseworkView extends VerticalLayout implements View {
         private int previousNoteCount = 0;
         private final boolean isStudentUser;
         private final CourseworkView courseworkView;
+        private boolean isFirstRun;
 
         public NotesExtractorRunnable(boolean isStudentUser,
                 CourseworkView courseworkView) {
             this.isStudentUser = isStudentUser;
             this.courseworkView = courseworkView;
+            this.isFirstRun = true;
         }
 
         @Override
@@ -532,7 +534,7 @@ public class CourseworkView extends VerticalLayout implements View {
                         releaseConnection();
                         return;
                     }
-
+                    
                     // Save it for the next round
                     previousNoteCount = numberOfResultedRows;
 
@@ -546,15 +548,18 @@ public class CourseworkView extends VerticalLayout implements View {
                         }
                     });
 
+                    int lastNoteIdForActivatingClickedStyle = -1;
+
                     resultSet.beforeFirst();
                     while (resultSet.next()) {
                         final int noteId = resultSet.getInt(1);
+                        lastNoteIdForActivatingClickedStyle = noteId;
+
                         final int pageNum = resultSet.getInt(2);
                         final boolean isStudentToLecturer = resultSet.getBoolean(4);
                         final boolean isReadStudent = resultSet.getBoolean(5);
                         final boolean isReadLecturer = resultSet.getBoolean(6);
-                        
-                        
+
                         MainUI.get().access(new Runnable() {
                             @Override
                             public void run() {
@@ -577,19 +582,19 @@ public class CourseworkView extends VerticalLayout implements View {
                                         identifier += "Me";
                                     }
                                 }
-                                
+
                                 boolean isRead;
                                 if (isStudentUser) {
                                     isRead = isReadStudent;
                                 } else {
                                     isRead = isReadLecturer;
                                 }
-                                
+
                                 Button noteButton = new Button(
                                         identifier + "  [p" + pageNum + "]");
                                 noteButton.setSizeFull();
                                 noteButton.addStyleName("coursework-panel-border");
-                                
+
                                 // Apply style
                                 if (isRead) {
                                     noteButton.addStyleName("note-read");
@@ -605,10 +610,38 @@ public class CourseworkView extends VerticalLayout implements View {
                             }
                         });
                     }
+
+                    // Only triggered after the first run
+                    if (!isFirstRun) {
+                        // Logically, the last note button added is 
+                        // a newly created opened comment, since it is only updated
+                        // if there is a new note added to list
+                        // So it is safe to say that this note must also have clicked
+                        // style added to it
+                        final int copyOfLastNoteId = lastNoteIdForActivatingClickedStyle;
+                        MainUI.get().access(new Runnable() {
+
+                            @Override
+                            public void run() {
+
+                                for (Map.Entry<Integer, Button> entry
+                                        : courseworkView.getListOfNoteButtons().entrySet()) {
+                                    if (entry.getKey() == copyOfLastNoteId) {
+                                        entry.getValue().removeStyleName("note-unread");
+                                        entry.getValue().addStyleName("note-clicked");
+                                        break;
+                                    }
+
+                                }
+                            }
+                        });
+                    }
                     
+                    isFirstRun = false;
+
                     preparedStatement.close();
                     resultSet.close();
-                    
+
                 } catch (SQLException ex) {
                     Logger.getLogger(CourseworkView.class.getName())
                             .log(Level.SEVERE, null, ex);

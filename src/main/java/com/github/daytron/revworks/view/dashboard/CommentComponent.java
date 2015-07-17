@@ -37,6 +37,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -93,7 +94,6 @@ public class CommentComponent extends CssLayout {
         if (isFirstComment) {
             writerArea.focus();
         }
-        
 
         runnableTask = new CommentsExtractorRunnable(MainUI.get()
                 .getAccessControl().isUserAStudent());
@@ -121,6 +121,14 @@ public class CommentComponent extends CssLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
+
+                // before closing this comment panel, 
+                // remove all clicked style on note buttons
+                for (Map.Entry<Integer, Button> entry
+                        : courseworkView.getListOfNoteButtons().entrySet()) {
+                    entry.getValue().removeStyleName("note-clicked");
+                }
+
                 CommentComponent.this.shutdownCommentExecutor();
                 CommentComponent.this.setVisible(false);
             }
@@ -139,7 +147,6 @@ public class CommentComponent extends CssLayout {
         Panel commentContainerPanel = new Panel();
 
         commentLabel.setWidth("100%");
-        
 
         commentLabel.setHeightUndefined();
         commentLabel.addStyleName("comment-label");

@@ -53,6 +53,20 @@ limitations under the License.
     .right-align-comment {
         text-align: right; 
     }
+    
+    .v-button-note-clicked {
+        background-image: none !important;
+        background-color: #228dad !important;
+
+        .v-button-caption {
+            color: #edfaff !important;  
+        }
+    }
+    
+    .v-button-note-clicked .v-button-wrap {
+        background-image: none !important;
+    }
+    
 
     .v-button-note-unread   {
         background-image: none !important;
@@ -69,7 +83,7 @@ limitations under the License.
 
     .v-button-note-read  {
         background-image: none !important;
-        background-color: #E6F8FE !important;
+        background-color: #E6F8FE;
     }
     
     .v-button-note-read .v-button-wrap {

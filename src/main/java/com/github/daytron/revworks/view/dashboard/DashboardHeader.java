@@ -77,8 +77,7 @@ public class DashboardHeader extends HorizontalLayout {
 
         final NotificationButton notificationButton
                 = new NotificationButton();
-        notificationButton.addClickListener(
-                new NotificationButtonListener(MainUI.get().getNotificationsWindow()));
+        notificationButton.addClickListener(new NotificationButtonListener());
         AppEventBus.register(notificationButton);
 
         Button logOutButton = new Button();

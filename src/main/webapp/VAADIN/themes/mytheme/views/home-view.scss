@@ -23,7 +23,9 @@ limitations under the License.
     .panel-header {
         background: #315A8E !important;
         color: #eaf3ff;
-        border-bottom: 1px solid #aad0ff !important;
+        border-bottom: 1px solid #d1e5ff !important;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
     }
     
     .panel-wrapper-custom {
@@ -32,6 +34,9 @@ limitations under the License.
         border-bottom: 1px solid #315A8E !important;
         border-left: 1px solid #315A8E !important;
         border-right: 1px solid #315A8E !important;
+        
+        border-top-left-radius: 13px;
+        border-top-right-radius: 13px;
         
         padding-bottom: 25px;
     }

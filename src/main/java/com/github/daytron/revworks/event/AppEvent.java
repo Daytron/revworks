@@ -27,6 +27,7 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Window;
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 

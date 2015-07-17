@@ -38,6 +38,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.vaadin.event.Action;
+import com.vaadin.event.LayoutEvents;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.SessionDestroyEvent;
 import com.vaadin.server.SessionDestroyListener;
@@ -133,6 +135,16 @@ public class MainUI extends UI {
         AppEventBus.register(notificationsProvider);
 
         DashboardScreen dashboardScreen = new DashboardScreen(MainUI.this);
+        dashboardScreen.addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
+
+            @Override
+            public void layoutClick(LayoutEvents.LayoutClickEvent event) {
+                
+                AppEventBus.post(new AppEvent.CloseNotificationWindowEvent());
+                
+                
+            }
+        });
         AppEventBus.register(dashboardScreen);
 
         setContent(dashboardScreen);
@@ -152,16 +164,19 @@ public class MainUI extends UI {
         return notificationsWindow;
     }
 
+    public void setNotificationsWindow(Window notificationsWindow) {
+        this.notificationsWindow = notificationsWindow;
+    }
+
     @Subscribe
-    public void closeAllWindows(AppEvent.CloseNotificationWindowEvent event) {
-        
+    public void closeNotificationWindows(AppEvent.CloseNotificationWindowEvent event) {
         
         if (notificationsWindow != null) {
             notificationsWindow.close();
             notificationsWindow = null;
 
             // Unpause the auto retrieve notification after closing window
-            MainUI.get().getNotificationsProvider().setPause(false);
+            notificationsProvider.setPause(false);
         }
     }
 

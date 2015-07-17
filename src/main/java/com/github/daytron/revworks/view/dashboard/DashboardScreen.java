@@ -29,8 +29,8 @@ import com.vaadin.event.LayoutEvents;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 /**
  *
@@ -47,6 +47,8 @@ public class DashboardScreen extends VerticalLayout {
     public DashboardScreen(MainUI mainUI) {
 
         setMargin(true);
+        addStyleName("dashscreen-main-layout");
+        
         headerLayout = new DashboardHeader();
         // Save it in the session 
         // to be used for shutting down the executor service
@@ -111,13 +113,6 @@ public class DashboardScreen extends VerticalLayout {
         
         navigator.navigateTo(HomeView.VIEW_NAME);
         
-        addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
-
-            @Override
-            public void layoutClick(LayoutEvents.LayoutClickEvent event) {
-                AppEventBus.post(new CloseNotificationWindowEvent());
-            }
-        });
     }
     
     @Subscribe

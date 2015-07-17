@@ -152,6 +152,10 @@ $header-height: round($v-unit-size / 1.1) !default;
 
 
     }
+    
+    .dashscreen-main-layout {
+        background: #F0EDE8;
+    }
 
     .view-dashboard-header {
         padding-bottom: $view-padding;
@@ -201,8 +205,9 @@ $header-height: round($v-unit-size / 1.1) !default;
     .v-menubar .v-menubar-menuitem {
         margin-left: 5px;
         margin-right: 5px;
-        background: #dbdeff !important;
+        background: #ECF1F7 !important;
         border: 1px solid rgba(53,93,129,0.4) !important;
+        padding-bottom: 9px;
 
         .v-menubar-menuitem-caption {
             color: #000;
@@ -219,7 +224,7 @@ $header-height: round($v-unit-size / 1.1) !default;
     }
 
     .v-menubar .v-menubar-menuitem-selected {
-        background: #dbdeff !important;
+        background: #ECF1F7 !important;
 
         .v-menubar-menuitem-caption {
             color: #000 !important;

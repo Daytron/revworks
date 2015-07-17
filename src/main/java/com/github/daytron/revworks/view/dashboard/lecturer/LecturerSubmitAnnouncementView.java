@@ -114,10 +114,12 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
         final CssLayout wrapperItem = new CssLayout();
         wrapperItem.setSizeFull();
         wrapperItem.setStyleName(ValoTheme.LAYOUT_CARD);
+        wrapperItem.addStyleName("message-preview-wrapper");
         
         // Create Header
         final HorizontalLayout layoutHeader = new HorizontalLayout();
         layoutHeader.addStyleName("v-panel-caption");
+        layoutHeader.addStyleName("message-preview-header");
         layoutHeader.setWidth("100%");
 
         Label titleLabel = new Label("Message Preview");

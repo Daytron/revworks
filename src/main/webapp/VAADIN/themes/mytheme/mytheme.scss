@@ -206,8 +206,8 @@ $header-height: round($v-unit-size / 1.1) !default;
         margin-left: 5px;
         margin-right: 5px;
         background: #ECF1F7 !important;
-        border: 1px solid rgba(53,93,129,0.4) !important;
-        padding-bottom: 9px;
+        border: 2px solid rgba(53,93,129,0.4) !important;
+        padding-bottom: 9px !important;
 
         .v-menubar-menuitem-caption {
             color: #000;
@@ -272,7 +272,7 @@ $header-height: round($v-unit-size / 1.1) !default;
     .dashboard-footer {
         font-size: $login-footer-font-size;
         width: 100%;
-        padding-top: 30px;
+        padding-top: 10px;
 
         a {
             color: #000;

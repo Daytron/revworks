@@ -17,7 +17,6 @@ package com.github.daytron.revworks.view.dashboard;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.event.AppEvent.*;
-import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.view.dashboard.lecturer.LecturerCourseworkModuleView;
 import com.github.daytron.revworks.view.dashboard.lecturer.LecturerSubmitAnnouncementView;
@@ -25,12 +24,11 @@ import com.github.daytron.revworks.view.dashboard.student.StudentCourseworkModul
 import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkSucessView;
 import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkView;
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.event.LayoutEvents;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  *
@@ -43,10 +41,12 @@ public class DashboardScreen extends VerticalLayout {
     private final NavigationMenu menu;
     private final CssLayout viewContainer;
     private final DashboardFooter dashboardFooter;
+    private final Panel scrollableContentPanel;
     
     public DashboardScreen(MainUI mainUI) {
 
         setMargin(true);
+        setSizeFull();
         addStyleName("dashscreen-main-layout");
         
         headerLayout = new DashboardHeader();
@@ -55,9 +55,13 @@ public class DashboardScreen extends VerticalLayout {
         // when user logout
         CurrentUserSession.setDashboardHeader(headerLayout);
 
+        scrollableContentPanel = new Panel();
+        scrollableContentPanel.setSizeFull();
+        
         viewContainer = new CssLayout();
         viewContainer.addStyleName("valo-content");
-        viewContainer.setSizeFull();
+        viewContainer.setWidth("100%");
+        viewContainer.setHeightUndefined();
 
         final Navigator navigator = new Navigator(mainUI, viewContainer);
         navigator.setErrorView(ErrorView.class);
@@ -101,14 +105,15 @@ public class DashboardScreen extends VerticalLayout {
             // Admin
         }
         
+        scrollableContentPanel.setContent(viewContainer);
 
         addComponent(headerLayout);
         addComponent(menu);
-        addComponent(viewContainer);
+        addComponent(scrollableContentPanel);
         
         dashboardFooter = new DashboardFooter();
         addComponent(dashboardFooter);
-        setExpandRatio(viewContainer, 1);
+        setExpandRatio(scrollableContentPanel, 1);
         setWidth("100%");
         
         navigator.navigateTo(HomeView.VIEW_NAME);

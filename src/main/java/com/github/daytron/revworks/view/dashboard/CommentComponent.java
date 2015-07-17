@@ -151,8 +151,7 @@ public class CommentComponent extends CssLayout {
         commentLabel.setHeightUndefined();
         commentLabel.addStyleName("comment-label");
         commentContainerPanel.setContent(commentLabel);
-        commentContainerPanel.setHeight("493px");
-        commentContainerPanel.setWidth("100%");
+        commentContainerPanel.setSizeFull();
         commentContainerPanel.addStyleName("coursework-panel-border");
 
         // TODO Fille with old contents for commentLabel

@@ -46,7 +46,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -137,7 +136,7 @@ public class CourseworkView extends VerticalLayout implements View {
 
     private void initView() throws Exception {
         final CssLayout expanderWraperLayout = new CssLayout();
-        expanderWraperLayout.setWidth("100%");
+        expanderWraperLayout.setSizeFull();
         expanderWraperLayout.addStyleName(".wrapper-layout");
 
         CssLayout contentLayout = new CssLayout();
@@ -194,11 +193,10 @@ public class CourseworkView extends VerticalLayout implements View {
 
     private VerticalLayout createContentLayout() throws IOException, Exception {
         final VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setWidth("100%");
+        verticalLayout.setSizeFull();
 
         coreContentLayout = new HorizontalLayout();
-        coreContentLayout.setWidth("100%");
-        coreContentLayout.setHeight("600px");
+        coreContentLayout.setSizeFull();
         coreContentLayout.setSpacing(true);
 
         // Coursework display viewer
@@ -225,7 +223,6 @@ public class CourseworkView extends VerticalLayout implements View {
         coreContentLayout.setExpandRatio(commentLayout, 2);
 
         verticalLayout.addComponent(coreContentLayout);
-        verticalLayout.addComponent(new Label("Document ready."));
 
         return verticalLayout;
 
@@ -343,8 +340,7 @@ public class CourseworkView extends VerticalLayout implements View {
 
         // Content
         courseworkPagePanel = new Panel();
-        courseworkPagePanel.setWidth("100%");
-        courseworkPagePanel.setHeight("565px");
+        courseworkPagePanel.setSizeFull();
         courseworkPagePanel.addStyleName("coursework-panel-border");
 
         listOfPdfPages = PdfRenderer.extractPages(coursework);
@@ -421,9 +417,7 @@ public class CourseworkView extends VerticalLayout implements View {
         // Content
         Panel notesPanel = new Panel();
         notesPanel.addStyleName("coursework-panel-border");
-        notesPanel.setWidth("100%");
-        notesPanel.setHeight("565px");
-
+        notesPanel.setSizeFull();
         scrollNoteLayout = new VerticalLayout();
         scrollNoteLayout.setWidth("100%");
         scrollNoteLayout.setHeight(null);

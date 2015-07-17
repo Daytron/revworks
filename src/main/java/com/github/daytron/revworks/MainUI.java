@@ -38,7 +38,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
-import com.vaadin.event.Action;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.SessionDestroyEvent;
@@ -83,8 +82,8 @@ public class MainUI extends UI {
     
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        // Set max session timeout after 10 minutes
-        VaadinSession.getCurrent().getSession().setMaxInactiveInterval(300);
+        // Set max session timeout after 20 minutes
+        VaadinSession.getCurrent().getSession().setMaxInactiveInterval(1200);
 
         Responsive.makeResponsive(this);
         setLocale(vaadinRequest.getLocale());
@@ -180,9 +179,10 @@ public class MainUI extends UI {
         }
     }
 
+    // 6 minutes heartbeat interval
     @WebServlet(urlPatterns = "/*", name = "MainUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MainUI.class, productionMode = false,
-            closeIdleSessions = true, heartbeatInterval = 90)
+            closeIdleSessions = true, heartbeatInterval = 360)
     public static class MainUIServlet extends VaadinServlet implements
             SessionDestroyListener {
 

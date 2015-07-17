@@ -323,5 +323,9 @@ $header-height: round($v-unit-size / 1.1) !default;
         padding-top: 5px;
         padding-bottom: 5px;
     }
+    
+    .notifications-window-layout {
+        border: 1px solid #315A8E !important;
+    }
 
 }

@@ -122,7 +122,7 @@ public class NotificationButtonListener implements Button.ClickListener {
         if (notificationsWindow == null) {
             notificationsWindow = new Window();
             notificationsWindow.setWidth(300.0f, Sizeable.Unit.PIXELS);
-            notificationsWindow.addStyleName("notifications");
+            notificationsWindow.addStyleName("notifications-window-layout");
             notificationsWindow.setClosable(false);
             notificationsWindow.setResizable(false);
             notificationsWindow.setDraggable(false);

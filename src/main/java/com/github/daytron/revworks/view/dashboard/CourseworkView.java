@@ -32,7 +32,6 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
@@ -268,7 +267,13 @@ public class CourseworkView extends VerticalLayout implements View {
                         return;
                     }
 
-                    try {
+                    if (page > listOfPdfPages.size() || 
+                            page < 1) {
+                        NotificationUtil.showWarning("Page out of bounds!", 
+                                "No such page exist.");
+                        pageField.setValue(String.valueOf(currentPage));
+                    } else {
+                        try {
                         FileResource fileResource
                                 = new FileResource(listOfPdfPages.get(page - 1));
                         Image image = new Image(null, fileResource);
@@ -282,6 +287,9 @@ public class CourseworkView extends VerticalLayout implements View {
                                 ErrorMsg.DATA_FETCH_ERROR.getText(),
                                 ErrorMsg.CONSULT_YOUR_ADMIN.getText());
                     }
+                    }
+                    
+                    
                 } catch (NumberFormatException e) {
                 }
             }

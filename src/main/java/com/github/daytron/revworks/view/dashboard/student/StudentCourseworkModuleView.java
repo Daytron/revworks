@@ -41,6 +41,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
 import java.io.IOException;
@@ -52,7 +53,7 @@ import java.util.logging.Logger;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class StudentCourseworkModuleView extends VerticalLayout implements View {
+public class StudentCourseworkModuleView extends Panel implements View {
 
     public static final String VIEW_NAME = "CourseworkModuleView";
     public static final String VIEW_CAPTION = "My Courseworks";
@@ -91,9 +92,14 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
     }
 
     private void initView() {
-        setWidth("100%");
-        setMargin(true);
-        setSpacing(true);
+        setSizeFull();
+        
+        VerticalLayout wrapperLayout = new VerticalLayout();
+        wrapperLayout.setWidth("100%");
+        wrapperLayout.setHeightUndefined();
+        
+        wrapperLayout.setMargin(true);
+        wrapperLayout.setSpacing(true);
 
         final CssLayout wrapperItem = new CssLayout();
         wrapperItem.setWidth("100%");
@@ -135,7 +141,9 @@ public class StudentCourseworkModuleView extends VerticalLayout implements View 
         contentLayout.setExpandRatio(assignmentTable, 1);
         wrapperItem.addComponent(contentLayout);
 
-        addComponent(wrapperItem);
+        wrapperLayout.addComponent(wrapperItem);
+        
+        setContent(wrapperLayout);
 
     }
 

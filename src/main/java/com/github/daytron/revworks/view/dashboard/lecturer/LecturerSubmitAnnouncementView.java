@@ -45,7 +45,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class LecturerSubmitAnnouncementView extends VerticalLayout implements View {
+public class LecturerSubmitAnnouncementView extends Panel implements View {
 
     public static final String VIEW_NAME = "NewAnnouncementView";
     public static final String VIEW_CAPTION = "New Announcement";
@@ -78,8 +78,13 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
 
     private void initView() {
         setSizeFull();
-        setMargin(true);
-        setSpacing(true);
+        
+        VerticalLayout wrapperLayout = new VerticalLayout();
+        wrapperLayout.setWidth("100%");
+        wrapperLayout.setHeightUndefined();
+        
+        wrapperLayout.setMargin(true);
+        wrapperLayout.setSpacing(true);
 
         Label viewTitleLabel = new Label(VIEW_TITLE);
         viewTitleLabel.setStyleName(ValoTheme.LABEL_H2);
@@ -87,10 +92,12 @@ public class LecturerSubmitAnnouncementView extends VerticalLayout implements Vi
 
         Component contentLayout = createNewAnnouncementForm();
 
-        addComponent(viewTitleLabel);
-        addComponent(contentLayout);
+        wrapperLayout.addComponent(viewTitleLabel);
+        wrapperLayout.addComponent(contentLayout);
 
-        setExpandRatio(contentLayout, 1);
+        wrapperLayout.setExpandRatio(contentLayout, 1);
+        
+        setContent(wrapperLayout);
     }
 
     private Component createNewAnnouncementForm() {

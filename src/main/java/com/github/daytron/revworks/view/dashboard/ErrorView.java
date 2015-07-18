@@ -18,6 +18,7 @@ package com.github.daytron.revworks.view.dashboard;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.ValoTheme;
@@ -28,22 +29,30 @@ import com.vaadin.ui.themes.ValoTheme;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class ErrorView extends VerticalLayout implements View {
+public class ErrorView extends Panel implements View {
 
     private final Label errorLabel;
 
     public ErrorView() {
-        setMargin(true);
-        setSpacing(true);
+        setSizeFull();
+        
+        VerticalLayout wrapperLayout = new VerticalLayout();
+        wrapperLayout.setWidth("100%");
+        wrapperLayout.setHeightUndefined();
+        
+        wrapperLayout.setMargin(true);
+        wrapperLayout.setSpacing(true);
 
         Label headerErrorLabel = new Label("The view could not be found!");
         headerErrorLabel.addStyleName(Reindeer.LABEL_H1);
         headerErrorLabel.addStyleName(ValoTheme.LABEL_FAILURE);
 
-        addComponent(headerErrorLabel);
+        wrapperLayout.addComponent(headerErrorLabel);
 
         this.errorLabel = new Label();
-        addComponent(this.errorLabel);
+        wrapperLayout.addComponent(this.errorLabel);
+        
+        setContent(wrapperLayout);
     }
 
     @Override

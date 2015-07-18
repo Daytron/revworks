@@ -41,6 +41,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.Reindeer;
@@ -55,7 +56,7 @@ import java.util.logging.Logger;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class LecturerCourseworkModuleView extends VerticalLayout implements View {
+public class LecturerCourseworkModuleView extends Panel implements View {
 
     public static final String VIEW_NAME = "CourseworkModuleView";
     public static final String VIEW_CAPTION = "View Courseworks";
@@ -99,17 +100,22 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
     }
 
     private void initView() {
-        setWidth("100%");
-        setMargin(true);
-        setSpacing(true);
+        setSizeFull();
+        
+        VerticalLayout wrapperLayout = new VerticalLayout();
+        wrapperLayout.setWidth("100%");
+        wrapperLayout.setHeightUndefined();
+        
+        wrapperLayout.setMargin(true);
+        wrapperLayout.setSpacing(true);
 
         if (this.listOfNBeanItemContainers.isEmpty()) {
             Label emptyNoticeLabel = new Label("No modules registered found.\n"
                     + "Please seek the administrator for more information.");
             emptyNoticeLabel.setStyleName(ValoTheme.LABEL_FAILURE);
-            addComponent(emptyNoticeLabel);
+            wrapperLayout.addComponent(emptyNoticeLabel);
         } else {
-            addComponent(tabSheet);
+            wrapperLayout.addComponent(tabSheet);
             tabSheet.setStyleName(Reindeer.TABSHEET_BORDERLESS);
             
 
@@ -123,6 +129,8 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
                         entry.getKey().getModuleId());
             }
         }
+        
+        setContent(wrapperLayout);
 
     }
 

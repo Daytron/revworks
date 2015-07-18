@@ -21,6 +21,7 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -29,19 +30,24 @@ import com.vaadin.ui.VerticalLayout;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class StudentSubmitCourseworkSucessView extends VerticalLayout
+public class StudentSubmitCourseworkSucessView extends Panel
         implements View {
 
     public static final String VIEW_NAME = "SubmitCourseworkSuccessView";
 
     public StudentSubmitCourseworkSucessView() {
-        setWidth("100%");
-        setSpacing(true);
+        setSizeFull();
+        
+        VerticalLayout wrapperLayout = new VerticalLayout();
+        wrapperLayout.setWidth("100%");
+        wrapperLayout.setHeightUndefined();
+        
+        wrapperLayout.setSpacing(true);
 
         // Extra top space
         Label gapLabelTop = new Label();
         gapLabelTop.setHeight(20, Unit.PIXELS);
-        addComponent(gapLabelTop);
+        wrapperLayout.addComponent(gapLabelTop);
         
         // Check image Row
         final HorizontalLayout checkLayout = new HorizontalLayout();
@@ -66,7 +72,7 @@ public class StudentSubmitCourseworkSucessView extends VerticalLayout
         checkLayout.setExpandRatio(leftCheckSpaceLabel, 1);
         checkLayout.setExpandRatio(rightCheckSpaceLabel, 1);
         
-        addComponent(checkLayout);
+        wrapperLayout.addComponent(checkLayout);
         
         // Success text row
         final HorizontalLayout successTextLayout = new HorizontalLayout();
@@ -89,12 +95,14 @@ public class StudentSubmitCourseworkSucessView extends VerticalLayout
         successTextLayout.setExpandRatio(leftSuccessSpaceLabel, 1);
         successTextLayout.setExpandRatio(rightSuccessSpaceLabel, 1);
         
-        addComponent(successTextLayout);
+        wrapperLayout.addComponent(successTextLayout);
         
         // Extra bottom space
         Label gapLabelBottom = new Label();
         gapLabelBottom.setHeight(9, Unit.EM);
-        addComponent(gapLabelBottom);
+        wrapperLayout.addComponent(gapLabelBottom);
+        
+        setContent(wrapperLayout);
 
     }
 

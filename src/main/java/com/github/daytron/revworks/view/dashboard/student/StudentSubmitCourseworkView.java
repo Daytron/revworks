@@ -33,6 +33,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
@@ -47,7 +48,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class StudentSubmitCourseworkView extends VerticalLayout
+public class StudentSubmitCourseworkView extends Panel
         implements View {
 
     public static final String VIEW_NAME = "SubmitCourseworkView";
@@ -64,7 +65,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         // from coursework view and comment component if possible
         CurrentUserSession.shutdownCourseworkViewExecutorService();
         CurrentUserSession.shutdownCommentExectorService();
-        
+
         if (!isInitialised) {
             this.listOfClasses = CurrentUserSession.getCurrentClassTables();
             initView();
@@ -74,8 +75,13 @@ public class StudentSubmitCourseworkView extends VerticalLayout
 
     private void initView() {
         setSizeFull();
-        setMargin(true);
-        setSpacing(true);
+
+        VerticalLayout wrapperLayout = new VerticalLayout();
+        wrapperLayout.setWidth("100%");
+        wrapperLayout.setHeightUndefined();
+
+        wrapperLayout.setMargin(true);
+        wrapperLayout.setSpacing(true);
 
         Label viewTitleLabel = new Label(VIEW_TITLE);
         viewTitleLabel.setStyleName(ValoTheme.LABEL_H2);
@@ -83,10 +89,12 @@ public class StudentSubmitCourseworkView extends VerticalLayout
 
         Component contentLayout = createSubmitCourseworkForm();
 
-        addComponent(viewTitleLabel);
-        addComponent(contentLayout);
+        wrapperLayout.addComponent(viewTitleLabel);
+        wrapperLayout.addComponent(contentLayout);
 
-        setExpandRatio(contentLayout, 1);
+        wrapperLayout.setExpandRatio(contentLayout, 1);
+
+        setContent(wrapperLayout);
     }
 
     private Component createSubmitCourseworkForm() {
@@ -120,7 +128,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         titleTextField.setMaxLength(150);
         contentFormLayout.addComponent(titleTextField);
 
-        Label gapLabel = new Label("&nbsp;",ContentMode.HTML);
+        Label gapLabel = new Label("&nbsp;", ContentMode.HTML);
         gapLabel.setHeight(10, Unit.PIXELS);
         contentFormLayout.addComponent(gapLabel);
 
@@ -128,7 +136,6 @@ public class StudentSubmitCourseworkView extends VerticalLayout
 //        Label uploadInformationLabel = new Label();
 //        uploadInformationLabel.setValue("Upload your coursework PDF file here.");
 //        contentFormLayout.addComponent(uploadInformationLabel);
-
         // Upload area
         ProgressBar progressBar = new ProgressBar(0.0f);
         progressBar.setWidth("50%");
@@ -145,7 +152,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
         contentFormLayout.addComponent(fileUploader);
         contentFormLayout.addComponent(progressBar);
 
-        Label gapLabel2 = new Label("&nbsp;",ContentMode.HTML);
+        Label gapLabel2 = new Label("&nbsp;", ContentMode.HTML);
         gapLabel2.setHeight(10, Unit.PIXELS);
         contentFormLayout.addComponent(gapLabel2);
 
@@ -158,13 +165,9 @@ public class StudentSubmitCourseworkView extends VerticalLayout
                 = new CheckBox("I agree to the terms and conditions.");
         contentFormLayout.addComponent(agreeBox);
 
-        layout.addComponent(contentFormLayout);
-        layout.setWidth("100%");
-        layout.setSpacing(true);
-
-        Label gapLabel3 = new Label("&nbsp;",ContentMode.HTML);
+        Label gapLabel3 = new Label("&nbsp;", ContentMode.HTML);
         gapLabel3.setHeight(5, Unit.PIXELS);
-        layout.addComponent(gapLabel3);
+        contentFormLayout.addComponent(gapLabel3);
 
         final List<ClassTable> copyOfClassTables = this.listOfClasses;
         Button submitButton = new Button("Submit");
@@ -209,7 +212,7 @@ public class StudentSubmitCourseworkView extends VerticalLayout
                         selectedClass = classTable;
                     }
                 }
-                
+
                 if (selectedClass == null) {
                     NotificationUtil.showError("Something went wrong.",
                             "Could not find matching class.");
@@ -223,8 +226,11 @@ public class StudentSubmitCourseworkView extends VerticalLayout
 
             }
         });
+        contentFormLayout.addComponent(submitButton);
 
-        layout.addComponent(submitButton);
+        layout.addComponent(contentFormLayout);
+        layout.setWidth("100%");
+        layout.setSpacing(true);
 
         return layout;
 

@@ -30,6 +30,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.time.LocalDateTime;
@@ -43,7 +44,7 @@ import java.util.List;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class HomeView extends VerticalLayout implements View {
+public class HomeView extends Panel implements View {
 
     public static final String VIEW_NAME = "HomeView";
     public static final String VIEW_CAPTION = "Home";
@@ -171,8 +172,12 @@ public class HomeView extends VerticalLayout implements View {
     private void initView() {
 
         setSizeFull();
-        setMargin(true);
-        setSpacing(true);
+        VerticalLayout wrapperLayout = new VerticalLayout();
+        wrapperLayout.setWidth("100%");
+        wrapperLayout.setHeightUndefined();
+        
+        wrapperLayout.setMargin(true);
+        wrapperLayout.setSpacing(true);
 
         Label whatsNewLabel;
         if (this.listOfAnnouncements.isEmpty()) {
@@ -186,7 +191,7 @@ public class HomeView extends VerticalLayout implements View {
         VerticalLayout contentLayout = new VerticalLayout();
         contentLayout.setSpacing(true);
 
-        addComponent(whatsNewLabel);
+        wrapperLayout.addComponent(whatsNewLabel);
 
         for (Announcement announcement : this.listOfAnnouncements) {
             Component announcementComponent
@@ -194,8 +199,10 @@ public class HomeView extends VerticalLayout implements View {
             contentLayout.addComponent(announcementComponent);
         }
 
-        addComponent(contentLayout);
-        setExpandRatio(contentLayout, 1);
+        wrapperLayout.addComponent(contentLayout);
+        wrapperLayout.setExpandRatio(contentLayout, 1);
+        
+        setContent(wrapperLayout);
         initialised = true;
     }
 

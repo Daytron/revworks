@@ -27,6 +27,7 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -209,10 +210,10 @@ public abstract class AppEvent {
 
     public static final class ToggleCourseworkViewEvent {
 
-        private final CssLayout contentLayout;
+        private final VerticalLayout contentLayout;
         private final boolean isToggled;
 
-        public ToggleCourseworkViewEvent(CssLayout contentLayout, boolean isToggled) {
+        public ToggleCourseworkViewEvent(VerticalLayout contentLayout, boolean isToggled) {
             this.contentLayout = contentLayout;
             this.isToggled = isToggled;
         }
@@ -221,7 +222,7 @@ public abstract class AppEvent {
             return isToggled;
         }
 
-        public CssLayout getContentLayout() {
+        public VerticalLayout getContentLayout() {
             return contentLayout;
         }
 

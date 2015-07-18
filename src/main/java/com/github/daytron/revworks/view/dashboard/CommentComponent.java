@@ -25,7 +25,6 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -50,7 +49,7 @@ import java.util.logging.Logger;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class CommentComponent extends CssLayout {
+public class CommentComponent extends VerticalLayout {
 
     private final ScheduledExecutorService scheduler
             = Executors.newScheduledThreadPool(1);
@@ -80,15 +79,20 @@ public class CommentComponent extends CssLayout {
         this.noteId = noteId;
         this.courseworkView = courseworkView;
 
-        setWidth("100%");
+        setSizeFull();
         setStyleName(ValoTheme.LAYOUT_CARD);
         addStyleName("coursework-panel-wrapper");
         addStyleName("coursework-panel-border");
 
         this.commentLabel = new Label("", ContentMode.HTML);
         this.writerArea = new TextArea();
-        addComponent(createHeader());
-        addComponent(createContent());
+        HorizontalLayout headerLayout = createHeader();
+        addComponent(headerLayout);
+        
+        VerticalLayout contentLayout = createContent();
+        addComponent(contentLayout);
+        
+        setExpandRatio(contentLayout, 1);
 
         // Only focus to writerArea if creating a comment for the first time
         if (isFirstComment) {
@@ -147,9 +151,9 @@ public class CommentComponent extends CssLayout {
         Panel commentContainerPanel = new Panel();
 
         commentLabel.setWidth("100%");
-
         commentLabel.setHeightUndefined();
         commentLabel.addStyleName("comment-label");
+        
         commentContainerPanel.setContent(commentLabel);
         commentContainerPanel.setSizeFull();
         commentContainerPanel.addStyleName("coursework-panel-border");

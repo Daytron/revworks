@@ -39,7 +39,7 @@ public class DashboardScreen extends VerticalLayout {
 
     private final DashboardHeader headerLayout;
     private final NavigationMenu menu;
-    private final CssLayout viewContainer;
+    private final VerticalLayout viewContainer;
     private final DashboardFooter dashboardFooter;
     private final Panel scrollableContentPanel;
     
@@ -58,11 +58,12 @@ public class DashboardScreen extends VerticalLayout {
         scrollableContentPanel = new Panel();
         scrollableContentPanel.setSizeFull();
         
-        viewContainer = new CssLayout();
-        viewContainer.addStyleName("valo-content");
-        viewContainer.setWidth("100%");
-        viewContainer.setHeightUndefined();
-
+        viewContainer = new VerticalLayout();
+//        viewContainer.setWidth("100%");
+//        viewContainer.setHeightUndefined();
+        viewContainer.setSizeFull();
+        
+        
         final Navigator navigator = new Navigator(mainUI, viewContainer);
         navigator.setErrorView(ErrorView.class);
         

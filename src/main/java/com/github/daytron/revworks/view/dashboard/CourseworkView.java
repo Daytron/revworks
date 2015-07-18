@@ -86,6 +86,7 @@ public class CourseworkView extends VerticalLayout implements View {
     public CourseworkView() {
         this.pageField = new TextField();
         coursework = null;
+        setSizeFull();
     }
 
     @Override
@@ -135,24 +136,29 @@ public class CourseworkView extends VerticalLayout implements View {
     }
 
     private void initView() throws Exception {
-        final CssLayout expanderWraperLayout = new CssLayout();
+        final VerticalLayout expanderWraperLayout = new VerticalLayout();
         expanderWraperLayout.setSizeFull();
-        expanderWraperLayout.addStyleName(".wrapper-layout");
+        expanderWraperLayout.addStyleName("wrapper-layout");
 
-        CssLayout contentLayout = new CssLayout();
+        VerticalLayout contentLayout = new VerticalLayout();
         contentLayout.setSizeFull();
         contentLayout.addStyleName(ValoTheme.LAYOUT_CARD);
         contentLayout.addStyleName("coursework-view-wrapper-content-layout");
 
-        contentLayout.addComponent(createHeaderView(expanderWraperLayout));
-        contentLayout.addComponent(createContentLayout());
+        
+        HorizontalLayout headerLayout = createHeaderView(expanderWraperLayout);
+        contentLayout.addComponent(headerLayout);
+        VerticalLayout subContentLayout = createContentLayout();
+        contentLayout.addComponent(subContentLayout);
+        contentLayout.setExpandRatio(subContentLayout, 1);
+        
         expanderWraperLayout.addComponent(contentLayout);
 
         addComponent(expanderWraperLayout);
 
     }
 
-    private HorizontalLayout createHeaderView(final CssLayout expanderLayout) {
+    private HorizontalLayout createHeaderView(final VerticalLayout expanderLayout) {
         HorizontalLayout toolbarLayout = new HorizontalLayout();
         toolbarLayout.addStyleName("content-toolbar");
         toolbarLayout.setWidth("100%");
@@ -200,10 +206,10 @@ public class CourseworkView extends VerticalLayout implements View {
         coreContentLayout.setSpacing(true);
 
         // Coursework display viewer
-        CssLayout viewerLayout = createCourseworkViewer();
+        VerticalLayout viewerLayout = createCourseworkViewer();
 
         // Scroll Layout
-        CssLayout scrollLayout = createNoteComponent();
+        VerticalLayout scrollLayout = createNoteComponent();
 
         // Comment Layout
         // By default it is a placeholder hidden with noteId 0
@@ -228,9 +234,9 @@ public class CourseworkView extends VerticalLayout implements View {
 
     }
 
-    private CssLayout createCourseworkViewer() throws IOException, Exception {
-        final CssLayout viewerLayout = new CssLayout();
-        viewerLayout.setWidth("100%");
+    private VerticalLayout createCourseworkViewer() throws IOException, Exception {
+        final VerticalLayout viewerLayout = new VerticalLayout();
+        viewerLayout.setSizeFull();
         viewerLayout.setStyleName(ValoTheme.LAYOUT_CARD);
         viewerLayout.addStyleName("coursework-panel-wrapper");
         viewerLayout.addStyleName("coursework-panel-border");
@@ -267,7 +273,8 @@ public class CourseworkView extends VerticalLayout implements View {
                                 = new FileResource(listOfPdfPages.get(page - 1));
                         Image image = new Image(null, fileResource);
                         image.setWidth("100%");
-
+                        image.setHeightUndefined();
+                                
                         courseworkPagePanel.setContent(image);
                         currentPage = page;
                     } catch (Exception e) {
@@ -296,6 +303,7 @@ public class CourseworkView extends VerticalLayout implements View {
                                 = new FileResource(listOfPdfPages.get(currentPage - 2));
                         Image image = new Image(null, fileResource);
                         image.setWidth("100%");
+                        image.setHeightUndefined();
 
                         courseworkPagePanel.setContent(image);
                         currentPage = currentPage - 1;
@@ -325,6 +333,7 @@ public class CourseworkView extends VerticalLayout implements View {
                                 = new FileResource(listOfPdfPages.get(currentPage));
                         Image image = new Image(null, fileResource);
                         image.setWidth("100%");
+                        image.setHeightUndefined();
 
                         courseworkPagePanel.setContent(image);
                         currentPage = currentPage + 1;
@@ -351,6 +360,7 @@ public class CourseworkView extends VerticalLayout implements View {
 
         Image image = new Image(null, new FileResource(listOfPdfPages.get(0)));
         image.setWidth("100%");
+        image.setHeightUndefined();
         courseworkPagePanel.setContent(image);
         currentPage = 1;
 
@@ -363,13 +373,15 @@ public class CourseworkView extends VerticalLayout implements View {
 
         viewerLayout.addComponent(headerLayout);
         viewerLayout.addComponent(courseworkPagePanel);
+        
+        viewerLayout.setExpandRatio(courseworkPagePanel, 1);
 
         return viewerLayout;
     }
 
-    private CssLayout createNoteComponent() {
-        final CssLayout noteLayout = new CssLayout();
-        noteLayout.setWidth("100%");
+    private VerticalLayout createNoteComponent() {
+        final VerticalLayout noteLayout = new VerticalLayout();
+        noteLayout.setSizeFull();
         noteLayout.setStyleName(ValoTheme.LAYOUT_CARD);
         noteLayout.addStyleName("coursework-panel-wrapper");
         noteLayout.addStyleName("coursework-panel-border");
@@ -420,10 +432,12 @@ public class CourseworkView extends VerticalLayout implements View {
         notesPanel.setSizeFull();
         scrollNoteLayout = new VerticalLayout();
         scrollNoteLayout.setWidth("100%");
-        scrollNoteLayout.setHeight(null);
+        scrollNoteLayout.setHeightUndefined();
 
         notesPanel.setContent(scrollNoteLayout);
         noteLayout.addComponent(notesPanel);
+        
+        noteLayout.setExpandRatio(notesPanel, 1);
 
         return noteLayout;
 

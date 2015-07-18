@@ -77,6 +77,7 @@ public class NotificationButtonListener implements Button.ClickListener {
 
         // Create panel holder
         Panel notificationPanel = new Panel();
+        notificationPanel.addStyleName("notifications-panel-layout");
         VerticalLayout panelContentLayout = new VerticalLayout();
         panelContentLayout.setMargin(true);
         panelContentLayout.setWidth("100%");

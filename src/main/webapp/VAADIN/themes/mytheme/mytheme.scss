@@ -327,5 +327,9 @@ $header-height: round($v-unit-size / 1.1) !default;
     .notifications-window-layout {
         border: 1px solid #315A8E !important;
     }
+    
+    .notifications-window-layout .notifications-panel-layout {
+        border: 1px solid #315A8E !important;
+    }
 
 }

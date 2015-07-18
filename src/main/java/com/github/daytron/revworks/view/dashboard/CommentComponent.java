@@ -63,6 +63,7 @@ public class CommentComponent extends VerticalLayout {
     private int noteId;
     private final int page;
     private final CourseworkView courseworkView;
+    private final Panel commentContainerPanel;
 
     public CommentComponent(Coursework coursework,
             boolean isFirstComment, int page, CourseworkView courseworkView) {
@@ -78,6 +79,7 @@ public class CommentComponent extends VerticalLayout {
         this.page = page;
         this.noteId = noteId;
         this.courseworkView = courseworkView;
+        commentContainerPanel = new Panel();
 
         setSizeFull();
         setStyleName(ValoTheme.LAYOUT_CARD);
@@ -148,8 +150,7 @@ public class CommentComponent extends VerticalLayout {
         contentLayout.setSizeFull();
 
         // Comment Viewer
-        Panel commentContainerPanel = new Panel();
-
+        
         commentLabel.setWidth("100%");
         commentLabel.setHeightUndefined();
         commentLabel.addStyleName("comment-label");
@@ -349,6 +350,7 @@ public class CommentComponent extends VerticalLayout {
                             @Override
                             public void run() {
                                 commentLabel.setValue(stringBuilder.toString());
+                                commentContainerPanel.setScrollTop(Short.MAX_VALUE);
                             }
                         });
 

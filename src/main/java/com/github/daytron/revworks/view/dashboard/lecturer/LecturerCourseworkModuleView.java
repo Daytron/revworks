@@ -259,7 +259,7 @@ public class LecturerCourseworkModuleView extends VerticalLayout implements View
                     new boolean[]{false});
 
             moduleTable.setColumnWidth("id", 50);
-            moduleTable.setPageLength(8);
+            moduleTable.setPageLength(20);
 
             moduleTable.setImmediate(true);
             moduleTable.addItemClickListener(new ItemClickEvent.ItemClickListener() {

@@ -57,37 +57,55 @@ limitations under the License.
     .v-button-note-clicked {
         background-image: none !important;
         background-color: #228dad !important;
+        white-space: normal !important;
+        height: auto;
+        padding-bottom: 5px;
 
         .v-button-caption {
-            color: #edfaff !important;  
+            color: #edfaff !important;
+            white-space: normal !important;
         }
     }
     
     .v-button-note-clicked .v-button-wrap {
         background-image: none !important;
+        white-space: normal !important;
     }
     
 
     .v-button-note-unread   {
         background-image: none !important;
         background-color: #fff !important;
+        white-space: normal !important;
+        height: auto;
+        padding-bottom: 5px;
 
         .v-button-caption {
-            font-weight: bolder !important;  
+            font-weight: bolder !important;
+            white-space: normal !important;
         }
     }
     
     .v-button-note-unread .v-button-wrap {
         background-image: none !important;
+        white-space: normal !important;
     }
 
     .v-button-note-read  {
         background-image: none !important;
         background-color: #E6F8FE;
+        white-space: normal !important;
+        height: auto;
+        padding-bottom: 5px;
+        
+        .v-button-caption {
+            white-space: normal !important;
+        }
     }
     
     .v-button-note-read .v-button-wrap {
         background-image: none !important;
+        white-space: normal !important;
     }
     
     .v-button-send .v-button-wrap {

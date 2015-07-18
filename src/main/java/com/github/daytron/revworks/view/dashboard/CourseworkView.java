@@ -617,8 +617,8 @@ public class CourseworkView extends VerticalLayout implements View {
                                     }
 
                                     Button noteButton = new Button(
-                                            identifier + "  [p" + pageNum + "]");
-                                    noteButton.setSizeFull();
+                                            identifier + " [p" + pageNum + "]");
+                                    noteButton.setWidth("100%");
                                     noteButton.addStyleName("coursework-panel-border");
 
                                     // Apply style

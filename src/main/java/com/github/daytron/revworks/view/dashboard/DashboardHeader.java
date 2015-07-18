@@ -102,7 +102,7 @@ public class DashboardHeader extends HorizontalLayout {
 
         runnableTask = new NotificationsExtractorRunnable();
         scheduledFuture = scheduler.scheduleWithFixedDelay(runnableTask,
-                0, 3, TimeUnit.SECONDS);
+                0, 500, TimeUnit.MILLISECONDS);
 
     }
 
@@ -115,17 +115,18 @@ public class DashboardHeader extends HorizontalLayout {
             implements Runnable {
 
         private int previousUnreadCount = 0;
-        private int previousReadCount = 0;
 
         @Override
         public void run() {
 
-            // Skip retrieval if notification button is pressed
-            if (MainUI.get().getNotificationsProvider().isPause()) {
-                return;
+            synchronized (this) {
+                // Skip retrieval if notification button is pressed
+                if (MainUI.get().getNotificationsProvider().isPause()) {
+                    return;
+                } 
             }
 
-            CopyOnWriteArrayList<UserNotification> listOfUserNotifications
+            final CopyOnWriteArrayList<UserNotification> listOfUserNotifications
                     = new CopyOnWriteArrayList<>();
             if (reserveConnectionPool()) {
                 try {
@@ -175,12 +176,9 @@ public class DashboardHeader extends HorizontalLayout {
                                         userNotificationType
                                                 = UserNotificationType.NOTE;
                                         break;
-                                    case 3:
+                                    default:
                                         userNotificationType
                                                 = UserNotificationType.COMMENT;
-                                        break;
-                                    default:
-                                        userNotificationType = null;
                                         break;
                                 }
 
@@ -204,7 +202,7 @@ public class DashboardHeader extends HorizontalLayout {
                             resultSetUnread.close();
                         } else {
                             // else empty
-                            // get last 30 notifications (aggregate later on)
+                            // get last 5 notifications (aggregate later on)
 
                             // close first
                             preparedStatementUnread.close();
@@ -226,24 +224,6 @@ public class DashboardHeader extends HorizontalLayout {
                                 releaseConnection();
                                 return;
                             }
-
-                            // Calculate the current resulting row count
-                            int numberOfResultedRows = 0;
-                            resultSetRead.beforeFirst();
-                            while (resultSetRead.next()) {
-                                numberOfResultedRows += 1;
-                            }
-
-                            if (numberOfResultedRows == 0
-                                    || numberOfResultedRows == previousReadCount) {
-                                preparedStatementRead.close();
-                                resultSetRead.close();
-                                releaseConnection();
-                                return;
-                            }
-
-                            // save new unread count
-                            previousReadCount = numberOfResultedRows;
 
                             resultSetRead.beforeFirst();
                             DateTimeFormatter formatter
@@ -296,8 +276,15 @@ public class DashboardHeader extends HorizontalLayout {
 
                     }
 
-                    MainUI.get().getNotificationsProvider()
+                    MainUI.get().access(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            MainUI.get().getNotificationsProvider()
                             .setListOfNotifications(listOfUserNotifications);
+                        }
+                    });
+                    
 
                 } catch (SQLException ex) {
                     Logger.getLogger(DashboardHeader.class.getName()).log(Level.SEVERE, null, ex);

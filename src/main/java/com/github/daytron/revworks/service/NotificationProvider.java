@@ -34,7 +34,7 @@ public class NotificationProvider extends QueryManagerAbstract {
         this.pause = false;
     }
 
-    public void setListOfNotifications(CopyOnWriteArrayList<UserNotification> 
+    public synchronized void setListOfNotifications(CopyOnWriteArrayList<UserNotification> 
             listOfNotifications) {
         this.listOfNotifications = listOfNotifications;
         

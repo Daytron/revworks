@@ -35,16 +35,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Ryan Gilera
  */
 public class NotificationButtonListener implements Button.ClickListener {
-    
 
     public NotificationButtonListener() {
     }
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
-        // Pause the auto retrieve notification while
-        // opening a new window
-        MainUI.get().getNotificationsProvider().setPause(true);
 
         final VerticalLayout popupLayout = new VerticalLayout();
         popupLayout.setMargin(true);
@@ -116,7 +112,7 @@ public class NotificationButtonListener implements Button.ClickListener {
 
             panelContentLayout.addComponent(notificationItemLayout);
         }
-       
+
         Window notificationsWindow = MainUI.get().getNotificationsWindow();
 
         if (notificationsWindow == null) {
@@ -128,13 +124,15 @@ public class NotificationButtonListener implements Button.ClickListener {
             notificationsWindow.setDraggable(false);
             notificationsWindow.setCloseShortcut(KeyboardEvent.KeyCode.ESC, null);
             notificationsWindow.setContent(popupLayout);
-            
+
             MainUI.get().setNotificationsWindow(notificationsWindow);
-        } 
-        
-        
+        }
 
         if (!notificationsWindow.isAttached()) {
+            // Pause the auto retrieve notification while
+            // opening a new window
+            MainUI.get().getNotificationsProvider().setPause(true);
+            
             notificationsWindow.setPositionX(event.getClientX()
                     - event.getRelativeX() - 300);
             notificationsWindow.setPositionY(event.getClientY()

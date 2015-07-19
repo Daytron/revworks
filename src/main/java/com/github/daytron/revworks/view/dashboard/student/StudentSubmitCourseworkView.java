@@ -16,6 +16,7 @@
 package com.github.daytron.revworks.view.dashboard.student;
 
 import com.github.daytron.revworks.data.ErrorMsg;
+import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.model.ClassTable;
@@ -32,6 +33,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressBar;
@@ -75,26 +77,96 @@ public class StudentSubmitCourseworkView extends Panel
 
     private void initView() {
         setSizeFull();
-
+        
         VerticalLayout wrapperLayout = new VerticalLayout();
         wrapperLayout.setWidth("100%");
         wrapperLayout.setHeightUndefined();
-
         wrapperLayout.setMargin(true);
-        wrapperLayout.setSpacing(true);
 
         Label viewTitleLabel = new Label(VIEW_TITLE);
         viewTitleLabel.setStyleName(ValoTheme.LABEL_H2);
         viewTitleLabel.addStyleName(ValoTheme.LABEL_BOLD);
 
-        Component contentLayout = createSubmitCourseworkForm();
-
         wrapperLayout.addComponent(viewTitleLabel);
-        wrapperLayout.addComponent(contentLayout);
+        
+        // Content
+        HorizontalLayout wrapperInnerLayout = new HorizontalLayout();
+        wrapperInnerLayout.setWidth("100%");
+        wrapperInnerLayout.setHeightUndefined();
+        
+        wrapperInnerLayout.setSpacing(true);
+        
+        Component contentleftLayout = createSubmitCourseworkForm();
+        wrapperInnerLayout.addComponent(contentleftLayout);
+        
+        Component contentRightLayout = createRightContentSideNote();
+        wrapperInnerLayout.addComponent(contentRightLayout);
+        
+        wrapperInnerLayout.setExpandRatio(contentleftLayout, 7);
+        wrapperInnerLayout.setExpandRatio(contentRightLayout, 3);
 
-        wrapperLayout.setExpandRatio(contentLayout, 1);
-
+        
+        wrapperLayout.addComponent(wrapperInnerLayout);
+        wrapperLayout.setExpandRatio(wrapperInnerLayout, 1);
+        
         setContent(wrapperLayout);
+    }
+    
+    private Component createRightContentSideNote() {
+        VerticalLayout sideNoteLayout = new VerticalLayout();
+        setSizeFull();
+        
+        sideNoteLayout.setStyleName(ValoTheme.LAYOUT_CARD);
+        sideNoteLayout.addStyleName("student-submit-coursework-side-note-wrapper");
+        
+        // Create Header
+        final HorizontalLayout layoutHeader = new HorizontalLayout();
+        layoutHeader.addStyleName("v-panel-caption");
+        layoutHeader.addStyleName("student-submit-coursework-side-note-header");
+        layoutHeader.setWidth("100%");
+
+        Label titleLabel = new Label(
+                FontAwesomeIcon.EXCLAMATION_TRIANGLE.getLgSize() + 
+                        "Important Note");
+        titleLabel.setContentMode(ContentMode.HTML);
+        titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
+        titleLabel.setSizeFull();
+        layoutHeader.addComponent(titleLabel);
+        
+        sideNoteLayout.addComponent(layoutHeader);
+        
+        // Content
+        VerticalLayout content = new VerticalLayout();
+        content.setSizeFull();
+        content.setSpacing(true);
+        content.setMargin(true);
+        content.addStyleName("student-submit-coursework-side-note-content");
+        
+        Label note1 = new Label();
+        note1.setValue("Only allowed file format is PDF. PDF file format is "
+                + "the defacto document "
+                + "standard that is widely compatible to all OS platforms and "
+                + "web browsers.");
+        content.addComponent(note1);
+        
+        Label note2 = new Label();
+        note2.setContentMode(ContentMode.HTML);
+        note2.setValue("There are multiple ways to convert your "
+                + "document to PDF file format. If you're using Microsoft's "
+                + "Office Word, you can easily convert the document by saving it "
+                + "as PDF (SAVE AS > PDF). Alternatively, there are lots of "
+                + "online document PDF converter out there, you may start your "
+                + "search <a href=\"http://lmgtfy.com/?q=convert+to+pdf+online\">here"
+                + "</a>.");
+        content.addComponent(note2);
+        
+        content.setExpandRatio(note2, 1);
+        
+        sideNoteLayout.addComponent(content);
+        
+        sideNoteLayout.setExpandRatio(content, 1);
+        
+        return sideNoteLayout;
     }
 
     private Component createSubmitCourseworkForm() {

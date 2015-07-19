@@ -91,7 +91,7 @@ public class LecturerSubmitAnnouncementView extends Panel implements View {
         viewTitleLabel.setStyleName(ValoTheme.LABEL_H2);
         viewTitleLabel.addStyleName(ValoTheme.LABEL_BOLD);
 
-        Component contentLayout = createNewAnnouncementForm();
+        Component contentLayout = createContent();
 
         wrapperLayout.addComponent(viewTitleLabel);
         wrapperLayout.addComponent(contentLayout);
@@ -101,7 +101,7 @@ public class LecturerSubmitAnnouncementView extends Panel implements View {
         setContent(wrapperLayout);
     }
 
-    private Component createNewAnnouncementForm() {
+    private Component createContent() {
         HorizontalLayout horizontalLayout = 
                 new HorizontalLayout();
         horizontalLayout.setWidth("100%");

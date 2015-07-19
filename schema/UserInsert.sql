@@ -109,7 +109,7 @@ INSERT INTO `appschema`.`User` (`first_name`, `last_name`,`usertype_id`) VALUES 
 
 # Admin table
 INSERT INTO `appschema`.`Admin`
-VALUES (51,'admin@gsm.org.uk','youview');
+VALUES (51,'admin@gsm.org.uk','sudafed');
 
 # Student table
 #1

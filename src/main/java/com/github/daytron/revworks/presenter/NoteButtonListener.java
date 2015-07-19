@@ -32,7 +32,7 @@ public class NoteButtonListener implements Button.ClickListener {
     private final CourseworkView courseworkView;
     private final int associatedPage;
 
-    public NoteButtonListener(CourseworkView courseworkView, 
+    public NoteButtonListener(CourseworkView courseworkView,
             int associatedPage) {
         this.courseworkView = courseworkView;
         this.associatedPage = associatedPage;
@@ -53,12 +53,23 @@ public class NoteButtonListener implements Button.ClickListener {
         if (noteId == 0) {
             return;
         }
+        
+        // Clear first previous clicked style to all note buttons
+        synchronized (this) {
+            for (Map.Entry<Integer, Button> entry
+                    : courseworkView.getListOfNoteButtons().entrySet()) {
+                entry.getValue().removeStyleName("note-clicked");
+            }
+        }
 
         // Skip new comment layout generation if it is the current 
         // stored commentLayout and show it if hidden
         if (noteId == courseworkView.getCommentLayout().getNoteId()) {
             courseworkView.getCommentLayout().setVisible(true);
-          
+            
+            // Also return back the click style
+            event.getButton().addStyleName("note-clicked");
+
             // Also point to the associated page if somehow not in the 
             // targeted page
             if (courseworkView.getCurrentPage() != associatedPage) {
@@ -77,27 +88,23 @@ public class NoteButtonListener implements Button.ClickListener {
                 = new CommentComponent(courseworkView.getCoursework(),
                         false, courseworkView.getCurrentPage(),
                         noteId, courseworkView);
+        lcc.setVisible(true);
 
         courseworkView.getCoreContentLayout().replaceComponent(
                 courseworkView.getCommentLayout(), lcc);
         courseworkView.setCommentLayout(lcc);
-        
+
         // Store new comment component to this session
         CurrentUserSession.setCurrentCommentComponent(lcc);
-        
+
         // Only flip page is the current page is not the associated page
         if (courseworkView.getCurrentPage() != associatedPage) {
             courseworkView.flipToPage(associatedPage);
         }
-        
-        // Clear previous clicked style to note buttons
-        for (Map.Entry<Integer, Button> entry
-                : courseworkView.getListOfNoteButtons().entrySet()) {
-            entry.getValue().removeStyleName("note-clicked");
-        }
+
         // Trigger update note is_read fields via event bus
         AppEventBus.post(new AppEvent.UpdateNoteIsReadWhenClickEvent(noteId,
-            event.getButton()));
+                event.getButton()));
     }
 
 }

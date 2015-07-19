@@ -215,7 +215,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
     @Subscribe
     @Override
     public void updateNoteIsReadWhenClicked(AppEvent.UpdateNoteIsReadWhenClickEvent event) {
-        Button button = event.getButton();
+        final Button button = event.getButton();
 
         if (reserveConnectionPool()) {
             try {
@@ -243,7 +243,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
                 getConnection().commit();
 
                 preparedStatementNote.close();
-
+                
                 button.removeStyleName("note-unread");
                 button.addStyleName("note-read");
                 button.addStyleName("note-clicked");

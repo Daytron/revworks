@@ -90,10 +90,10 @@ public class CommentComponent extends VerticalLayout {
         this.writerArea = new TextArea();
         HorizontalLayout headerLayout = createHeader();
         addComponent(headerLayout);
-        
+
         VerticalLayout contentLayout = createContent();
         addComponent(contentLayout);
-        
+
         setExpandRatio(contentLayout, 1);
 
         // Only focus to writerArea if creating a comment for the first time
@@ -127,16 +127,18 @@ public class CommentComponent extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                CommentComponent.this.setVisible(false);
 
-                // before closing this comment panel, 
                 // remove all clicked style on note buttons
-                for (Map.Entry<Integer, Button> entry
-                        : courseworkView.getListOfNoteButtons().entrySet()) {
-                    entry.getValue().removeStyleName("note-clicked");
+                synchronized (this) {
+                    for (Map.Entry<Integer, Button> entry
+                            : courseworkView.getListOfNoteButtons().entrySet()) {
+                        entry.getValue().removeStyleName("note-clicked");
+                    }
                 }
 
                 CommentComponent.this.shutdownCommentExecutor();
-                CommentComponent.this.setVisible(false);
+
             }
         });
         headerLayout.addComponent(closeLayoutButton);
@@ -150,11 +152,10 @@ public class CommentComponent extends VerticalLayout {
         contentLayout.setSizeFull();
 
         // Comment Viewer
-        
         commentLabel.setWidth("100%");
         commentLabel.setHeightUndefined();
         commentLabel.addStyleName("comment-label");
-        
+
         commentContainerPanel.setContent(commentLabel);
         commentContainerPanel.setSizeFull();
         commentContainerPanel.addStyleName("coursework-panel-border");

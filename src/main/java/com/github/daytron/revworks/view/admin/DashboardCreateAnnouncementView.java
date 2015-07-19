@@ -16,6 +16,8 @@
 package com.github.daytron.revworks.view.admin;
 
 import com.github.daytron.revworks.data.FontAwesomeIcon;
+import com.github.daytron.revworks.event.AppEvent;
+import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.vaadin.data.Property;
 import com.vaadin.navigator.View;
@@ -193,10 +195,10 @@ public final class DashboardCreateAnnouncementView extends VerticalLayout implem
                     return;
                 }
 
-//                AppEventBus.post(
-//                        new AppEvent.LecturerSubmitNewAnnouncementEvent(
-//                                selectedClass, titleTextField,
-//                                richTextArea,button));
+                AppEventBus.post(
+                        new AppEvent.AdminSubmitNewAnnouncementEvent(
+                                titleTextField,
+                                richTextArea,button));
             }
         });
 

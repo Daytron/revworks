@@ -37,7 +37,6 @@ import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.service.LecturerDataInserterImpl;
 import com.github.daytron.revworks.service.NotificationInserter;
 import com.github.daytron.revworks.service.StudentDataInserterImpl;
-import com.github.daytron.revworks.view.admin.Dashboard;
 import com.github.daytron.revworks.view.AdminLoginPopup;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.google.common.eventbus.Subscribe;
@@ -229,6 +228,9 @@ public class UserAccessControl implements AccessControl {
 
             event.getAdminLoginPopup().close();
 
+            // Register handlers
+            AppEventBus.register(MainUI.get().getAdminDataInserter());
+            
             MainUI.get().showAdminDashboard();
 
             Notification.show("Welcome "

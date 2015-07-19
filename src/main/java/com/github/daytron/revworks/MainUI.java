@@ -26,6 +26,7 @@ import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.service.NotificationProvider;
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
+import com.github.daytron.revworks.service.admin.AdminDataInserter;
 import com.github.daytron.revworks.view.LoginScreen;
 import com.github.daytron.revworks.view.admin.Dashboard;
 import com.github.daytron.revworks.view.main.CommentComponent;
@@ -82,6 +83,11 @@ public class MainUI extends UI {
             = new NotificationProvider();
     private Window notificationsWindow = null;
 
+    // Admin stuff
+    
+    private final AdminDataInserter adminDataInserter 
+            = new AdminDataInserter();
+    
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         // Set max session timeout after 20 minutes
@@ -185,6 +191,10 @@ public class MainUI extends UI {
             // Unpause the auto retrieve notification after closing window
             notificationsProvider.setPause(false);
         }
+    }
+
+    public AdminDataInserter getAdminDataInserter() {
+        return adminDataInserter;
     }
 
     // 6 minutes heartbeat interval

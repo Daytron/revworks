@@ -22,13 +22,11 @@ import com.github.daytron.revworks.model.UserNotification;
 import com.github.daytron.revworks.view.AdminLoginPopup;
 import com.github.daytron.revworks.view.main.CourseworkView;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -379,5 +377,30 @@ public abstract class AppEvent {
     public static final class CloseNotificationWindowEvent {
     }
     
-    
+    public static final class AdminSubmitNewAnnouncementEvent {
+
+        private final TextField title;
+        private final RichTextArea richTextArea;
+        private final Button submitButton;
+
+        public AdminSubmitNewAnnouncementEvent(
+                TextField title, RichTextArea richTextArea, Button submitButton) {
+            this.title = title;
+            this.richTextArea = richTextArea;
+            this.submitButton = submitButton;
+        }
+        
+        public TextField getTitle() {
+            return title;
+        }
+
+        public RichTextArea getRichTextArea() {
+            return richTextArea;
+        }
+
+        public Button getSubmitButton() {
+            return submitButton;
+        }
+
+    }
 }

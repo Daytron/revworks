@@ -225,7 +225,10 @@ public enum PreparedQueryStatement {
             + "VALUES (?,?,now(),?,?,?,?);"),
     INSERT_NOTIFICATIONS_COURSEWORK("INSERT INTO NotificationsCoursework("
             + "user_notification_id,coursework_id) "
-            + "VALUES (?,?);");
+            + "VALUES (?,?);"),
+    ADMIN_INSERT_ANNOUNCEMENT("INSERT INTO Announcement "
+            + "(title,message,date_submitted,announcement_type_id) "
+            + "VALUES (?,?,now(),1);");
 
     private final String query;
 

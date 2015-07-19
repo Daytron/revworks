@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.view.dashboard;
+package com.github.daytron.revworks.view.main;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.event.AppEvent.*;
 import com.github.daytron.revworks.service.CurrentUserSession;
-import com.github.daytron.revworks.view.dashboard.lecturer.LecturerCourseworkModuleView;
-import com.github.daytron.revworks.view.dashboard.lecturer.LecturerSubmitAnnouncementView;
-import com.github.daytron.revworks.view.dashboard.student.StudentCourseworkModuleView;
-import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkSucessView;
-import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkView;
+import com.github.daytron.revworks.view.main.lecturer.LecturerCourseworkModuleView;
+import com.github.daytron.revworks.view.main.lecturer.LecturerSubmitAnnouncementView;
+import com.github.daytron.revworks.view.main.student.StudentCourseworkModuleView;
+import com.github.daytron.revworks.view.main.student.StudentSubmitCourseworkSucessView;
+import com.github.daytron.revworks.view.main.student.StudentSubmitCourseworkView;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
@@ -34,20 +34,20 @@ import com.vaadin.ui.VerticalLayout;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class DashboardScreen extends VerticalLayout {
+public class MainView extends VerticalLayout {
 
-    private final DashboardHeader headerLayout;
+    private final HeaderComponent headerLayout;
     private final NavigationMenu menu;
     private final VerticalLayout viewContainer;
-    private final DashboardFooter dashboardFooter;
+    private final FooterComponent dashboardFooter;
     private final Panel scrollableContentPanel;
     
-    public DashboardScreen(MainUI mainUI) {
+    public MainView(MainUI mainUI) {
 
         setSizeFull();
         addStyleName("dashscreen-main-layout");
         
-        headerLayout = new DashboardHeader();
+        headerLayout = new HeaderComponent();
         // Save it in the session 
         // to be used for shutting down the executor service
         // when user logout
@@ -119,7 +119,7 @@ public class DashboardScreen extends VerticalLayout {
         addComponent(menu);
         addComponent(scrollableContentPanel);
         
-        dashboardFooter = new DashboardFooter();
+        dashboardFooter = new FooterComponent();
         addComponent(dashboardFooter);
         setExpandRatio(scrollableContentPanel, 1);
         setWidth("100%");

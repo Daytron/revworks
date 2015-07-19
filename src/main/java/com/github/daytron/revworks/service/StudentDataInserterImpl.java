@@ -21,7 +21,7 @@ import com.github.daytron.revworks.data.UserNotificationType;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEvent.StudentSubmitCourseworkEvent;
 import com.github.daytron.revworks.event.AppEventBus;
-import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkSucessView;
+import com.github.daytron.revworks.view.main.student.StudentSubmitCourseworkSucessView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
 import java.io.DataInputStream;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.view.dashboard;
+package com.github.daytron.revworks.view.main;
 
 import com.github.daytron.revworks.data.ExternalLink;
 import com.vaadin.server.ExternalResource;
@@ -28,9 +28,9 @@ import com.vaadin.ui.VerticalLayout;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class DashboardFooter extends VerticalLayout {
+public class FooterComponent extends VerticalLayout {
 
-    public DashboardFooter() {
+    public FooterComponent() {
         setWidth("100%");
         setSpacing(true);
         setStyleName("dashboard-footer");

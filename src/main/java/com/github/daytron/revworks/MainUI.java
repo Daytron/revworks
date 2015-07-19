@@ -26,10 +26,10 @@ import com.github.daytron.revworks.service.NotificationProvider;
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.view.LoginScreen;
-import com.github.daytron.revworks.view.dashboard.CommentComponent;
-import com.github.daytron.revworks.view.dashboard.CourseworkView;
-import com.github.daytron.revworks.view.dashboard.DashboardHeader;
-import com.github.daytron.revworks.view.dashboard.DashboardScreen;
+import com.github.daytron.revworks.view.main.CommentComponent;
+import com.github.daytron.revworks.view.main.CourseworkView;
+import com.github.daytron.revworks.view.main.HeaderComponent;
+import com.github.daytron.revworks.view.main.MainView;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Push;
 import javax.servlet.annotation.WebServlet;
@@ -133,7 +133,7 @@ public class MainUI extends UI {
         // Before it runs a new thread for updating user notifications
         AppEventBus.register(notificationsProvider);
 
-        DashboardScreen dashboardScreen = new DashboardScreen(MainUI.this);
+        MainView dashboardScreen = new MainView(MainUI.this);
         dashboardScreen.addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
 
             @Override
@@ -291,8 +291,8 @@ public class MainUI extends UI {
 
                     // Shutdown executor service for notification in
                     // the dashboard header
-                    DashboardHeader dashboardHeader
-                            = (DashboardHeader) event.getSession().getAttribute(
+                    HeaderComponent dashboardHeader
+                            = (HeaderComponent) event.getSession().getAttribute(
                                     CurrentUserSession.CURRENT_DASHBOARD_HEADER);
                     dashboardHeader.shutdownNotificationExecutor();
 

@@ -20,7 +20,7 @@ import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.UserNotification;
 import com.github.daytron.revworks.view.AdminLoginPopup;
-import com.github.daytron.revworks.view.dashboard.CourseworkView;
+import com.github.daytron.revworks.view.main.CourseworkView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.OptionGroup;

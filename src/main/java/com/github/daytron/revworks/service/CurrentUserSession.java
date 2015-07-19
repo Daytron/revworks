@@ -17,9 +17,9 @@ package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.model.ClassTable;
-import com.github.daytron.revworks.view.dashboard.CommentComponent;
-import com.github.daytron.revworks.view.dashboard.CourseworkView;
-import com.github.daytron.revworks.view.dashboard.DashboardHeader;
+import com.github.daytron.revworks.view.main.CommentComponent;
+import com.github.daytron.revworks.view.main.CourseworkView;
+import com.github.daytron.revworks.view.main.HeaderComponent;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.server.VaadinService;
@@ -182,7 +182,7 @@ public class CurrentUserSession {
         }
     }
     
-    public static void setDashboardHeader(DashboardHeader dashboardHeader) {        
+    public static void setDashboardHeader(HeaderComponent dashboardHeader) {        
         try {
             VaadinSession vaadinSession = VaadinSession.getCurrent();
             vaadinSession.getLockInstance().lock();
@@ -193,14 +193,14 @@ public class CurrentUserSession {
         }
     }
     
-    public static DashboardHeader getDashboardHeader() {
-        DashboardHeader dashboardHeader = (DashboardHeader) VaadinSession
+    public static HeaderComponent getDashboardHeader() {
+        HeaderComponent dashboardHeader = (HeaderComponent) VaadinSession
                 .getCurrent().getAttribute(CURRENT_DASHBOARD_HEADER);
         return dashboardHeader;
     }
     
     public static void shutdownDashboardHeaderExecutorService() {
-        DashboardHeader dashboardHeader = getDashboardHeader();
+        HeaderComponent dashboardHeader = getDashboardHeader();
         if (dashboardHeader != null) {
             dashboardHeader.shutdownNotificationExecutor();
         }

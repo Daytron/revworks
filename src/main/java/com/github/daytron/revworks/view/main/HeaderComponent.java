@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.view.dashboard;
+package com.github.daytron.revworks.view.main;
 
 import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.component.NotificationButton;
@@ -52,14 +52,14 @@ import java.util.logging.Logger;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class DashboardHeader extends HorizontalLayout {
+public class HeaderComponent extends HorizontalLayout {
 
     private final ScheduledExecutorService scheduler
             = Executors.newScheduledThreadPool(1);
     private final Runnable runnableTask;
     private final ScheduledFuture scheduledFuture;
 
-    public DashboardHeader() {
+    public HeaderComponent() {
         setSpacing(true);
         addStyleName("view-dashboard-header");
 
@@ -300,7 +300,7 @@ public class DashboardHeader extends HorizontalLayout {
                     
 
                 } catch (SQLException ex) {
-                    Logger.getLogger(DashboardHeader.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(HeaderComponent.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     releaseConnection();
                 }

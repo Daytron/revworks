@@ -30,7 +30,7 @@ import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
 import com.github.daytron.revworks.model.User;
 import com.github.daytron.revworks.util.NotificationUtil;
-import com.github.daytron.revworks.view.dashboard.CourseworkView;
+import com.github.daytron.revworks.view.main.CourseworkView;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
 import com.vaadin.data.util.BeanItemContainer;

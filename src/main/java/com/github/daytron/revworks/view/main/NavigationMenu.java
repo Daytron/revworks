@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.view.dashboard;
+package com.github.daytron.revworks.view.main;
 
-import com.github.daytron.revworks.view.dashboard.lecturer.LecturerCourseworkModuleView;
-import com.github.daytron.revworks.view.dashboard.lecturer.LecturerSubmitAnnouncementView;
-import com.github.daytron.revworks.view.dashboard.student.StudentCourseworkModuleView;
-import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCourseworkView;
+import com.github.daytron.revworks.view.main.lecturer.LecturerCourseworkModuleView;
+import com.github.daytron.revworks.view.main.lecturer.LecturerSubmitAnnouncementView;
+import com.github.daytron.revworks.view.main.student.StudentCourseworkModuleView;
+import com.github.daytron.revworks.view.main.student.StudentSubmitCourseworkView;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Resource;

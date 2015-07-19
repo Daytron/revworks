@@ -86,7 +86,7 @@ public class HelpView extends Panel implements View {
         intro.setValue("<p>In this section, I have provided answers to commonly "
                 + "asked questions. If none of these answers help you, please "
                 + "feel free to email me "
-                + "at ryangilera@gmail.com. I am also online most of time on "
+                + "at <b>ryangilera@gmail.com<b>. I am also online most of time on "
                 + "Google hangouts (same email) as well, "
                 + "if you prefer such method of communication. To begin, click "
                 + "on any of the question you would like to know the answer.</p>");

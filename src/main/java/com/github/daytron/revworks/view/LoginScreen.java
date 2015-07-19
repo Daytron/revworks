@@ -208,6 +208,9 @@ public final class LoginScreen extends CssLayout {
                 new ExternalResource(ExternalLink.STUDENT_PORTAL.getLink()));
         Link lecturerPortalLink = new Link(ExternalLink.LECTURER_PORTAL.getName(),
                 new ExternalResource(ExternalLink.LECTURER_PORTAL.getLink()));
+        
+        Link gsmLearnLinkButton = new Link(ExternalLink.GSM_LEARN.getName(),
+                new ExternalResource(ExternalLink.GSM_LEARN.getLink()));
 
         // The button masquerading as a link to launch admin login form 
         Button webmasterButtonLink = new Button(
@@ -224,15 +227,36 @@ public final class LoginScreen extends CssLayout {
 
         // Add these links and button together
         footerLinksLayout.addComponents(studentPortalLink,
-                lecturerPortalLink, webmasterButtonLink);
+                lecturerPortalLink, gsmLearnLinkButton, webmasterButtonLink);
         footerLinksLayout.setSpacing(true);
 
         // The final row of the footer
         final HorizontalLayout footerBottomLayout = new HorizontalLayout();
-        Label allRightsReservedLabel = new Label("All Rights Reserved 2015. Ryan Gilera");
+        Label allRightsReservedLabel = new Label("All Rights Reserved 2015. "
+                + "Created by Ryan Gilera [");
         footerBottomLayout.addComponent(allRightsReservedLabel);
         footerBottomLayout.setSizeUndefined();
-
+        
+        Link githubLink = new Link(ExternalLink.MY_GITHUB_PAGE.getName(),
+                new ExternalResource(ExternalLink.MY_GITHUB_PAGE.getLink()));
+        githubLink.setTargetName("_blank");
+        githubLink.setSizeUndefined();
+        footerBottomLayout.addComponent(githubLink);
+        
+        Label midBracketLabel = new Label("] [");
+        midBracketLabel.setSizeUndefined();
+        footerBottomLayout.addComponent(midBracketLabel);
+        
+        Link linkedinLink = new Link(ExternalLink.MY_LINKEDIN_PAGE.getName(),
+                new ExternalResource(ExternalLink.MY_LINKEDIN_PAGE.getLink()));
+        linkedinLink.setTargetName("_blank");
+        linkedinLink.setSizeUndefined();
+        footerBottomLayout.addComponent(linkedinLink);
+        
+        Label endOfLabel = new Label("]");
+        endOfLabel.setSizeUndefined();
+        footerBottomLayout.addComponent(endOfLabel);
+        
         // Bring all of them together
         footerLayout.addComponents(footerLinksLayout, footerBottomLayout);
         // Sets positions for the two rows

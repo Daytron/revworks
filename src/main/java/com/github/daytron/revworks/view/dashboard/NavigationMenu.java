@@ -147,6 +147,8 @@ public class NavigationMenu extends HorizontalLayout {
                 navigator.navigateTo(LecturerSubmitAnnouncementView.VIEW_NAME);
             } else if (selectedItem.getText().equalsIgnoreCase("My Courseworks")){
                 navigator.navigateTo(StudentCourseworkModuleView.VIEW_NAME);
+            } else if (selectedItem.getText().equalsIgnoreCase("Help Guide")) {
+                navigator.navigateTo(HelpView.VIEW_NAME);
             } else {
                 navigator.navigateTo(LecturerCourseworkModuleView.VIEW_NAME);
             }

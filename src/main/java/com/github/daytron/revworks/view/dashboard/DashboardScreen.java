@@ -79,12 +79,17 @@ public class DashboardScreen extends VerticalLayout {
                     StudentCourseworkModuleView.VIEW_NAME,
                     StudentCourseworkModuleView.VIEW_CAPTION, 
                     FontAwesome.FOLDER_OPEN);
+            menu.addView(HelpView.class, 
+                    HelpView.VIEW_NAME, 
+                    HelpView.VIEW_CAPTION, 
+                    FontAwesome.LIFE_SAVER);
             
             // inner views 
             navigator.addView(StudentSubmitCourseworkSucessView.VIEW_NAME, 
                     StudentSubmitCourseworkSucessView.class);
             navigator.addView(CourseworkView.VIEW_NAME, 
                     CourseworkView.class);
+            
         } else if (mainUI.getAccessControl().isUserALecturer()) {
             menu.addView(HomeView.class,
                     HomeView.VIEW_NAME,
@@ -96,6 +101,10 @@ public class DashboardScreen extends VerticalLayout {
             menu.addView(LecturerSubmitAnnouncementView.class,
                     LecturerSubmitAnnouncementView.VIEW_NAME,
                     LecturerSubmitAnnouncementView.VIEW_CAPTION, FontAwesome.BULLHORN);
+            menu.addView(HelpView.class, 
+                    HelpView.VIEW_NAME, 
+                    HelpView.VIEW_CAPTION, 
+                    FontAwesome.LIFE_SAVER);
             
             // inner views
             navigator.addView(CourseworkView.VIEW_NAME, 

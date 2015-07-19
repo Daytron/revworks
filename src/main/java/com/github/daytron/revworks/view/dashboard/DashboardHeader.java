@@ -79,6 +79,19 @@ public class DashboardHeader extends HorizontalLayout {
         notificationButton.addClickListener(new NotificationButtonListener());
         AppEventBus.register(notificationButton);
 
+        Button helpButton = new Button();
+        helpButton.setDescription("Help Guide");
+        helpButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        helpButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        helpButton.setIcon(FontAwesome.LIFE_SAVER);
+        helpButton.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                MainUI.get().getNavigator().navigateTo(HelpView.VIEW_NAME);
+            }
+        });
+        
         Button logOutButton = new Button();
         logOutButton.setDescription("Sign out");
         logOutButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
@@ -93,7 +106,7 @@ public class DashboardHeader extends HorizontalLayout {
         });
 
         HorizontalLayout toolbar = new HorizontalLayout(welcomeUserLabel,
-                notificationButton, logOutButton);
+                notificationButton, helpButton, logOutButton);
         toolbar.setSpacing(true);
         toolbar.setStyleName("dashboard-toolbar");
         toolbar.setComponentAlignment(welcomeUserLabel, Alignment.BOTTOM_LEFT);

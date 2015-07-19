@@ -332,5 +332,51 @@ $header-height: round($v-unit-size / 1.1) !default;
     .notifications-window-layout .notifications-panel-layout {
         border: 1px solid #315A8E !important;
     }
+    
+    .v-panel-help-view-main-panel {
+        border: 1px solid #315A8E !important;
+    }
+    
+    .v-panel-help-view-main-panel .v-panel-captionwrap {
+        background: #ECF1F7 !important;
+        border: 1px solid #315A8E !important;
+        
+        .v-panel-caption {
+            color: #000 !important;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    }
+    
+    .v-accordion .v-accordion-item .v-accordion-item-caption  {
+        background: #315A8E !important;
+        border: 1px solid #5d94d8;
+        
+        .v-caption .v-captiontext {
+            color: #eaf3ff !important;
+        }
+        
+    }
+    
+    .v-accordion .v-accordion-item .v-accordion-item-caption:hover {
+        background: #c1ddff !important;
+        border: 1px solid #315A8E !important;
+        
+        .v-caption .v-captiontext {
+            font-weight: bold;
+            color: #000 !important;
+        }
+    }
+    
+    .v-accordion .v-accordion-item.v-accordion-item-open .v-accordion-item-caption {
+        background: #c1ddff !important;
+        border: 1px solid #5d94d8;
+        
+        .v-caption .v-captiontext {
+            font-weight: bold;
+            color: #000 !important;
+        }
+        
+    }
 
 }

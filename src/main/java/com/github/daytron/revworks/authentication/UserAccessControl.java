@@ -149,7 +149,7 @@ public class UserAccessControl implements AccessControl {
             
             AppEventBus.register(new NotificationInserter());
             
-            MainUI.get().showDashboardScreen();
+            MainUI.get().showMainScreen();
 
             NotificationUtil.showInformation(
                     FontAwesomeIcon.THUMBS_O_UP.getLgSize(),
@@ -229,8 +229,7 @@ public class UserAccessControl implements AccessControl {
 
             event.getAdminLoginPopup().close();
 
-            Dashboard adminDashboard = new Dashboard();
-            UI.getCurrent().setContent(adminDashboard);
+            MainUI.get().showAdminDashboard();
 
             Notification.show("Welcome "
                     + getFirstName()

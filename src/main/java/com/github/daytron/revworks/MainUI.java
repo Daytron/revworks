@@ -20,12 +20,14 @@ import com.github.daytron.revworks.authentication.UserAccessControl;
 import com.github.daytron.revworks.authentication.UserAuthentication;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
+import com.github.daytron.revworks.model.User;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.github.daytron.revworks.service.LecturerDataProviderImpl;
 import com.github.daytron.revworks.service.NotificationProvider;
 import com.github.daytron.revworks.service.SQLConnectionManager;
 import com.github.daytron.revworks.service.StudentDataProviderImpl;
 import com.github.daytron.revworks.view.LoginScreen;
+import com.github.daytron.revworks.view.admin.Dashboard;
 import com.github.daytron.revworks.view.main.CommentComponent;
 import com.github.daytron.revworks.view.main.CourseworkView;
 import com.github.daytron.revworks.view.main.HeaderComponent;
@@ -79,7 +81,7 @@ public class MainUI extends UI {
     private final NotificationProvider notificationsProvider
             = new NotificationProvider();
     private Window notificationsWindow = null;
-    
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         // Set max session timeout after 20 minutes
@@ -95,7 +97,7 @@ public class MainUI extends UI {
         if (!accessControl.isUserSignedIn()) {
             setContent(new LoginScreen());
         } else {
-            showDashboardScreen();
+            showMainScreen();
         }
 
     }
@@ -128,25 +130,31 @@ public class MainUI extends UI {
         return notificationsProvider;
     }
 
-    public void showDashboardScreen() {
-        // Register it first before building dashboardscreen
+    public void showMainScreen() {
+        // Register it first before building mainscreen
         // Before it runs a new thread for updating user notifications
         AppEventBus.register(notificationsProvider);
 
-        MainView dashboardScreen = new MainView(MainUI.this);
-        dashboardScreen.addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
+        MainView mainScreen = new MainView(MainUI.this);
+        mainScreen.addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
 
             @Override
             public void layoutClick(LayoutEvents.LayoutClickEvent event) {
-                
+
                 AppEventBus.post(new AppEvent.CloseNotificationWindowEvent());
-                
-                
+
             }
         });
-        AppEventBus.register(dashboardScreen);
+        AppEventBus.register(mainScreen);
 
-        setContent(dashboardScreen);
+        setContent(mainScreen);
+        getNavigator().navigateTo(getNavigator().getState());
+    }
+
+    public void showAdminDashboard() {
+        Dashboard dashboard = new Dashboard(MainUI.this);
+
+        setContent(dashboard);
         getNavigator().navigateTo(getNavigator().getState());
     }
 
@@ -169,7 +177,7 @@ public class MainUI extends UI {
 
     @Subscribe
     public void closeNotificationWindows(AppEvent.CloseNotificationWindowEvent event) {
-        
+
         if (notificationsWindow != null) {
             notificationsWindow.close();
             notificationsWindow = null;
@@ -274,27 +282,34 @@ public class MainUI extends UI {
                     System.out.println("User in session is null!!");
                 } else {
 
-                    CopyOnWriteArrayList<File> listOfFilesToDelete
-                            = (CopyOnWriteArrayList<File>) event.getSession()
-                            .getAttribute(CurrentUserSession.TRASH_CAN_FOR_FILES_KEY);
-                    
+                    if (!((User) user).isAdminUser()) {
 
-                    // Shutdown the remaining service threads
-                    CourseworkView courseworkView = (CourseworkView) event.getSession().getAttribute(CurrentUserSession.CURRENT_COURSEWORK_VIEW);
-                    CommentComponent commentComponent = (CommentComponent) event.getSession().getAttribute(CurrentUserSession.CURRENT_COMMENT_COMPONENT);
-                    if (courseworkView != null) {
-                        courseworkView.shutdownNoteExecutor();
-                    }
-                    if (commentComponent != null) {
-                        commentComponent.shutdownCommentExecutor();
-                    }
+                        CopyOnWriteArrayList<File> listOfFilesToDelete
+                                = (CopyOnWriteArrayList<File>) event.getSession()
+                                .getAttribute(CurrentUserSession.TRASH_CAN_FOR_FILES_KEY);
 
-                    // Shutdown executor service for notification in
-                    // the dashboard header
-                    HeaderComponent dashboardHeader
-                            = (HeaderComponent) event.getSession().getAttribute(
-                                    CurrentUserSession.CURRENT_DASHBOARD_HEADER);
-                    dashboardHeader.shutdownNotificationExecutor();
+                        // Shutdown the remaining service threads
+                        CourseworkView courseworkView = (CourseworkView) event.getSession().getAttribute(CurrentUserSession.CURRENT_COURSEWORK_VIEW);
+                        CommentComponent commentComponent = (CommentComponent) event.getSession().getAttribute(CurrentUserSession.CURRENT_COMMENT_COMPONENT);
+                        if (courseworkView != null) {
+                            courseworkView.shutdownNoteExecutor();
+                        }
+                        if (commentComponent != null) {
+                            commentComponent.shutdownCommentExecutor();
+                        }
+
+                        // Shutdown executor service for notification in
+                        // the dashboard header
+                        HeaderComponent dashboardHeader
+                                = (HeaderComponent) event.getSession().getAttribute(
+                                        CurrentUserSession.CURRENT_DASHBOARD_HEADER);
+                        dashboardHeader.shutdownNotificationExecutor();
+
+                        // Clean any uploaded or temp files through deletion
+                        for (File file : listOfFilesToDelete) {
+                            file.delete();
+                        }
+                    }
 
                     // Explicitly cleanup all available or reserve connections 
                     // in the connection pool to free up MYSQL connection load
@@ -303,17 +318,9 @@ public class MainUI extends UI {
                     if (jdbccp != null) {
                         jdbccp.destroy();
                     }
-                    
-                    
+
                     // Remove the closed session from list
                     listOfUserSessions.remove(user.getName());
-
-                    // Clean any uploaded or temp files through deletion
-                    for (File file : listOfFilesToDelete) {
-                        file.delete();
-                    }
-
-                    printSessions("Session destroyed with session");
                 }
             }
 

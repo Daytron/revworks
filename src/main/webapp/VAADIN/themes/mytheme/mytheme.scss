@@ -403,4 +403,12 @@ $header-height: round($v-unit-size / 1.1) !default;
         background: #d1e5ff !important;
     }
     
+    
+    // ADMIN SECTION
+    .admin-logout-menu {
+      position: fixed;
+      bottom: 0;
+      margin-bottom: 0;
+    }
+    
 }

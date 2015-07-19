@@ -26,7 +26,6 @@ import com.github.daytron.revworks.view.dashboard.student.StudentSubmitCoursewor
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
@@ -45,7 +44,6 @@ public class DashboardScreen extends VerticalLayout {
     
     public DashboardScreen(MainUI mainUI) {
 
-        setMargin(true);
         setSizeFull();
         addStyleName("dashscreen-main-layout");
         

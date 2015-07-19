@@ -117,7 +117,7 @@ public class CourseworkView extends VerticalLayout implements View {
                         MainUI.get().getAccessControl().isUserAStudent(),
                         this);
                 noteScheduledFuture = noteScheduler.scheduleWithFixedDelay(
-                        noteRunnableTask, 0, 1, TimeUnit.SECONDS);
+                        noteRunnableTask, 0, 500, TimeUnit.MILLISECONDS);
 
                 // Store coursework view to this session
                 CurrentUserSession.setCurrentCourseworkView(this);
@@ -202,6 +202,7 @@ public class CourseworkView extends VerticalLayout implements View {
 
         coreContentLayout = new HorizontalLayout();
         coreContentLayout.setSizeFull();
+        coreContentLayout.addStyleName("panels-horizontal-content-wrapper");
         coreContentLayout.setSpacing(true);
 
         // Coursework display viewer

@@ -143,17 +143,18 @@ public class StudentSubmitCourseworkView extends Panel
         content.addStyleName("student-submit-coursework-side-note-content");
         
         Label note1 = new Label();
-        note1.setValue("Only allowed file format is PDF. PDF file format is "
-                + "the defacto document "
-                + "standard that is widely compatible to all OS platforms and "
-                + "web browsers.");
+        note1.setValue("The only allowed file format is PDF. The PDF file format "
+                + "is the defacto document standard "
+                + "that is widely compatible to all operating system platforms "
+                + "and web browsers.");
         content.addComponent(note1);
         
         Label note2 = new Label();
         note2.setContentMode(ContentMode.HTML);
         note2.setValue("There are multiple ways to convert your "
                 + "document to PDF file format. If you're using Microsoft's "
-                + "Office Word, you can easily convert the document by saving it "
+                + "Office Word or LibreOffice Writer, you can easily convert "
+                + "the document by saving it "
                 + "as PDF (SAVE AS > PDF). Alternatively, there are lots of "
                 + "online document PDF converter out there, you may start your "
                 + "search <a href=\"http://lmgtfy.com/?q=convert+to+pdf+online\">here"

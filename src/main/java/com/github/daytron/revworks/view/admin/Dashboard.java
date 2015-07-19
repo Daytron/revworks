@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.daytron.revworks.view;
+package com.github.daytron.revworks.view.admin;
 
 import com.vaadin.ui.VerticalLayout;
 
@@ -22,6 +22,6 @@ import com.vaadin.ui.VerticalLayout;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class AdminDashboardScreen extends VerticalLayout {
+public class Dashboard extends VerticalLayout {
     
 }

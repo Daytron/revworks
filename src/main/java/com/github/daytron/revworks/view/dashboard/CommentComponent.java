@@ -104,7 +104,7 @@ public class CommentComponent extends VerticalLayout {
         runnableTask = new CommentsExtractorRunnable(MainUI.get()
                 .getAccessControl().isUserAStudent());
         scheduledFuture = scheduler.scheduleWithFixedDelay(runnableTask,
-                0, 1, TimeUnit.SECONDS);
+                0, 500, TimeUnit.MILLISECONDS);
     }
 
     private HorizontalLayout createHeader() {

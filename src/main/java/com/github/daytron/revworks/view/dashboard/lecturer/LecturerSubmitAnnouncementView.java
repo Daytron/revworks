@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.view.dashboard.lecturer;
 
+import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.model.ClassTable;
@@ -129,7 +130,10 @@ public class LecturerSubmitAnnouncementView extends Panel implements View {
         layoutHeader.addStyleName("message-preview-header");
         layoutHeader.setWidth("100%");
 
-        Label titleLabel = new Label("Message Preview");
+        Label titleLabel = new Label(
+                FontAwesomeIcon.DESKTOP.getLgSize() + 
+                        "Message Preview");
+        titleLabel.setContentMode(ContentMode.HTML);
         titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
         titleLabel.setSizeFull();
         layoutHeader.addComponent(titleLabel);

@@ -37,6 +37,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -101,11 +102,11 @@ public class LecturerCourseworkModuleView extends Panel implements View {
 
     private void initView() {
         setSizeFull();
-        
+
         VerticalLayout wrapperLayout = new VerticalLayout();
         wrapperLayout.setWidth("100%");
         wrapperLayout.setHeightUndefined();
-        
+
         wrapperLayout.setMargin(true);
         wrapperLayout.setSpacing(true);
 
@@ -115,9 +116,32 @@ public class LecturerCourseworkModuleView extends Panel implements View {
             emptyNoticeLabel.setStyleName(ValoTheme.LABEL_FAILURE);
             wrapperLayout.addComponent(emptyNoticeLabel);
         } else {
+            Label viewTitleLabel = new Label(VIEW_TITLE);
+            viewTitleLabel.setStyleName(ValoTheme.LABEL_H2);
+            viewTitleLabel.addStyleName(ValoTheme.LABEL_BOLD);
+            wrapperLayout.addComponent(viewTitleLabel);
+
+            Label introLabel = new Label("Here you can find your submitted courseworks "
+                    + "and its corresponding information. To view a coursework, "
+                    + "simply select/click the file you wish to view and "
+                    + "click \"View Coursework\" button.");
+
+            wrapperLayout.addComponent(introLabel);
+
+            Label warningLabel = new Label();
+            warningLabel.setContentMode(ContentMode.HTML);
+            warningLabel.setValue("<p style=\"color:red;font-size:1rem;\">"
+                    + "PLEASE be aware, depending on the number of pages, loading "
+                    + "time may take awhile. This is due to hardware limitation of "
+                    + "my small rented cloud server. Please just be patient. "
+                    + "If there is no progress bar (BLUE) on top blinking, you may "
+                    + "sign out and start again. If you would like to contact me, "
+                    + "please see my email in the help guide page. Thank you.</p>");
+
+            wrapperLayout.addComponent(warningLabel);
+
             wrapperLayout.addComponent(tabSheet);
             tabSheet.setStyleName(Reindeer.TABSHEET_BORDERLESS);
-            
 
             for (Map.Entry<ClassTable, BeanItemContainer> entry
                     : this.listOfNBeanItemContainers.entrySet()) {
@@ -128,8 +152,10 @@ public class LecturerCourseworkModuleView extends Panel implements View {
                 tabSheet.addTab(tabWidget.createNewTab(),
                         entry.getKey().getModuleId());
             }
+
+            wrapperLayout.setExpandRatio(tabSheet, 1);
         }
-        
+
         setContent(wrapperLayout);
 
     }
@@ -293,7 +319,7 @@ public class LecturerCourseworkModuleView extends Panel implements View {
             layoutHeader.setMargin(true);
             layoutHeader.addStyleName("panel-header");
 
-            Label titleLabel = new Label(VIEW_TITLE);
+            Label titleLabel = new Label("Courseworks Table View");
             titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
             titleLabel.setSizeFull();
             layoutHeader.addComponent(titleLabel);

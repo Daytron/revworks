@@ -37,6 +37,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -75,7 +76,7 @@ public class StudentCourseworkModuleView extends Panel implements View {
         // from coursework view and comment component if possible
         CurrentUserSession.shutdownCourseworkViewExecutorService();
         CurrentUserSession.shutdownCommentExectorService();
-        
+
         if (!isInitialised) {
             try {
                 this.courseworksContainer = MainUI.get().getStudentDataProvider()
@@ -93,13 +94,36 @@ public class StudentCourseworkModuleView extends Panel implements View {
 
     private void initView() {
         setSizeFull();
-        
+
         VerticalLayout wrapperLayout = new VerticalLayout();
         wrapperLayout.setWidth("100%");
         wrapperLayout.setHeightUndefined();
-        
+
         wrapperLayout.setMargin(true);
         wrapperLayout.setSpacing(true);
+        Label viewTitleLabel = new Label(VIEW_TITLE);
+        viewTitleLabel.setStyleName(ValoTheme.LABEL_H2);
+        viewTitleLabel.addStyleName(ValoTheme.LABEL_BOLD);
+        wrapperLayout.addComponent(viewTitleLabel);
+
+        Label introLabel = new Label("Here you can find your submitted courseworks "
+                + "and its corresponding information. To view a coursework, "
+                + "simply select/click the file you wish to view and "
+                + "click \"View Coursework\" button.");
+
+        wrapperLayout.addComponent(introLabel);
+
+        Label warningLabel = new Label();
+        warningLabel.setContentMode(ContentMode.HTML);
+        warningLabel.setValue("<p style=\"color:red;font-size:1rem;\">"
+                + "PLEASE be aware, depending on the number of pages, loading "
+                + "time may take awhile. This is due to hardware limitation of "
+                + "my small rented cloud server. Please just be patient. "
+                + "If there is no progress bar (BLUE) on top blinking, you may "
+                + "sign out and start again. If you would like to contact me, "
+                + "please see my email in the help guide page. Thank you.</p>");
+
+        wrapperLayout.addComponent(warningLabel);
 
         final CssLayout wrapperItem = new CssLayout();
         wrapperItem.setWidth("100%");
@@ -142,7 +166,8 @@ public class StudentCourseworkModuleView extends Panel implements View {
         wrapperItem.addComponent(contentLayout);
 
         wrapperLayout.addComponent(wrapperItem);
-        
+        wrapperLayout.setExpandRatio(wrapperItem, 1);
+
         setContent(wrapperLayout);
 
     }
@@ -152,7 +177,7 @@ public class StudentCourseworkModuleView extends Panel implements View {
         courseworksTable.setEditable(false);
         courseworksTable.setSelectable(true);
         courseworksTable.setWidth("100%");
-        
+
         // Set column data properties and names
         courseworksTable.setColumnHeader("id", "ID");
         courseworksTable.setColumnHeader("title", "Title");
@@ -171,7 +196,7 @@ public class StudentCourseworkModuleView extends Panel implements View {
         courseworksTable.addGeneratedColumn("lecturer",
                 new LecturerNameColumnGenerator());
         courseworksTable.setColumnHeader("lecturer", "Lecturer");
-        
+
         courseworksTable.setColumnHeader("readStudent", "Read");
 
         // Arrange columns order
@@ -181,17 +206,17 @@ public class StudentCourseworkModuleView extends Panel implements View {
         courseworksTable.setColumnAlignments(new Table.Align[]{Table.ALIGN_LEFT,
             Table.Align.CENTER, Table.Align.CENTER, Table.Align.CENTER,
             Table.Align.CENTER, Table.Align.CENTER});
-        
+
         courseworksTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
 
             @Override
             public String getStyle(Table source, Object itemId, Object propertyId) {
                 if (propertyId == null) {
                     Item item = source.getItem(itemId);
-                    
+
                     Property<Boolean> isRead = item.getItemProperty("readStudent");
                     boolean isReadStudent = isRead.getValue();
-                    
+
                     // If it is unread then make text bolder
                     if (!isReadStudent) {
                         return "unread";
@@ -236,7 +261,7 @@ public class StudentCourseworkModuleView extends Panel implements View {
         layoutHeader.setMargin(true);
         layoutHeader.addStyleName("panel-header");
 
-        Label titleLabel = new Label(VIEW_TITLE);
+        Label titleLabel = new Label("Courseworks Table View");
         titleLabel.setStyleName(ValoTheme.LABEL_BOLD);
         titleLabel.setSizeFull();
         layoutHeader.addComponent(titleLabel);
@@ -249,16 +274,15 @@ public class StudentCourseworkModuleView extends Panel implements View {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                if (courseworksContainer.size() < 1 
-                            || selectedCoursework == null) {
-                        NotificationUtil.showInformation(
-                                "No table item selected.", 
-                                "No item found.");
-                        event.getButton().setEnabled(true);
-                    } else {
-                        AppEventBus.post(new AppEvent
-                                .StudentViewCourseworkEvent(selectedCoursework));
-                    }
+                if (courseworksContainer.size() < 1
+                        || selectedCoursework == null) {
+                    NotificationUtil.showInformation(
+                            "No table item selected.",
+                            "No item found.");
+                    event.getButton().setEnabled(true);
+                } else {
+                    AppEventBus.post(new AppEvent.StudentViewCourseworkEvent(selectedCoursework));
+                }
             }
         });
         layoutHeader.addComponent(openFileButton);

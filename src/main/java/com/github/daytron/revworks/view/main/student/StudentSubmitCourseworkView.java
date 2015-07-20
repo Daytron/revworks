@@ -158,7 +158,7 @@ public class StudentSubmitCourseworkView extends Panel
                 + "as PDF (SAVE AS > PDF). Alternatively, there are lots of "
                 + "online document PDF converter out there, you may start your "
                 + "search <a target=\"_blank\" href=\"http://lmgtfy.com/?q=convert+to+pdf+online\">here"
-                + "&nbsp;" + FontAwesomeIcon.EXTERNAL_LINK.getLgSizeWithNoSpace()
+                + "&nbsp;" + FontAwesomeIcon.EXTERNAL_LINK.get1xSizeWithNoSpace()
                 + "</a>.");
         content.addComponent(note2);
         

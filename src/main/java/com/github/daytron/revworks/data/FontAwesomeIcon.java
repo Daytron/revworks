@@ -52,6 +52,10 @@ public enum FontAwesomeIcon {
     public String getLgSizeWithNoSpace() {
         return code + "fa-lg\"></i>";
     }
+    
+    public String get1xSizeWithNoSpace() {
+        return code + "fa-1x\"></i>";
+    }
 
     public String get2xSize() {
         return code + "fa-2x\"></i>&nbsp;&nbsp;";

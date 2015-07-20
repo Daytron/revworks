@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.view;
 
+import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.validator.LoginValidatorFactory;
 import com.github.daytron.revworks.data.ExternalLink;
 import com.github.daytron.revworks.data.LoginString;
@@ -25,6 +26,7 @@ import com.vaadin.data.Property;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -38,7 +40,9 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+import elemental.events.KeyboardEvent;
 
 /**
  * The login page as the main landing page of application.
@@ -51,10 +55,9 @@ public final class LoginScreen extends CssLayout {
     private TextField usernameField;
     private PasswordField passwordField;
     private Button loginButton;
-    
 
     public LoginScreen() {
-        
+
         buildUI();
         this.usernameField.focus();
     }
@@ -67,14 +70,14 @@ public final class LoginScreen extends CssLayout {
 
         Component loginFormComponent = createContent();
 
-        VerticalLayout centerFormLayout = new VerticalLayout();
-        centerFormLayout.setStyleName("centering-layout");
-        centerFormLayout.addComponent(loginFormComponent);
+        VerticalLayout contentLayout = new VerticalLayout();
+        contentLayout.setStyleName("centering-layout");
+        contentLayout.addComponent(loginFormComponent);
 
-        centerFormLayout.setComponentAlignment(loginFormComponent,
+        contentLayout.setComponentAlignment(loginFormComponent,
                 Alignment.MIDDLE_CENTER);
 
-        addComponent(centerFormLayout);
+        addComponent(contentLayout);
         addComponent(createFooter());
     }
 
@@ -129,14 +132,13 @@ public final class LoginScreen extends CssLayout {
         // TextField for userid/email
         usernameField = new TextField(
                 LoginString.FORM_STUDENT_ID.getText());
-        usernameField.setWidth(15, UNITS_EM);
+        usernameField.setWidth(16.4f, UNITS_EM);
         usernameField.setMaxLength(
                 LoginValidationNum.STUDENT_ID_LENGTH.getValue());
         // By default, hides validation error. Only to show later on explicitly
         // using the submit button
         usernameField.setValidationVisible(false);
         usernameField.setIcon(FontAwesome.USER);
-        
 
         // Apply corresponding validator by default
         usernameField.addValidator(
@@ -155,7 +157,7 @@ public final class LoginScreen extends CssLayout {
         // Password field
         passwordField = new PasswordField(
                 LoginString.FORM_USER_PASSWORD.getText());
-        passwordField.setWidth(15, UNITS_EM);
+        passwordField.setWidth(16.4f, UNITS_EM);
         passwordField.setMaxLength(
                 LoginValidationNum.PASSWORD_MAX_LENGTH.getValue());
         passwordField.setIcon(FontAwesome.LOCK);
@@ -164,6 +166,11 @@ public final class LoginScreen extends CssLayout {
         // By default, hides validation error. Only to show later on explicitly
         // using the submit button
         passwordField.setValidationVisible(false);
+
+        // Horizontal button bar
+        HorizontalLayout buttonBar = new HorizontalLayout();
+        buttonBar.setWidth("100%");
+        buttonBar.setSpacing(true);
 
         // For login button
         loginButton = new Button(
@@ -181,9 +188,67 @@ public final class LoginScreen extends CssLayout {
             }
         });
 
+        // Not yet register button
+        Button notYetRegisterButton = new Button("Not yet registered?");
+        notYetRegisterButton.setDescription("If you're not yet registered "
+                + "click here for instructtion.");
+        notYetRegisterButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        notYetRegisterButton.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                Window noteWindow = new Window();
+                noteWindow.setClosable(true);
+                noteWindow.setModal(true);
+                noteWindow.setResizable(true);
+                noteWindow.setDraggable(false);
+                noteWindow.setCloseShortcut(KeyboardEvent.KeyCode.ESC, null);
+                
+                noteWindow.setWidth(300.0f, Sizeable.Unit.PIXELS);
+                
+                VerticalLayout content = new VerticalLayout();
+                content.setWidth("100%");
+                content.setMargin(true);
+                content.setSpacing(true);
+                
+                Label titleLabel = new Label("Registration Notice");
+                titleLabel.addStyleName(ValoTheme.LABEL_BOLD);
+                
+                Label noteLabel = new Label("If you would like to join to the "
+                        + "ongoing user test pilot, then send me an email to "
+                        + "ryangilera@gmail.com with your:");
+                
+                
+                Label listLabel = new Label();
+                listLabel.setContentMode(ContentMode.HTML);
+                listLabel.setValue("<ul>"
+                        + "<li>GSM student id</li>"
+                        + "<li>Your first and last name</li>"
+                        + "<li>Your module id and name</li>"
+                        + "<li>Your complete course name</li>"
+                        + "<li>Lecturer name</li>"
+                        + "<li>Desired password</li>"
+                        + "</ul>");
+                
+                Label lastNoteLabel = new Label("I'll contact you as "
+                        + "soon as possible. Thank you.");
+                
+                content.addComponents(titleLabel,noteLabel,listLabel,
+                        lastNoteLabel);
+                noteWindow.setContent(content);
+                
+                MainUI.get().addWindow(noteWindow);
+            }
+        });
+
+        Label expandingGap = new Label();
+        expandingGap.setWidth("100%");
+        buttonBar.addComponents(loginButton, notYetRegisterButton,expandingGap);
+        buttonBar.setExpandRatio(expandingGap, 1);
+
         // Add all together
         loginFormLayout.addComponents(userOptionGroup,
-                usernameField, passwordField, loginButton);
+                usernameField, passwordField, buttonBar);
 
         return loginFormLayout;
     }
@@ -208,7 +273,7 @@ public final class LoginScreen extends CssLayout {
                 new ExternalResource(ExternalLink.STUDENT_PORTAL.getLink()));
         Link lecturerPortalLink = new Link(ExternalLink.LECTURER_PORTAL.getName(),
                 new ExternalResource(ExternalLink.LECTURER_PORTAL.getLink()));
-        
+
         Link gsmLearnLinkButton = new Link(ExternalLink.GSM_LEARN.getName(),
                 new ExternalResource(ExternalLink.GSM_LEARN.getLink()));
 
@@ -236,27 +301,27 @@ public final class LoginScreen extends CssLayout {
                 + "Created by Ryan Gilera [");
         footerBottomLayout.addComponent(allRightsReservedLabel);
         footerBottomLayout.setSizeUndefined();
-        
+
         Link githubLink = new Link(ExternalLink.MY_GITHUB_PAGE.getName(),
                 new ExternalResource(ExternalLink.MY_GITHUB_PAGE.getLink()));
         githubLink.setTargetName("_blank");
         githubLink.setSizeUndefined();
         footerBottomLayout.addComponent(githubLink);
-        
+
         Label midBracketLabel = new Label("] [");
         midBracketLabel.setSizeUndefined();
         footerBottomLayout.addComponent(midBracketLabel);
-        
+
         Link linkedinLink = new Link(ExternalLink.MY_LINKEDIN_PAGE.getName(),
                 new ExternalResource(ExternalLink.MY_LINKEDIN_PAGE.getLink()));
         linkedinLink.setTargetName("_blank");
         linkedinLink.setSizeUndefined();
         footerBottomLayout.addComponent(linkedinLink);
-        
+
         Label endOfLabel = new Label("]");
         endOfLabel.setSizeUndefined();
         footerBottomLayout.addComponent(endOfLabel);
-        
+
         // Bring all of them together
         footerLayout.addComponents(footerLinksLayout, footerBottomLayout);
         // Sets positions for the two rows
@@ -265,5 +330,5 @@ public final class LoginScreen extends CssLayout {
 
         return footerLayout;
     }
-    
+
 }

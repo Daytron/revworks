@@ -33,6 +33,7 @@ public enum FontAwesomeIcon {
     EXCLAMATION_TRIANGLE("<i class=\"fa fa-exclamation-triangle "),
     DESKTOP("<i class=\"fa fa-desktop "),
     SERVER("<i class=\"fa fa-server "),
+    EXTERNAL_LINK("<i class=\"fa fa-external-link "),
     
     // NONE SIZEABLE - SPINNERS
     REFRESHER_SPIN("<i class=\"fa fa-refresh fa-spin\"></i>")
@@ -46,6 +47,10 @@ public enum FontAwesomeIcon {
 
     public String getLgSize() {
         return code + "fa-lg\"></i>&nbsp;&nbsp;";
+    }
+    
+    public String getLgSizeWithNoSpace() {
+        return code + "fa-lg\"></i>";
     }
 
     public String get2xSize() {

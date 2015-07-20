@@ -15,6 +15,7 @@
  */
 package com.github.daytron.revworks.view.main;
 
+import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.service.CurrentUserSession;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -189,6 +190,7 @@ public class HelpView extends Panel implements View {
                 + "as PDF (SAVE AS > PDF). Alternatively, there are lots of "
                 + "online document PDF converter out there, you may start your "
                 + "search <a href=\"http://lmgtfy.com/?q=convert+to+pdf+online\">here"
+                + "&nbsp;" + FontAwesomeIcon.EXTERNAL_LINK.getLgSizeWithNoSpace()
                 + "</a>.</p>");
         content4.addComponent(content4Label2);
 

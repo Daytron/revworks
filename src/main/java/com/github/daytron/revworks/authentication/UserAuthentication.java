@@ -166,7 +166,6 @@ public class UserAuthentication extends QueryManagerAbstract {
                             = getConnection().prepareStatement(
                                     PreparedQueryStatement.STUDENT_SELECT_CLASS.getQuery());
                     User studentUser = (User) user;
-                    System.out.println("Student user ID" + studentUser.getId());
 
                     preparedStatementClass.setInt(1, studentUser.getId());
                     preparedStatementClass.setString(2, semesterID);

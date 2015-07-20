@@ -224,12 +224,15 @@ public class MainUI extends UI {
                 previousSession.close();
                 // Then invalidate the wrapped session to unbind remaining UI
                 previousSession.getSession().invalidate();
-
-                printSessions("After session.close() is invoked.");
+                
+                System.out.println("### Closing previous session with the same user: " +
+                        userID + "....");
             }
             // Store new session
             listOfUserSessions.put(userID, currentSession);
-            printSessions("After new session is invoke.");
+            System.out.println("### Added new session: user: " + userID 
+                    + " - After new session is invoke.");
+            printSessions("after a user: " + userID + " login" );
         }
 
         /**
@@ -249,14 +252,18 @@ public class MainUI extends UI {
          * printing method is triggered.
          */
         public static void printSessions(String customeMsg) {
-            System.out.println("VAADIN SESSIONS: " + customeMsg);
+            System.out.println("####################");
+            System.out.println("Current active sessions " + customeMsg + ":");
             for (String id : listOfUserSessions.keySet()) {
                 System.out.println("Session id: " + id);
             }
+            
 
             if (listOfUserSessions.isEmpty()) {
-                System.out.println("WARNING EMPTY LIST OF SESSIONS!!!!");
+                System.out.println("No active session.");
             }
+            
+            System.out.println("####################");
         }
 
         /**
@@ -280,18 +287,12 @@ public class MainUI extends UI {
          */
         @Override
         public void sessionDestroy(SessionDestroyEvent event) {
-            if (event.getSession() == null) {
-                System.out.println("Session is null!!!");
-                printSessions("With session null");
-            } else {
+            if (event.getSession() != null) {
                 final String KEY = CurrentUserSession.CURRENT_USER_SESSION_ATTRIBUTE_KEY;
                 Principal user = (Principal) event.getSession()
                         .getAttribute(KEY);
 
-                if (user == null) {
-                    System.out.println("User in session is null!!");
-                } else {
-
+                if (user != null) {
                     if (!((User) user).isAdminUser()) {
 
                         CopyOnWriteArrayList<File> listOfFilesToDelete
@@ -328,9 +329,13 @@ public class MainUI extends UI {
                     if (jdbccp != null) {
                         jdbccp.destroy();
                     }
+                    
+                    System.out.println("Closing session for user: " + user.getName());
 
                     // Remove the closed session from list
                     listOfUserSessions.remove(user.getName());
+                    
+                    printSessions("after user: " + user.getName() + " logout:");
                 }
             }
 

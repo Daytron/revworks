@@ -135,7 +135,6 @@ public class UserAccessControl implements AccessControl {
             // See MainUIServlet documentation
             MainUI.MainUIServlet.saveUserSessionInfo(getPrincipalName(),
                     VaadinSession.getCurrent());
-            MainUI.MainUIServlet.printSessions("user login");
             
             if (userType == UserType.LECTURER) {
                 AppEventBus.register(new LecturerDataInserterImpl());
@@ -224,7 +223,7 @@ public class UserAccessControl implements AccessControl {
             MainUI.MainUIServlet.saveUserSessionInfo(
                     getPrincipalName(),
                     VaadinSession.getCurrent());
-            MainUI.MainUIServlet.printSessions("admin login");
+            System.out.println("Admin login to the system..");
 
             event.getAdminLoginPopup().close();
 

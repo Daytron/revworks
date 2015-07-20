@@ -231,7 +231,8 @@ public final class LoginScreen extends CssLayout {
                         + "</ul>");
                 
                 Label lastNoteLabel = new Label("I'll contact you as "
-                        + "soon as possible. Thank you.");
+                        + "soon as possible. You may close this window "
+                        + "to return back to the login area. Thank you.");
                 
                 content.addComponents(titleLabel,noteLabel,listLabel,
                         lastNoteLabel);

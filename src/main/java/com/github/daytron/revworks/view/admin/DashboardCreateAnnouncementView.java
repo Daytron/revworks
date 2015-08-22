@@ -74,7 +74,6 @@ public final class DashboardCreateAnnouncementView extends VerticalLayout implem
         addComponent(contentComponent);
 
         setExpandRatio(contentComponent, 1);
-
     }
 
     private Component createContent() {
@@ -231,4 +230,5 @@ public final class DashboardCreateAnnouncementView extends VerticalLayout implem
 
         return contentLayout;
     }
+    
 }

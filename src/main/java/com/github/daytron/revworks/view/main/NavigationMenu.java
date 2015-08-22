@@ -94,7 +94,6 @@ public class NavigationMenu extends HorizontalLayout {
         }
         
         homeMenuItem.setIcon(icon);
-
     }
 
     /**

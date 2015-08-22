@@ -34,4 +34,5 @@ public class AuthenticationException extends Exception {
     public AuthenticationException(Throwable t) {
         super(t);
     }
+    
 }

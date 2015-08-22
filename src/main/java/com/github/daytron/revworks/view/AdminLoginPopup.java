@@ -37,6 +37,7 @@ import com.vaadin.ui.themes.ValoTheme;
  */
 @SuppressWarnings("serial")
 public final class AdminLoginPopup extends Window {
+    
     private static final long serialVersionUID = 1L;
     private TextField userField;
     
@@ -69,7 +70,6 @@ public final class AdminLoginPopup extends Window {
      * @return A FormLayout object
      */
     private FormLayout buildLoginForm() {
-
         // Username field
         userField = new TextField(
                 LoginString.FORM_ADMIN_EMAIL.getText());

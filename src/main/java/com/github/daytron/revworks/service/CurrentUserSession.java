@@ -163,7 +163,6 @@ public class CurrentUserSession {
             VaadinSession vaadinSession = VaadinSession.getCurrent();
             vaadinSession.getLockInstance().lock();
             vaadinSession.setAttribute(CURRENT_COURSEWORK_VIEW, courseworkView);
-
         } finally {
             VaadinSession.getCurrent().getLockInstance().unlock();
         }
@@ -177,6 +176,7 @@ public class CurrentUserSession {
 
     public static void shutdownCourseworkViewExecutorService() {
         CourseworkView oldCourseworkView = getCurrentCourseworkView();
+        
         if (oldCourseworkView != null) {
             oldCourseworkView.shutdownNoteExecutor();
         }
@@ -187,7 +187,6 @@ public class CurrentUserSession {
             VaadinSession vaadinSession = VaadinSession.getCurrent();
             vaadinSession.getLockInstance().lock();
             vaadinSession.setAttribute(CURRENT_DASHBOARD_HEADER, dashboardHeader);
-
         } finally {
             VaadinSession.getCurrent().getLockInstance().unlock();
         }
@@ -201,6 +200,7 @@ public class CurrentUserSession {
     
     public static void shutdownDashboardHeaderExecutorService() {
         HeaderComponent dashboardHeader = getDashboardHeader();
+        
         if (dashboardHeader != null) {
             dashboardHeader.shutdownNotificationExecutor();
         }

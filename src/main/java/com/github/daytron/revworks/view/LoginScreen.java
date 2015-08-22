@@ -57,7 +57,6 @@ public final class LoginScreen extends CssLayout {
     private Button loginButton;
 
     public LoginScreen() {
-
         buildUI();
         this.usernameField.focus();
     }

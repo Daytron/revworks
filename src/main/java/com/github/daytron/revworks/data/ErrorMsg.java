@@ -42,8 +42,7 @@ public enum ErrorMsg {
             + "tick box."),
     
     // For lecturer coursework module view
-    LECTURER_NO_CLASS_FOUND("No class found.")
-    ;
+    LECTURER_NO_CLASS_FOUND("No class found.");
 
     private final String text;
 

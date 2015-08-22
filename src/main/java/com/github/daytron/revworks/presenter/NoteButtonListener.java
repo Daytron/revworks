@@ -75,6 +75,7 @@ public class NoteButtonListener implements Button.ClickListener {
             if (courseworkView.getCurrentPage() != associatedPage) {
                 courseworkView.flipToPage(associatedPage);
             }
+            
             return;
         }
 

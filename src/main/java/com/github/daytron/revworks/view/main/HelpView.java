@@ -166,7 +166,6 @@ public class HelpView extends Panel implements View {
         accordion.addTab(content3, "How long is the idle time before it "
                 + "automatically ends my current session?");
         
-        
         // 4th Content
         VerticalLayout content4 = new VerticalLayout();
         content4.setWidth("100%");
@@ -324,4 +323,5 @@ public class HelpView extends Panel implements View {
 
         return layout;
     }
+    
 }

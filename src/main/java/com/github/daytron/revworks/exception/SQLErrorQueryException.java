@@ -23,17 +23,15 @@ package com.github.daytron.revworks.exception;
 public class SQLErrorQueryException extends Exception {
 
     public SQLErrorQueryException(String msg, Throwable t) {
-
         super(msg, t);
     }
 
     public SQLErrorQueryException(String msg) {
-
         super(msg);
     }
 
     public SQLErrorQueryException(Throwable t) {
-
         super(t);
     }
+    
 }

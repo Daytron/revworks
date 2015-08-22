@@ -103,7 +103,6 @@ public class StudentSubmitCourseworkSucessView extends Panel
         wrapperLayout.addComponent(gapLabelBottom);
         
         setContent(wrapperLayout);
-
     }
 
     @Override

@@ -307,6 +307,6 @@ public class StudentSubmitCourseworkView extends Panel
         layout.setSpacing(true);
 
         return layout;
-
     }
+    
 }

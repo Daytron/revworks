@@ -31,7 +31,6 @@ public class StudentIDRangeValidator extends AbstractValidator<String> {
             Integer maximumValue) {
         super(errorMessage);
         this.integerRangeValidator = new IntegerRangeValidator(errorMessage, minimumValue, maximumValue);
-
     }
 
     /**

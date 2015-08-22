@@ -154,7 +154,6 @@ public class CourseworkView extends VerticalLayout implements View {
         expanderWraperLayout.addComponent(contentLayout);
 
         addComponent(expanderWraperLayout);
-
     }
 
     private HorizontalLayout createHeaderView(final VerticalLayout expanderLayout) {
@@ -231,7 +230,6 @@ public class CourseworkView extends VerticalLayout implements View {
         verticalLayout.addComponent(coreContentLayout);
 
         return verticalLayout;
-
     }
 
     private VerticalLayout createCourseworkViewer() throws IOException, Exception {
@@ -261,7 +259,6 @@ public class CourseworkView extends VerticalLayout implements View {
 
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
-                try {
                     int page = Integer.parseInt(pageField.getValue());
 
                     if (page == currentPage) {
@@ -283,16 +280,12 @@ public class CourseworkView extends VerticalLayout implements View {
                                 
                         courseworkPagePanel.setContent(image);
                         currentPage = page;
-                    } catch (Exception e) {
-                        NotificationUtil.showError(
-                                ErrorMsg.DATA_FETCH_ERROR.getText(),
-                                ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                        } catch (Exception e) {
+                            NotificationUtil.showError(
+                                    ErrorMsg.DATA_FETCH_ERROR.getText(),
+                                    ErrorMsg.CONSULT_YOUR_ADMIN.getText());
+                        }
                     }
-                    }
-                    
-                    
-                } catch (NumberFormatException e) {
-                }
             }
         });
 
@@ -449,7 +442,6 @@ public class CourseworkView extends VerticalLayout implements View {
         noteLayout.setExpandRatio(notesPanel, 1);
 
         return noteLayout;
-
     }
 
     public VerticalLayout getScrollNoteLayout() {
@@ -538,6 +530,7 @@ public class CourseworkView extends VerticalLayout implements View {
                     // Calculate the current resulting row count
                     int numberOfResultedRows = 0;
                     resultSet.beforeFirst();
+                    
                     while (resultSet.next()) {
                         numberOfResultedRows += 1;
                     }
@@ -547,7 +540,6 @@ public class CourseworkView extends VerticalLayout implements View {
                     // by this user to apply clicked css style later on
                     if (numberOfResultedRows == 0
                             || (numberOfResultedRows == previousNoteCount)) {
-
                         isNewNoteAdded = false;
                     } else {
                         isNewNoteAdded = true;
@@ -568,6 +560,7 @@ public class CourseworkView extends VerticalLayout implements View {
                     boolean lastIsStudentToLecturer = false;
 
                     resultSet.beforeFirst();
+                    
                     while (resultSet.next()) {
                         final int noteId = resultSet.getInt(1);
                         lastNoteIdForActivatingClickedStyle = noteId;
@@ -611,7 +604,6 @@ public class CourseworkView extends VerticalLayout implements View {
 
                                 // Otherwise add a new note button
                                 if (!alreadyInTheListButton) {
-
                                     String identifier = "";
                                     if (isStudentToLecturer) {
                                         if (isStudentUser) {
@@ -633,6 +625,7 @@ public class CourseworkView extends VerticalLayout implements View {
                                     }
 
                                     boolean isRead;
+                                    
                                     if (isStudentUser) {
                                         isRead = isReadStudent;
                                     } else {
@@ -740,4 +733,5 @@ public class CourseworkView extends VerticalLayout implements View {
             }
         }
     }
+    
 }

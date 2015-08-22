@@ -82,6 +82,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
 
                         // Create new user notification for the corresponding user
                         final Coursework coursework = event.getCoursework();
+                        
                         if (MainUI.get().getAccessControl().isUserAStudent()) {
                             AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
                                     " has sent you a comment",
@@ -186,6 +187,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
 
                 // Create new user notification for the corresponding user
                 final Coursework coursework = event.getCoursework();
+                
                 if (MainUI.get().getAccessControl().isUserAStudent()) {
                     AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
                             " has created a note",
@@ -220,6 +222,7 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
         if (reserveConnectionPool()) {
             try {
                 PreparedStatement preparedStatementNote;
+                
                 if (MainUI.get().getAccessControl().isUserAStudent()) {
                     preparedStatementNote
                             = getConnection().prepareStatement(
@@ -228,7 +231,6 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
 
                     preparedStatementNote.setBoolean(1, true);
                     preparedStatementNote.setInt(2, event.getNoteId());
-
                 } else {
                     preparedStatementNote
                             = getConnection().prepareStatement(
@@ -258,4 +260,5 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
             notifyDataSendError();
         }
     }
+    
 }

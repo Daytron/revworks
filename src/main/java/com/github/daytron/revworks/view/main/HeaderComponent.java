@@ -116,7 +116,6 @@ public class HeaderComponent extends HorizontalLayout {
         runnableTask = new NotificationsExtractorRunnable();
         scheduledFuture = scheduler.scheduleWithFixedDelay(runnableTask,
                 0, 500, TimeUnit.MILLISECONDS);
-
     }
 
     public void shutdownNotificationExecutor() {
@@ -241,6 +240,7 @@ public class HeaderComponent extends HorizontalLayout {
                             resultSetRead.beforeFirst();
                             DateTimeFormatter formatter
                                     = DateTimeFormatter.ofPattern("dd-MMM hh:mm a");
+                            
                             while (resultSetRead.next()) {
                                 Timestamp timestamp = resultSetRead.getTimestamp(4);
                                 LocalDateTime submittedDateTime = timestamp.toLocalDateTime();
@@ -308,4 +308,5 @@ public class HeaderComponent extends HorizontalLayout {
         }
 
     }
+    
 }

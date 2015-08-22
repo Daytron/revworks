@@ -21,7 +21,9 @@ package com.github.daytron.revworks.data;
  * @author Ryan Gilera
  */
 public enum UserNotificationType {
+    
     COURSEWORK,
     NOTE,
     COMMENT;
+    
 }

@@ -16,13 +16,9 @@
 package com.github.daytron.revworks.service.admin;
 
 import com.github.daytron.revworks.service.*;
-import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.FontAwesomeIcon;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
-import com.github.daytron.revworks.data.UserNotificationType;
 import com.github.daytron.revworks.event.AppEvent;
-import com.github.daytron.revworks.event.AppEventBus;
-import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.util.NotificationUtil;
 import com.google.common.eventbus.Subscribe;
 import java.sql.PreparedStatement;

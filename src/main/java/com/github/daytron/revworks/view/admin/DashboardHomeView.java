@@ -26,6 +26,7 @@ import com.vaadin.ui.themes.ValoTheme;
  * @author Ryan Gilera
  */
 public final class DashboardHomeView extends VerticalLayout implements View {
+    
     public final static String VIEW_NAME = "DASHBOARD";
     public final static String VIEW_CAPTION = "Home";
     public final static String VIEW_TITLE = "Dashboard";
@@ -48,7 +49,6 @@ public final class DashboardHomeView extends VerticalLayout implements View {
         Label title = new Label(VIEW_TITLE);
         title.addStyleName(ValoTheme.LABEL_H1);
         addComponent(title);
-        
     }
     
 }

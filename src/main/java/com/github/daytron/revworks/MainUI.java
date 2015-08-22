@@ -84,10 +84,9 @@ public class MainUI extends UI {
     private Window notificationsWindow = null;
 
     // Admin stuff
-    
-    private final AdminDataInserter adminDataInserter 
+    private final AdminDataInserter adminDataInserter
             = new AdminDataInserter();
-    
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         // Set max session timeout after 20 minutes
@@ -105,7 +104,6 @@ public class MainUI extends UI {
         } else {
             showMainScreen();
         }
-
     }
 
     public static MainUI get() {
@@ -146,11 +144,10 @@ public class MainUI extends UI {
 
             @Override
             public void layoutClick(LayoutEvents.LayoutClickEvent event) {
-
                 AppEventBus.post(new AppEvent.CloseNotificationWindowEvent());
-
             }
         });
+
         AppEventBus.register(mainScreen);
 
         setContent(mainScreen);
@@ -183,7 +180,6 @@ public class MainUI extends UI {
 
     @Subscribe
     public void closeNotificationWindows(AppEvent.CloseNotificationWindowEvent event) {
-
         if (notificationsWindow != null) {
             notificationsWindow.close();
             notificationsWindow = null;
@@ -204,7 +200,8 @@ public class MainUI extends UI {
     public static class MainUIServlet extends VaadinServlet implements
             SessionDestroyListener {
 
-        private static final ConcurrentHashMap<String, VaadinSession> listOfUserSessions = new ConcurrentHashMap<>();
+        private static final ConcurrentHashMap<String, VaadinSession> 
+                listOfUserSessions = new ConcurrentHashMap<>();
 
         /**
          * Saves the new login session to the collection member,
@@ -218,21 +215,22 @@ public class MainUI extends UI {
         public static void saveUserSessionInfo(String userID,
                 VaadinSession currentSession) {
             VaadinSession previousSession = listOfUserSessions.get(userID);
-            if (previousSession != null) {
 
+            if (previousSession != null) {
                 // Close the previous session
                 previousSession.close();
                 // Then invalidate the wrapped session to unbind remaining UI
                 previousSession.getSession().invalidate();
-                
-                System.out.println("### Closing previous session with the same user: " +
-                        userID + "....");
+
+                System.out.println("### Closing previous session with the same user: "
+                        + userID + "....");
             }
+
             // Store new session
             listOfUserSessions.put(userID, currentSession);
-            System.out.println("### Added new session: user: " + userID 
+            System.out.println("### Added new session: user: " + userID
                     + " - After new session is invoke.");
-            printSessions("after a user: " + userID + " login" );
+            printSessions("after a user: " + userID + " login");
         }
 
         /**
@@ -254,15 +252,15 @@ public class MainUI extends UI {
         public static void printSessions(String customeMsg) {
             System.out.println("####################");
             System.out.println("Current active sessions " + customeMsg + ":");
+
             for (String id : listOfUserSessions.keySet()) {
                 System.out.println("Session id: " + id);
             }
-            
 
             if (listOfUserSessions.isEmpty()) {
                 System.out.println("No active session.");
             }
-            
+
             System.out.println("####################");
         }
 
@@ -300,11 +298,19 @@ public class MainUI extends UI {
                                 .getAttribute(CurrentUserSession.TRASH_CAN_FOR_FILES_KEY);
 
                         // Shutdown the remaining service threads
-                        CourseworkView courseworkView = (CourseworkView) event.getSession().getAttribute(CurrentUserSession.CURRENT_COURSEWORK_VIEW);
-                        CommentComponent commentComponent = (CommentComponent) event.getSession().getAttribute(CurrentUserSession.CURRENT_COMMENT_COMPONENT);
+                        CourseworkView courseworkView
+                                = (CourseworkView) event.getSession()
+                                .getAttribute(
+                                        CurrentUserSession.CURRENT_COURSEWORK_VIEW);
+                        CommentComponent commentComponent
+                                = (CommentComponent) event.getSession()
+                                .getAttribute(
+                                        CurrentUserSession.CURRENT_COMMENT_COMPONENT);
+
                         if (courseworkView != null) {
                             courseworkView.shutdownNoteExecutor();
                         }
+
                         if (commentComponent != null) {
                             commentComponent.shutdownCommentExecutor();
                         }
@@ -326,15 +332,16 @@ public class MainUI extends UI {
                     // in the connection pool to free up MYSQL connection load
                     JDBCConnectionPool jdbccp = ((JDBCConnectionPool) event.getSession()
                             .getAttribute(CurrentUserSession.JDBC_CONNECTION_POOL_KEY));
+
                     if (jdbccp != null) {
                         jdbccp.destroy();
                     }
-                    
+
                     System.out.println("Closing session for user: " + user.getName());
 
                     // Remove the closed session from list
                     listOfUserSessions.remove(user.getName());
-                    
+
                     printSessions("after user: " + user.getName() + " logout:");
                 }
             }

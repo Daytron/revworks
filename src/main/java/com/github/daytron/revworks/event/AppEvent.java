@@ -211,7 +211,8 @@ public abstract class AppEvent {
         private final VerticalLayout contentLayout;
         private final boolean isToggled;
 
-        public ToggleCourseworkViewEvent(VerticalLayout contentLayout, boolean isToggled) {
+        public ToggleCourseworkViewEvent(VerticalLayout contentLayout, 
+                boolean isToggled) {
             this.contentLayout = contentLayout;
             this.isToggled = isToggled;
         }
@@ -257,7 +258,6 @@ public abstract class AppEvent {
             return courseworkView;
         }
         
-        
     }
 
     public static final class SubmitNewCommentEvent {
@@ -288,6 +288,7 @@ public abstract class AppEvent {
     }
     
     public static final class UpdateNoteIsReadWhenClickEvent {
+        
         private final int noteId;
         private final Button button;
 
@@ -307,6 +308,7 @@ public abstract class AppEvent {
     }
     
     public static final class UpdateNotificationButtonBadgeCountEvent {
+        
         private final int count;
 
         public UpdateNotificationButtonBadgeCountEvent(int count) {
@@ -320,6 +322,7 @@ public abstract class AppEvent {
     }
     
     public static final class UpdateNotificationToReadEvent {
+        
         private final CopyOnWriteArrayList<UserNotification> listOfUserNotifications;
 
         public UpdateNotificationToReadEvent(CopyOnWriteArrayList<UserNotification> 
@@ -371,7 +374,6 @@ public abstract class AppEvent {
             return courseworkId;
         }
         
-        
     }
     
     public static final class CloseNotificationWindowEvent {
@@ -403,4 +405,5 @@ public abstract class AppEvent {
         }
 
     }
+    
 }

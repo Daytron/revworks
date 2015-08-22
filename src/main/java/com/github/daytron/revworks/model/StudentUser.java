@@ -51,5 +51,4 @@ public class StudentUser extends User {
         return studentID;
     }
 
-
 }

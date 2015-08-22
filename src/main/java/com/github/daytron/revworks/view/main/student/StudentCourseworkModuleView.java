@@ -169,7 +169,6 @@ public class StudentCourseworkModuleView extends Panel implements View {
         wrapperLayout.setExpandRatio(wrapperItem, 1);
 
         setContent(wrapperLayout);
-
     }
 
     public Table createSubmittedCourseworkTable() {
@@ -250,7 +249,6 @@ public class StudentCourseworkModuleView extends Panel implements View {
         });
 
         return courseworksTable;
-
     }
 
     public HorizontalLayout createPanelHeader() {
@@ -298,6 +296,7 @@ public class StudentCourseworkModuleView extends Panel implements View {
                         StudentSubmitCourseworkView.VIEW_NAME);
             }
         });
+        
         layoutHeader.addComponent(submitButton);
 
         layoutHeader.setExpandRatio(titleLabel, 1);

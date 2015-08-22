@@ -28,4 +28,5 @@ public interface StudentDataInserter {
     public void insertNewCoursework(final StudentSubmitCourseworkEvent event);
     
     public void insertNewComment(final SubmitNewCommentEvent event);
+    
 }

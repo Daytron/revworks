@@ -60,7 +60,6 @@ public class UserAuthentication extends QueryManagerAbstract {
             String password) throws AuthenticationException, SQLErrorRetrievingConnectionAndPoolException {
 
         if (reserveConnectionPool()) {
-
             try {
                 // Begin user credentials verification
                 PreparedStatement preparedStatementUser;
@@ -68,7 +67,6 @@ public class UserAuthentication extends QueryManagerAbstract {
                 if (userType == UserType.STUDENT) {
                     preparedStatementUser = getConnection().prepareStatement(
                             PreparedQueryStatement.LOGIN_USER_STUDENT.getQuery());
-
                 } else if (userType == UserType.LECTURER) {
                     preparedStatementUser = getConnection().prepareStatement(
                             PreparedQueryStatement.LOGIN_USER_LECTURER.getQuery());
@@ -107,14 +105,14 @@ public class UserAuthentication extends QueryManagerAbstract {
                 // Create appropriate user
                 Principal user;
                 if (userType == UserType.STUDENT) {
-                    user = new StudentUser(userID, userfield, firstName, lastName);
-
+                    user = new StudentUser(userID, userfield, 
+                            firstName, lastName);
                 } else if (userType == UserType.LECTURER) {
                     user = new LecturerUser(userID, userfield,
                             firstName, lastName);
                 } else {
-                    user = new AdminUser(userID, userfield, firstName,
-                            lastName);
+                    user = new AdminUser(userID, userfield, 
+                            firstName, lastName);
                 }
 
                 // Close the statement after using it, to free up memory
@@ -125,12 +123,12 @@ public class UserAuthentication extends QueryManagerAbstract {
 
                 return user;
             } catch (SQLException ex) {
-                Logger.getLogger(UserAuthentication.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UserAuthentication.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 releaseConnection();
                 throw new AuthenticationException(
                         ExceptionMsg.AUTHENTICATION_EXCEPTION_SYS_ERROR.getMsg());
             }
-
         } else {
             throw new SQLErrorRetrievingConnectionAndPoolException(
                     ExceptionMsg.SQL_ERROR_CONNECTION.getMsg());
@@ -272,7 +270,6 @@ public class UserAuthentication extends QueryManagerAbstract {
 
         if (reserveConnectionPool()) {
             try {
-
                 // Select the current semester firsl
                 PreparedStatement preparedStatementSemester = getConnection()
                         .prepareStatement(

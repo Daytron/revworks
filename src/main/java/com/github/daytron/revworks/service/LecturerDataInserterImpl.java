@@ -105,5 +105,4 @@ public class LecturerDataInserterImpl extends DataInserterAbstract implements
         }
     }
     
-
 }

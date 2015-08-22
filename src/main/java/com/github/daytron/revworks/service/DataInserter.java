@@ -26,5 +26,7 @@ public interface DataInserter {
     
     public void insertNewComment(final AppEvent.SubmitNewCommentEvent event);
     public void insertNewNote(AppEvent.SubmitNewNoteEvent event);
-    public void updateNoteIsReadWhenClicked(AppEvent.UpdateNoteIsReadWhenClickEvent event);
+    public void updateNoteIsReadWhenClicked(
+            AppEvent.UpdateNoteIsReadWhenClickEvent event);
+    
 }

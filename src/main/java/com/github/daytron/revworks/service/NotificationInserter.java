@@ -49,6 +49,7 @@ public class NotificationInserter extends QueryManagerAbstract {
                 preparedStatement.setBoolean(3, false);
 
                 int notificationTypeId;
+                
                 if (event.getUserNotificationType() == UserNotificationType.COURSEWORK) {
                     notificationTypeId = 1;
                 } else if (event.getUserNotificationType() == UserNotificationType.NOTE) {
@@ -88,7 +89,8 @@ public class NotificationInserter extends QueryManagerAbstract {
                 if (notificationTypeId <= 3 && notificationTypeId > 0) {
                     PreparedStatement prepareStatementNC
                             = getConnection().prepareStatement(
-                                    PreparedQueryStatement.INSERT_NOTIFICATIONS_COURSEWORK.getQuery());
+                                    PreparedQueryStatement
+                                            .INSERT_NOTIFICATIONS_COURSEWORK.getQuery());
                     prepareStatementNC.setInt(1, newId);
                     prepareStatementNC.setInt(2, event.getCourseworkId());
 
@@ -113,7 +115,6 @@ public class NotificationInserter extends QueryManagerAbstract {
     public void updateNotificationToRead(AppEvent.UpdateNotificationToReadEvent event) {
 
         if (reserveConnectionPool()) {
-
             try {
                 for (UserNotification userNotification : event.getListOfUserNotifications()) {
                     // Skip if it is already read
@@ -137,10 +138,10 @@ public class NotificationInserter extends QueryManagerAbstract {
             } finally {
                 releaseConnection();
             }
-
         } else {
             notifyDataSendError();
         }
 
     }
+    
 }

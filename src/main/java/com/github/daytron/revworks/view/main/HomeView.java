@@ -180,6 +180,7 @@ public class HomeView extends Panel implements View {
         wrapperLayout.setSpacing(true);
 
         Label whatsNewLabel;
+        
         if (this.listOfAnnouncements.isEmpty()) {
             whatsNewLabel = new Label("No announcement for this week.");
         } else {

@@ -26,6 +26,7 @@ public enum FilePath {
     HTML_OUTPUT_NAME("convertedWork"),
     FILE_OUTPUT_NAME("pdfFile"),
     TEMP_PICTURE_FOLDER("pictures/");
+    
     private final String path;
 
     private FilePath(String path) {

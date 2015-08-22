@@ -29,9 +29,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public interface LecturerDataProvider {
 
-    
     public ConcurrentHashMap<ClassTable,BeanItemContainer> extractCourseworkData() 
             throws 
             SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, 
             NoClassAttachedToLecturerException;
+    
 }

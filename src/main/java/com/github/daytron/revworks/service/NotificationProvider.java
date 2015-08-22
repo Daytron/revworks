@@ -34,12 +34,12 @@ public class NotificationProvider extends QueryManagerAbstract {
         this.pause = false;
     }
 
-    public synchronized void setListOfNotifications(CopyOnWriteArrayList<UserNotification> 
-            listOfNotifications) {
+    public synchronized void setListOfNotifications(CopyOnWriteArrayList<UserNotification> listOfNotifications) {
         this.listOfNotifications = listOfNotifications;
         
         // Count how many unread notifications
         int unreadCount = 0;
+        
         for (UserNotification userNotification : listOfNotifications) {
             if (!userNotification.isRead()) {
                 unreadCount += 1;

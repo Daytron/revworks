@@ -21,7 +21,7 @@ package com.github.daytron.revworks.data;
  * @author Ryan Gilera
  */
 public enum ExceptionMsg {
-
+    
     AUTHENTICATION_EXCEPTION_NO_USER("No such user found. Invalid credentials."),
     AUTHENTICATION_EXCEPTION_SYS_ERROR("System error occured "),
     NO_CURRENT_USER_EXCEPTION("No user is login"),
@@ -31,6 +31,7 @@ public enum ExceptionMsg {
     SQL_NO_RESULT_FOUND("SQL: The last query resulted to empty set."),
     SQL_ERROR_QUERY("SQL: Error query action."),
     NO_CLASS_ATTACHED_TO_LECTURER("No class found for lecturer user.");
+    
     private final String msg;
 
     private ExceptionMsg(String msg) {

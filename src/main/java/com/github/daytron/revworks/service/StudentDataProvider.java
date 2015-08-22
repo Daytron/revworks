@@ -34,4 +34,5 @@ public interface StudentDataProvider {
             throws SQLErrorRetrievingConnectionAndPoolException,
             SQLErrorQueryException, SQLNoResultFoundException,
             FileNotFoundException, IOException;
+    
 }

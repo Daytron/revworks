@@ -36,7 +36,6 @@ public class LoginValidatorFactory {
      * @return The StudentIDRangeValidator object
      */
     public static StudentIDRangeValidator buildStudentIDValidator() {
-
         StudentIDRangeValidator studentIDRangeValidator
                 = new StudentIDRangeValidator(
                         LoginValidationMsg.STUDENT_ID_INVALID.getText(),

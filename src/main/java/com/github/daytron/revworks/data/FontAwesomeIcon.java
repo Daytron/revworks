@@ -36,8 +36,7 @@ public enum FontAwesomeIcon {
     EXTERNAL_LINK("<i class=\"fa fa-external-link "),
     
     // NONE SIZEABLE - SPINNERS
-    REFRESHER_SPIN("<i class=\"fa fa-refresh fa-spin\"></i>")
-    ;
+    REFRESHER_SPIN("<i class=\"fa fa-refresh fa-spin\"></i>");
 
     private final String code;
 

@@ -188,6 +188,7 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
 
                         File pdfFile = new File(pdfFilename);
                         pdfFile.getParentFile().mkdirs();
+                        
                         try {
                             pdfFile.createNewFile();
 
@@ -238,9 +239,9 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
 
                 releaseConnection();
                 return listOfBeanItemContainers;
-
             } catch (SQLException ex) {
-                Logger.getLogger(LecturerDataProviderImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LecturerDataProviderImpl.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 releaseConnection();
                 throw new SQLErrorQueryException(
                         ExceptionMsg.SQL_ERROR_QUERY.getMsg());
@@ -313,7 +314,6 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
                     ErrorMsg.CONSULT_YOUR_ADMIN.getText());
 
             return;
-
         }
 
         MainUI.get().getNavigator().navigateTo(CourseworkView.VIEW_NAME);

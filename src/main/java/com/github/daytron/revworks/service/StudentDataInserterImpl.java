@@ -67,7 +67,8 @@ implements StudentDataInserter {
                 
                 // Prepare pdf file to be inserted to the database
                 byte[] pdfByte = new byte[(int)event.getCourseworkFile().length()];
-                DataInputStream dataInputStream = new DataInputStream((new FileInputStream(event.getCourseworkFile())));
+                DataInputStream dataInputStream = new DataInputStream((
+                        new FileInputStream(event.getCourseworkFile())));
                 // Read data into byte array
                 dataInputStream.read(pdfByte);
                 dataInputStream.close();
@@ -106,8 +107,6 @@ implements StudentDataInserter {
                 // switch view to success page
                 MainUI.get().getNavigator()
                         .navigateTo(StudentSubmitCourseworkSucessView.VIEW_NAME);
-                
-                
             } catch (SQLException | FileNotFoundException ex) {
                 Logger.getLogger(StudentDataInserterImpl.class.getName())
                         .log(Level.SEVERE, null, ex);
@@ -124,5 +123,4 @@ implements StudentDataInserter {
         }
     }
 
-    
 }

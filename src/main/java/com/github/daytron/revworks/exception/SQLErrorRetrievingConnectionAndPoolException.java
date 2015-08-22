@@ -23,17 +23,15 @@ package com.github.daytron.revworks.exception;
 public class SQLErrorRetrievingConnectionAndPoolException extends Exception {
 
     public SQLErrorRetrievingConnectionAndPoolException(String msg, Throwable t) {
-
         super(msg, t);
     }
 
     public SQLErrorRetrievingConnectionAndPoolException(String msg) {
-
         super(msg);
     }
 
     public SQLErrorRetrievingConnectionAndPoolException(Throwable t) {
-
         super(t);
     }
+    
 }

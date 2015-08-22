@@ -124,6 +124,7 @@ public final class NotificationUtil {
         title = FontAwesomeIcon.EXCLAMATION_CIRCLE.get2xSize() + title;
        
         Notification newNotification;
+        
         if (message == null || message.isEmpty()) {
             newNotification = new Notification(title,
                     Notification.Type.TRAY_NOTIFICATION);

@@ -23,17 +23,15 @@ package com.github.daytron.revworks.exception;
 public class WrongCurrentUserTypeException extends Exception {
 
     public WrongCurrentUserTypeException(String msg, Throwable t) {
-
         super(msg, t);
     }
 
     public WrongCurrentUserTypeException(String msg) {
-
         super(msg);
     }
 
     public WrongCurrentUserTypeException(Throwable t) {
-
         super(t);
     }
+    
 }

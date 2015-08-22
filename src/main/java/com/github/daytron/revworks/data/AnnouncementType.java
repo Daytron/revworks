@@ -21,5 +21,8 @@ package com.github.daytron.revworks.data;
  * @author Ryan Gilera
  */
 public enum AnnouncementType {
-    SYSTEM_WIDE, CLASS_WIDE;
+    
+    SYSTEM_WIDE, 
+    CLASS_WIDE;
+    
 }

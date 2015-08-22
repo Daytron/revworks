@@ -68,12 +68,12 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                 // that falls within the last 7 days
                 // Max 15 announcements
                 PreparedStatement preparedStatement;
+                
                 if (MainUI.get().getAccessControl().isUserAStudent()) {
                     preparedStatement = getConnection().prepareStatement(
                             PreparedQueryStatement
                             .STUDENT_SELECT_ANNOUNCEMENTS
                             .getQuery());
-
                 } else {
                     // Otherwise it's a lecturer
                     preparedStatement = getConnection().prepareStatement(
@@ -127,6 +127,7 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                         int classId = resultSet.getInt(6);
                         
                         ClassTable selectedClassTable = null;
+                        
                         for (ClassTable classTable : listOfClassTables) {
                             if (classTable.getId() == classId) {
                                 selectedClassTable = classTable;
@@ -178,9 +179,7 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
                 preparedStatement.close();
                 resultSet.close();
   
-
                 return listOfAnnouncements;
-
             } catch (SQLException ex) {
                 Logger.getLogger(DataProviderAbstract.class.getName())
                         .log(Level.SEVERE, null, ex);

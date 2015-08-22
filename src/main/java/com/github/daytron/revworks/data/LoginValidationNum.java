@@ -21,6 +21,7 @@ package com.github.daytron.revworks.data;
  * @author Ryan Gilera
  */
 public enum LoginValidationNum {
+    
     STUDENT_ID_MIN_VALUE(100000),
     STUDENT_ID_MAX_VALUE(999999),
     STUDENT_ID_LENGTH(6),

@@ -35,7 +35,6 @@ public class StudentIdColumnGenerator implements Table.ColumnGenerator {
         Property<StudentUser> studentProperty = item.getItemProperty("studentUser");
         
         return studentProperty.getValue().getStudentID();
-        
     }
     
 }

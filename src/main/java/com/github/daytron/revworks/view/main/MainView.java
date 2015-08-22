@@ -89,7 +89,6 @@ public class MainView extends VerticalLayout {
                     StudentSubmitCourseworkSucessView.class);
             navigator.addView(CourseworkView.VIEW_NAME, 
                     CourseworkView.class);
-            
         } else if (mainUI.getAccessControl().isUserALecturer()) {
             menu.addView(HomeView.class,
                     HomeView.VIEW_NAME,
@@ -125,7 +124,6 @@ public class MainView extends VerticalLayout {
         setWidth("100%");
         
         navigator.navigateTo(HomeView.VIEW_NAME);
-        
     }
     
     @Subscribe

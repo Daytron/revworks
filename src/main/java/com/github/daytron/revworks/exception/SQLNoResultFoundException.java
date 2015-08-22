@@ -23,17 +23,15 @@ package com.github.daytron.revworks.exception;
 public class SQLNoResultFoundException extends Exception {
 
     public SQLNoResultFoundException(String msg, Throwable t) {
-
         super(msg, t);
     }
 
     public SQLNoResultFoundException(String msg) {
-
         super(msg);
     }
 
     public SQLNoResultFoundException(Throwable t) {
-
         super(t);
     }
+    
 }

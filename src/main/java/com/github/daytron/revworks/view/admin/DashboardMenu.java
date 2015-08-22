@@ -118,10 +118,14 @@ final class DashboardMenu extends CssLayout {
         for (Button button : listOfButtons.values()) {
             button.removeStyleName("selected");
         }
+        
         Button selected = listOfButtons.get(viewName);
+        
         if (selected != null) {
             selected.addStyleName("selected");
         }
+        
         menuSection.removeStyleName("valo-menu-visible");
     }
+    
 }

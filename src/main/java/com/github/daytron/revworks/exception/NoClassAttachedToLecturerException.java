@@ -24,17 +24,15 @@ package com.github.daytron.revworks.exception;
 public class NoClassAttachedToLecturerException extends Exception {
 
     public NoClassAttachedToLecturerException(String msg, Throwable t) {
-
         super(msg, t);
     }
 
     public NoClassAttachedToLecturerException(String msg) {
-
         super(msg);
     }
 
     public NoClassAttachedToLecturerException(Throwable t) {
-
         super(t);
     }
+    
 }

@@ -108,6 +108,7 @@ public class UserAccessControl implements AccessControl {
         String password = event.getPasswordField().getValue();
 
         Principal user;
+        
         try {
             UserAuthentication userAuthentication = MainUI.get().getUserAuthentication();
             String semesterID = userAuthentication.verifyCurrentDateWithinASemester();
@@ -153,8 +154,11 @@ public class UserAccessControl implements AccessControl {
                     FontAwesomeIcon.THUMBS_O_UP.getLgSize(),
                     "Welcome " + getFirstName() + "!", "");
 
-        } catch (AuthenticationException | SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException ex) {
-            Logger.getLogger(UserAccessControl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AuthenticationException 
+                | SQLErrorRetrievingConnectionAndPoolException 
+                | SQLErrorQueryException ex) {
+            Logger.getLogger(UserAccessControl.class.getName()).log(Level
+                    .SEVERE, null, ex);
             NotificationUtil.showError(
                     ErrorMsg.SIGNIN_FAILED_CAPTION.getText(),
                     ErrorMsg.CONSULT_YOUR_ADMIN.getText());
@@ -236,7 +240,8 @@ public class UserAccessControl implements AccessControl {
                     + getFirstName()
                     + "!",
                     Notification.Type.TRAY_NOTIFICATION);
-        } catch (AuthenticationException | SQLErrorRetrievingConnectionAndPoolException ex) {
+        } catch (AuthenticationException 
+                | SQLErrorRetrievingConnectionAndPoolException ex) {
             Logger.getLogger(UserAccessControl.class.getName())
                     .log(Level.SEVERE, null, ex);
             NotificationUtil.showError(
@@ -254,8 +259,7 @@ public class UserAccessControl implements AccessControl {
      */
     @Subscribe
     @Override
-    public void webmasterLinkOnClick(
-            final WebmasterLinkClickEvent event) {
+    public void webmasterLinkOnClick(final WebmasterLinkClickEvent event) {
         AdminLoginPopup adminLoginPopup = new AdminLoginPopup();
 
         adminLoginPopup.setSizeUndefined();
@@ -293,7 +297,6 @@ public class UserAccessControl implements AccessControl {
             // Apply max entry length for student ID
             usernameField.setMaxLength(
                     LoginValidationNum.STUDENT_ID_LENGTH.getValue());
-
         } else {
             usernameField.setCaption(LoginString.FORM_LECTURER_EMAIL.getText());
 

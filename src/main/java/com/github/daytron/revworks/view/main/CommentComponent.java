@@ -68,7 +68,6 @@ public class CommentComponent extends VerticalLayout {
     public CommentComponent(Coursework coursework,
             boolean isFirstComment, int page, CourseworkView courseworkView) {
         this(coursework, isFirstComment, page, 0, courseworkView);
-
     }
 
     public CommentComponent(Coursework coursework,
@@ -138,9 +137,9 @@ public class CommentComponent extends VerticalLayout {
                 }
 
                 CommentComponent.this.shutdownCommentExecutor();
-
             }
         });
+        
         headerLayout.addComponent(closeLayoutButton);
         headerLayout.setExpandRatio(titleLabel, 1);
 
@@ -252,6 +251,7 @@ public class CommentComponent extends VerticalLayout {
                                 .prepareStatement(PreparedQueryStatement.SELECT_COMMENT.getQuery())) {
                             preparedStatement.setInt(1, noteId);
                             resultSet = preparedStatement.executeQuery();
+                            
                             if (!resultSet.next()) {
                                 preparedStatement.close();
                                 resultSet.close();
@@ -261,6 +261,7 @@ public class CommentComponent extends VerticalLayout {
                             // Calculate the current resulting row count
                             int numberOfResultedRows = 0;
                             resultSet.beforeFirst();
+                            
                             while (resultSet.next()) {
                                 numberOfResultedRows += 1;
                             }
@@ -287,6 +288,7 @@ public class CommentComponent extends VerticalLayout {
                                     = DateTimeFormatter.ofPattern("dd-MMM hh:mm a");
 
                             int counter = 0;
+                            
                             while (resultSet.next()) {
                                 counter += 1;
                                 String message = resultSet.getString(1);
@@ -321,7 +323,6 @@ public class CommentComponent extends VerticalLayout {
                                                 .append("<br>").append(message)
                                                 .append("</div>");
                                     }
-
                                 } else {
                                     if (isStudentUser) {
                                         stringBuilder.append("<div><small><b>")
@@ -364,6 +365,6 @@ public class CommentComponent extends VerticalLayout {
                 }
             }
         }
-
     }
+    
 }

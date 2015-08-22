@@ -68,7 +68,8 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
             fileOutputStream = new FileOutputStream(fileUploaded);
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(FileUploadReceiver.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FileUploadReceiver.class.getName())
+                    .log(Level.SEVERE, null, ex);
             return null;
         }
 
@@ -105,7 +106,6 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
             this.isUploaded = false;
             this.isCustomeError = true;
         } else if (!(fileExtension.equalsIgnoreCase(PDF_EXTENSION))) {
-
             NotificationUtil.showError(
                     ErrorMsg.STUDENT_FAILED_UPLOAD_COURSEWORK.getText(),
                     ErrorMsg.STUDENT_WRONG_FILE_TYPE_UPLOAD.getText()

@@ -113,7 +113,6 @@ public class FooterComponent extends VerticalLayout {
         bottomRowLayout.setExpandRatio(firstSpace, 1);
         bottomRowLayout.setExpandRatio(endOfLabel, 1);
         return bottomRowLayout;
-
     }
 
 }

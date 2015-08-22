@@ -16,16 +16,8 @@
 package com.github.daytron.revworks.service;
 
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
-import static com.vaadin.sass.internal.parser.ParserConstants.URL;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.MissingResourceException;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**

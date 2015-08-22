@@ -91,4 +91,5 @@ public final class StringUtil {
         // Get back the output string reference 
         return firstLetterWordFormatted;
     }
+    
 }

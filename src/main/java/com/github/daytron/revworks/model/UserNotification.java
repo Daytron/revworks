@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
  * @author Ryan Gilera
  */
 public class UserNotification {
+    
     private final int id;
     private final String title;
     private final String message;

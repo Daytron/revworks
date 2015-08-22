@@ -36,13 +36,14 @@ public class LocalDateTimeColumnGenerator implements Table.ColumnGenerator {
     public Object generateCell(Table source, Object itemId, Object columnId) {
         Item cellItem = source.getItem(itemId);
 
-        Property<LocalDateTime> dateSubmittedProperty = cellItem.getItemProperty(columnId);
+        Property<LocalDateTime> dateSubmittedProperty = cellItem
+                .getItemProperty(columnId);
         LocalDateTime localDateTime = dateSubmittedProperty.getValue();
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter
+                .ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT);
 
         return localDateTime.format(dateTimeFormatter);
-
     }
 
 }

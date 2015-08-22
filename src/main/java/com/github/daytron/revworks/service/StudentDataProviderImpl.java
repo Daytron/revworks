@@ -217,20 +217,11 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                 courseworksContainer.addAll(listOfCourseworks);
 
                 return courseworksContainer;
-
             } catch (SQLException ex) {
                 Logger.getLogger(StudentDataProviderImpl.class.getName())
                         .log(Level.SEVERE, null, ex);
                 throw new SQLErrorQueryException(
                         ExceptionMsg.SQL_ERROR_QUERY.getMsg());
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(StudentDataProviderImpl.class.getName())
-                        .log(Level.SEVERE, null, ex);
-                throw ex;
-            } catch (IOException ex) {
-                Logger.getLogger(StudentDataProviderImpl.class.getName())
-                        .log(Level.SEVERE, null, ex);
-                throw ex;
             } finally {
                 releaseConnection();
             }
@@ -302,7 +293,6 @@ public class StudentDataProviderImpl extends DataProviderAbstract
                     ErrorMsg.CONSULT_YOUR_ADMIN.getText());
 
             return;
-
         }
 
         MainUI.get().getNavigator().navigateTo(CourseworkView.VIEW_NAME);

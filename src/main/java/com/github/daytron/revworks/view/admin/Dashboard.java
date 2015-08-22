@@ -33,7 +33,6 @@ public class Dashboard extends HorizontalLayout {
     private final DashboardMenu menu;
     
     public Dashboard(MainUI mainUI) {
-        
         Panel contentWrapperPanel = new Panel();
         contentWrapperPanel.setSizeFull();
         
@@ -81,6 +80,5 @@ public class Dashboard extends HorizontalLayout {
         }
 
     };
-    
     
 }

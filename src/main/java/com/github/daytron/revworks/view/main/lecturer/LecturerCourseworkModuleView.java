@@ -87,12 +87,15 @@ public class LecturerCourseworkModuleView extends Panel implements View {
                 isInitialised = true;
 
             } catch (NoClassAttachedToLecturerException ex) {
-                Logger.getLogger(LecturerCourseworkModuleView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LecturerCourseworkModuleView.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 NotificationUtil.showError(
                         ErrorMsg.LECTURER_NO_CLASS_FOUND.getText(),
                         ErrorMsg.CONSULT_YOUR_ADMIN.getText());
-            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException ex) {
-                Logger.getLogger(LecturerCourseworkModuleView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLErrorRetrievingConnectionAndPoolException 
+                    | SQLErrorQueryException ex) {
+                Logger.getLogger(LecturerCourseworkModuleView.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 NotificationUtil.showError(
                         ErrorMsg.DATA_FETCH_ERROR.getText(),
                         ErrorMsg.CONSULT_YOUR_ADMIN.getText());
@@ -157,7 +160,6 @@ public class LecturerCourseworkModuleView extends Panel implements View {
         }
 
         setContent(wrapperLayout);
-
     }
 
     /**
@@ -204,6 +206,7 @@ public class LecturerCourseworkModuleView extends Panel implements View {
             Label footerTableLabel = new Label();
 
             int items = beanItemContainer.size();
+            
             if (items < 1) {
                 footerTableLabel.setValue("No coursework submitted yet.");
             } else {

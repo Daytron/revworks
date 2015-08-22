@@ -88,4 +88,5 @@ public abstract class User implements Principal {
     public int getId() {
         return id;
     }
+    
 }

@@ -199,7 +199,7 @@ public class MainUI extends UI {
 
     // 6 minutes heartbeat interval
     @WebServlet(urlPatterns = "/*", name = "MainUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MainUI.class, productionMode = true,
+    @VaadinServletConfiguration(ui = MainUI.class, productionMode = false,
             closeIdleSessions = true, heartbeatInterval = 360)
     public static class MainUIServlet extends VaadinServlet implements
             SessionDestroyListener {

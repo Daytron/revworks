@@ -16,7 +16,17 @@
 package com.github.daytron.revworks.service;
 
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
+import static com.vaadin.sass.internal.parser.ParserConstants.URL;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.SQLException;
+import java.util.MissingResourceException;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * A class for establishing and retrieving connection from the database.
@@ -31,23 +41,32 @@ public class SQLConnectionManager {
     public SQLConnectionManager() {
     }
 
-
     /**
      * Returns {@link SimpleJDBCConnectionPool} object. Creates a new object if
      * no object is attached.
      *
      * @return SimpleJDBCConnectionPool object
-     * @throws SQLException occurs whenever something went wrong to the database 
+     * @throws SQLException occurs whenever something went wrong to the database
      * connection
      */
-    public SimpleJDBCConnectionPool connect() throws SQLException {
+    public SimpleJDBCConnectionPool connect() throws SQLException, MissingResourceException {
+        // retrieve properties file
+        final ResourceBundle propertyBundle = ResourceBundle
+                .getBundle("com/github/daytron/revworks/dbconfig");
+        
+        // extract credentials
+        String dbSchema = propertyBundle.getString("dbschema");
+        String dbUser = propertyBundle.getString("dbuser");
+        String dbPass = propertyBundle.getString("dbpass");
+
+        String dbSchemaPath = "jdbc:mysql://localhost/" + dbSchema;
+        
         if (jbdcConnectionPool == null) {
             jbdcConnectionPool = new SimpleJDBCConnectionPool(
                     "com.mysql.jdbc.Driver",
-                    "jdbc:mysql://localhost/appschema",
-                    "uservalidator", "sqluserpw", 4, 10);
+                    dbSchemaPath, dbUser, dbPass, 4, 10);
         }
-        
+
         return jbdcConnectionPool;
     }
 

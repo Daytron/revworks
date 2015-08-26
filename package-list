@@ -1,0 +1,17 @@
+com.github.daytron.revworks
+com.github.daytron.revworks.authentication
+com.github.daytron.revworks.component
+com.github.daytron.revworks.data
+com.github.daytron.revworks.event
+com.github.daytron.revworks.exception
+com.github.daytron.revworks.model
+com.github.daytron.revworks.presenter
+com.github.daytron.revworks.service
+com.github.daytron.revworks.service.admin
+com.github.daytron.revworks.util
+com.github.daytron.revworks.validator
+com.github.daytron.revworks.view
+com.github.daytron.revworks.view.admin
+com.github.daytron.revworks.view.main
+com.github.daytron.revworks.view.main.lecturer
+com.github.daytron.revworks.view.main.student

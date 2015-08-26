@@ -54,9 +54,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Default implementation class of {@link AccessControl} interface. This
- * implementation accepts {@link  UserType} object and any strings as username
- * and a password, and manage user access control and information.
+ * An implementation class of {@link AccessControl} interface. The entry point 
+ * for all authorisations, checks and validations in the login process for all 
+ * users. 
  *
  * @author Ryan Gilera
  */
@@ -64,11 +64,7 @@ import java.util.logging.Logger;
 public class UserAccessControl implements AccessControl {
 
     /**
-     * Expose authentication method call of {@link UserAuthentication} to pass
-     * {@link  UserType} object, username and password arguments. As a result,
-     * it accepts and returns a {@link User} as a Principal object.
-     *
-     * @param event
+     * {@inheritDoc}
      */
     @Subscribe
     @Override
@@ -93,7 +89,7 @@ public class UserAccessControl implements AccessControl {
 
     /**
      * Authenticates the user login credentials. When deem successful, a new
-     * User object is created pulled from the user info from the database and
+     * user is retrieved, pulled from the user info from the database and
      * save the object to the current session.
      *
      * @param event The custom event for regular user sign-in event
@@ -167,9 +163,7 @@ public class UserAccessControl implements AccessControl {
     }
 
     /**
-     * Validates admin login form fields and call sign-in authentication method.
-     *
-     * @param event The custom event for admin sign-in event
+     * {@inheritDoc}
      */
     @Subscribe
     @Override
@@ -192,7 +186,7 @@ public class UserAccessControl implements AccessControl {
 
     /**
      * Authenticates the admin login credentials. When deem successful, a new
-     * User object is created pulled from the user info from the database and
+     * user is retrieved, pulled from the user info from the database and
      * save the object to the current session.
      *
      * @param event The custom event for admin sign-in event
@@ -252,10 +246,7 @@ public class UserAccessControl implements AccessControl {
     }
 
     /**
-     * Launches a new modal popup window for admin login when user click the
-     * webmaster link located at the login screen footer section.
-     *
-     * @param event The custom event for webmaster link click event
+     * {@inheritDoc}
      */
     @Subscribe
     @Override
@@ -269,10 +260,7 @@ public class UserAccessControl implements AccessControl {
     }
 
     /**
-     * Applies the necessary setting for each user type. The textfield is shared
-     * by student ID and lecturer's email address.
-     *
-     * @param event The custom event for OptionGroup's value change event
+     * {@inheritDoc}
      */
     @Subscribe
     @Override
@@ -311,31 +299,49 @@ public class UserAccessControl implements AccessControl {
         usernameField.focus();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isUserSignedIn() {
         return CurrentUserSession.getPrincipal() != null;
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public boolean isUserAStudent() {
         return ((User) CurrentUserSession.getPrincipal()).isStudentUser();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public boolean isUserALecturer() {
         return ((User) CurrentUserSession.getPrincipal()).isLecturerUser();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public boolean isUserAdmin() {
         return ((User) CurrentUserSession.getPrincipal()).isAdminUser();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public String getPrincipalName() {
         return CurrentUserSession.getPrincipal().getName();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public String getFirstName() {
         return ((User) CurrentUserSession.getPrincipal()).getFirstName();
@@ -346,11 +352,17 @@ public class UserAccessControl implements AccessControl {
         return ((User) CurrentUserSession.getPrincipal()).getLastName();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public String getFullName() {
         return ((User) CurrentUserSession.getPrincipal()).getFullName();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public String getLecturerEmail() throws WrongCurrentUserTypeException {
         if (((User) CurrentUserSession.getPrincipal()).isLecturerUser()) {
@@ -361,6 +373,9 @@ public class UserAccessControl implements AccessControl {
         }
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public String getStudentID() throws WrongCurrentUserTypeException {
         if (((User) CurrentUserSession.getPrincipal()).isLecturerUser()) {
@@ -371,6 +386,9 @@ public class UserAccessControl implements AccessControl {
         }
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Subscribe
     @Override
     public void signOut(final UserLogoutRequestEvent event) {
@@ -379,21 +397,27 @@ public class UserAccessControl implements AccessControl {
                 .getServletContext().getContextPath());
 
         CurrentUserSession.signOut();
-
-        // Reloads the page which will point back to login page
-        //Page.getCurrent().reload();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public String getUserTypeString() {
         return ((User) CurrentUserSession.getPrincipal()).getUserType().getText();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public UserType getUserType() {
         return ((User) CurrentUserSession.getPrincipal()).getUserType();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public int getUserId() {
         return ((User) CurrentUserSession.getPrincipal()).getId();

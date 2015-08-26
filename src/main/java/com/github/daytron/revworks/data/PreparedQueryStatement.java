@@ -236,6 +236,11 @@ public enum PreparedQueryStatement {
         this.query = script;
     }
 
+    /**
+     * Access the premade SQL query.
+     * 
+     * @return the query String value of an item 
+     */
     public String getQuery() {
         return query;
     }

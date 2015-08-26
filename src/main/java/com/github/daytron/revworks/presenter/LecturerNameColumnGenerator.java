@@ -29,6 +29,14 @@ import com.vaadin.ui.Table;
 @SuppressWarnings("serial")
 public class LecturerNameColumnGenerator implements Table.ColumnGenerator {
 
+    /**
+     * Generates a custom cell to display the associated lecturer's full name.
+     * 
+     * @param source the associated table 
+     * @param itemId item id which pertains to a specific row in the table
+     * @param columnId the corresponding column
+     * @return the lecturer's full name
+     */
     @Override
     @SuppressWarnings("Unchecked")
     public Object generateCell(Table source, Object itemId, Object columnId) {

@@ -23,13 +23,16 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * Ui widget component for dashboard footer.
+ * UI widget component for dashboard footer.
  *
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
 public class FooterComponent extends VerticalLayout {
 
+    /**
+     * A class constructor that builds its UI components upon object creation.
+     */
     public FooterComponent() {
         setWidth("100%");
         setSpacing(true);
@@ -39,6 +42,11 @@ public class FooterComponent extends VerticalLayout {
         addComponent(createBottomRow());
     }
 
+    /**
+     * Creates the top row of the footer and adds external links.
+     * 
+     * @return HorizontalLayout object
+     */
     private HorizontalLayout createPrimaryLinks() {
         final HorizontalLayout linkLayout = new HorizontalLayout();
         linkLayout.setWidth("100%");
@@ -81,6 +89,11 @@ public class FooterComponent extends VerticalLayout {
         return linkLayout;
     }
 
+    /**
+     * Creates the bottom row of the footer and adds external links.
+     * 
+     * @return HorizontalLayout object
+     */
     private HorizontalLayout createBottomRow() {
         final HorizontalLayout bottomRowLayout = new HorizontalLayout();
         bottomRowLayout.setWidth("100%");

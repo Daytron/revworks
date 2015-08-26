@@ -29,7 +29,7 @@ import java.security.Principal;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * A static class for handling user in a session.
+ * A static class for handling temporary user data in a session.
  *
  * @author Ryan Gilera
  */
@@ -128,6 +128,11 @@ public class CurrentUserSession {
         getFileTrashBin().add(fileToBeDeletedLater);
     }
 
+    /**
+     * Saves the current CommentComponent. 
+     * 
+     * @param commentComponent CommentComponent object
+     */
     public static void setCurrentCommentComponent(CommentComponent commentComponent) {
         // shutdown previous if not null
         shutdownCommentExectorService();
@@ -142,12 +147,20 @@ public class CurrentUserSession {
         }
     }
 
+    /**
+     * Access stored CommentComponent object. 
+     * 
+     * @return CommentComponent object if present, otherwise null
+     */
     public static CommentComponent getCurrentCommentComponent() {
         CommentComponent commentComponent = (CommentComponent) VaadinSession
                 .getCurrent().getAttribute(CURRENT_COMMENT_COMPONENT);
-        return (commentComponent == null) ? null : commentComponent;
+        return commentComponent;
     }
 
+    /**
+     * Shuts down executor service currently resides in the CommentComponent.
+     */
     public static void shutdownCommentExectorService() {
         CommentComponent oldCommentComponent = getCurrentCommentComponent();
         if (oldCommentComponent != null) {
@@ -155,6 +168,11 @@ public class CurrentUserSession {
         }
     }
 
+    /**
+     * Saves the current CourseworkView object.
+     * 
+     * @param courseworkView CourseworkView object
+     */
     public static void setCurrentCourseworkView(CourseworkView courseworkView) {
         // shutdown previous if not null
         shutdownCourseworkViewExecutorService();
@@ -168,12 +186,20 @@ public class CurrentUserSession {
         }
     }
 
+    /**
+     * Access stored CourseworkView object. 
+     * 
+     * @return CommentComponent object if present, otherwise null
+     */
     public static CourseworkView getCurrentCourseworkView() {
         CourseworkView courseworkView = (CourseworkView) VaadinSession
                 .getCurrent().getAttribute(CURRENT_COURSEWORK_VIEW);
         return courseworkView;
     }
 
+    /**
+     * Shuts down executor service currently resides in the CourseworkView.
+     */
     public static void shutdownCourseworkViewExecutorService() {
         CourseworkView oldCourseworkView = getCurrentCourseworkView();
         
@@ -182,6 +208,11 @@ public class CurrentUserSession {
         }
     }
     
+    /**
+     * Saves the HeaderComponent object.
+     * 
+     * @param dashboardHeader HeaderComponent object
+     */
     public static void setDashboardHeader(HeaderComponent dashboardHeader) {        
         try {
             VaadinSession vaadinSession = VaadinSession.getCurrent();
@@ -192,12 +223,20 @@ public class CurrentUserSession {
         }
     }
     
+    /**
+     * Access the stored HeaderComponent object.
+     * 
+     * @return HeaderComponent Object 
+     */
     public static HeaderComponent getDashboardHeader() {
         HeaderComponent dashboardHeader = (HeaderComponent) VaadinSession
                 .getCurrent().getAttribute(CURRENT_DASHBOARD_HEADER);
         return dashboardHeader;
     }
     
+    /**
+     * Shuts down executor service currently resides in the HeaderComponent.
+     */
     public static void shutdownDashboardHeaderExecutorService() {
         HeaderComponent dashboardHeader = getDashboardHeader();
         
@@ -207,7 +246,7 @@ public class CurrentUserSession {
     }
 
     /**
-     * Returns the list of trash can file collection for deletion.
+     * Access the list of trash can file collection ready for deletion.
      *
      * @return The CopyOnWriteArrayList object
      */
@@ -218,7 +257,7 @@ public class CurrentUserSession {
     }
 
     /**
-     * Returns the name of the current user stored in the current session, or
+     * Access the name of the current user stored in the current session, or
      * null if no user name is stored.
      *
      * @return The user object
@@ -231,7 +270,7 @@ public class CurrentUserSession {
     }
 
     /**
-     * Returns the current semester id based on the current date.
+     * Access the current semester id based on the current date.
      *
      * @return The semester id
      */
@@ -242,7 +281,7 @@ public class CurrentUserSession {
     }
 
     /**
-     * Returns list of classes associated with the current user. For admin user
+     * Access list of classes associated with the current user. For admin user
      * the list is empty by default.
      *
      * @return CopyOnWriteArrayList object
@@ -255,7 +294,7 @@ public class CurrentUserSession {
     }
 
     /**
-     * Returns the simple jdbc connection pool object that is used throughout
+     * Access the JDBC connection pool object that is used throughout
      * the session.
      *
      * @return SimpleJDBCConnectionPool object
@@ -278,6 +317,5 @@ public class CurrentUserSession {
         MainUI.get().close();
         VaadinSession.getCurrent().close();
         VaadinService.getCurrentRequest().getWrappedSession().invalidate();
-        //VaadinSession.getCurrent().getSession().invalidate();
     }
 }

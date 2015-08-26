@@ -36,7 +36,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- *
+ * The view for creating new systemwide announcements for the Administrators.
+ * 
  * @author Ryan Gilera
  */
 public final class DashboardCreateAnnouncementView extends VerticalLayout implements View {
@@ -49,6 +50,12 @@ public final class DashboardCreateAnnouncementView extends VerticalLayout implem
     
     private Label previewContent;
 
+    /**
+     * The entry point for all derived classes of View. If not currently 
+     * initialised, then build the UI components.
+     * 
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
@@ -60,6 +67,9 @@ public final class DashboardCreateAnnouncementView extends VerticalLayout implem
         }
     }
 
+    /**
+     * Builds the UI components.
+     */
     private void initView() {
         setWidth("100%");
         setHeightUndefined();
@@ -76,6 +86,11 @@ public final class DashboardCreateAnnouncementView extends VerticalLayout implem
         setExpandRatio(contentComponent, 1);
     }
 
+    /**
+     * Creates the main UI content.
+     * 
+     * @return Component object
+     */
     private Component createContent() {
         HorizontalLayout horizontalLayout
                 = new HorizontalLayout();
@@ -93,6 +108,12 @@ public final class DashboardCreateAnnouncementView extends VerticalLayout implem
         return horizontalLayout;
     }
 
+    /**
+     * Creates sub-content as a preview section of the announcement typed in the 
+     * RichTextArea.
+     * 
+     * @return CssLayout object
+     */
     private CssLayout createPreviewSection() {
         final CssLayout wrapperItem = new CssLayout();
         wrapperItem.setSizeFull();
@@ -132,6 +153,12 @@ public final class DashboardCreateAnnouncementView extends VerticalLayout implem
         return wrapperItem;
     }
 
+    /**
+     * Creates the editor component with a TextField for title and RichTextArea 
+     * for the message.
+     * 
+     * @return FormLayout object
+     */
     private FormLayout createEditorComponent() {
         FormLayout contentLayout = new FormLayout();
 

@@ -44,7 +44,7 @@ public abstract class User implements Principal {
     }
 
     /**
-     * Returns the unique identifier of a user. {@link Principal} class default
+     * Access the unique identifier of a user. {@link Principal} class default
      * implementation of this method refers to the username of a user to
      * identify them uniquely but since there are two different usernames from
      * two different user types, it is better to treat it as User ID as they are
@@ -57,34 +57,74 @@ public abstract class User implements Principal {
         return Integer.toString(this.id);
     }
 
+    /**
+     * Access the user's full name.
+     * 
+     * @return user's full name as String 
+     */
     public String getFullName() {
         return firstName + " " + lastName;
     }
 
+    /**
+     * Access the user's first name.
+     * 
+     * @return the user's first name as String
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Access the user's last name.
+     * 
+     * @return the user's last name as String
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * Access the type for this user
+     * 
+     * @return UserType enum item
+     */
     public UserType getUserType() {
         return userType;
     }
 
+    /**
+     * Determines whether the user is a lecturer or not.
+     * 
+     * @return true if the user is a lecturer, otherwise false.
+     */
     public boolean isLecturerUser() {
         return userType == UserType.LECTURER;
     }
 
+    /**
+     * Determines whether the user is a student or not. 
+     * 
+     * @return true if the user is a student, otherwise false.
+     */
     public boolean isStudentUser() {
         return userType == UserType.STUDENT;
     }
 
+    /**
+     * Determines whether the user is an admin or not. 
+     * 
+     * @return true if the user is an admin, otherwise false.
+     */
     public boolean isAdminUser() {
         return userType == UserType.ADMIN;
     }
 
+    /**
+     * Access the user id.
+     * 
+     * @return id as integer
+     */
     public int getId() {
         return id;
     }

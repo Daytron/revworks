@@ -24,20 +24,36 @@ import com.vaadin.ui.Button;
 import java.util.Map;
 
 /**
- *
+ * Event handler for clicking note button.
+ * 
  * @author Ryan Gilera
  */
 public class NoteButtonListener implements Button.ClickListener {
 
     private final CourseworkView courseworkView;
     private final int associatedPage;
-
+    
+    /**
+     * A class constructor that takes a CourseworkView object.
+     * 
+     * @param courseworkView the view for displaying coursework
+     * @param associatedPage the associated page as integer
+     */
     public NoteButtonListener(CourseworkView courseworkView,
             int associatedPage) {
         this.courseworkView = courseworkView;
         this.associatedPage = associatedPage;
     }
 
+    /**
+     * Verifies the button is registered in the CourseworkView. If no noteId is 
+     * found, skip the remaining statements. If a comment 
+     * component is already opened skips new comment component generation, 
+     * otherwise generate a new comment component. This also clears previous 
+     * clicked style applied to the buttons.
+     * 
+     * @param event button click event
+     */
     @Override
     public void buttonClick(Button.ClickEvent event) {
         int noteId = 0;
@@ -62,8 +78,8 @@ public class NoteButtonListener implements Button.ClickListener {
             }
         }
 
-        // Skip new comment layout generation if it is the current 
-        // stored commentLayout and show it if hidden
+        // Skip new comment layout generation if there is a current 
+        // stored commentLayout and show it if it is hidden
         if (noteId == courseworkView.getCommentLayout().getNoteId()) {
             courseworkView.getCommentLayout().setVisible(true);
             

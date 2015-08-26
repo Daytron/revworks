@@ -28,6 +28,15 @@ import com.vaadin.ui.Table;
 import com.github.daytron.revworks.model.StudentUser;
 public class StudentIdColumnGenerator implements Table.ColumnGenerator {
 
+    /**
+     * Generates a custom cell to display the student id of the associated 
+     * itemId.
+     * 
+     * @param source the associated table 
+     * @param itemId item id which pertains to a specific row in the table
+     * @param columnId the corresponding column
+     * @return the student id
+     */
     @Override
     public Object generateCell(Table source, Object itemId, Object columnId) {
         Item item = source.getItem(itemId);

@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
-public class SQLConnectionManager {
+public final class SQLConnectionManager {
 
     private SimpleJDBCConnectionPool jbdcConnectionPool = null;
 
@@ -42,18 +42,19 @@ public class SQLConnectionManager {
      * connection
      */
     public SimpleJDBCConnectionPool connect() throws SQLException, MissingResourceException {
-        // retrieve properties file
-        final ResourceBundle propertyBundle = ResourceBundle
-                .getBundle("com/github/daytron/revworks/dbconfig");
-        
-        // extract credentials
-        String dbSchema = propertyBundle.getString("dbschema");
-        String dbUser = propertyBundle.getString("dbuser");
-        String dbPass = propertyBundle.getString("dbpass");
 
-        String dbSchemaPath = "jdbc:mysql://localhost/" + dbSchema;
-        
         if (jbdcConnectionPool == null) {
+            // retrieve properties file
+            final ResourceBundle propertyBundle = ResourceBundle
+                    .getBundle("com/github/daytron/revworks/dbconfig");
+
+            // extract credentials
+            String dbSchema = propertyBundle.getString("dbschema");
+            String dbUser = propertyBundle.getString("dbuser");
+            String dbPass = propertyBundle.getString("dbpass");
+
+            String dbSchemaPath = "jdbc:mysql://localhost/" + dbSchema;
+
             jbdcConnectionPool = new SimpleJDBCConnectionPool(
                     "com.mysql.jdbc.Driver",
                     dbSchemaPath, dbUser, dbPass, 4, 10);

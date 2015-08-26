@@ -28,6 +28,15 @@ import com.vaadin.ui.Table;
  */
 public class ModuleIDColumnGenerator implements Table.ColumnGenerator {
 
+    /**
+     * Generates a custom cell to display the module id of the associated 
+     * itemId.
+     * 
+     * @param source the associated table 
+     * @param itemId item id which pertains to a specific row in the table
+     * @param columnId the corresponding column
+     * @return the module id as integer
+     */
     @Override
     public Object generateCell(Table source, Object itemId, Object columnId) {
         // First retrieve the item which is the row item 

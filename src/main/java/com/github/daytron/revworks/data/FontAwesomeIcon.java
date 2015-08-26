@@ -33,10 +33,7 @@ public enum FontAwesomeIcon {
     EXCLAMATION_TRIANGLE("<i class=\"fa fa-exclamation-triangle "),
     DESKTOP("<i class=\"fa fa-desktop "),
     SERVER("<i class=\"fa fa-server "),
-    EXTERNAL_LINK("<i class=\"fa fa-external-link "),
-    
-    // NONE SIZEABLE - SPINNERS
-    REFRESHER_SPIN("<i class=\"fa fa-refresh fa-spin\"></i>");
+    EXTERNAL_LINK("<i class=\"fa fa-external-link ");
 
     private final String code;
 
@@ -44,40 +41,84 @@ public enum FontAwesomeIcon {
         this.code = code;
     }
 
+    /**
+     * Access the HTML code for the particular icon with 33% increase in size 
+     * and two literal spaces at the end.
+     * 
+     * @return HTML code for an icon. 
+     */
     public String getLgSize() {
         return code + "fa-lg\"></i>&nbsp;&nbsp;";
     }
     
+    /**
+     * Access the HTML code for the particular icon with 33% increase in size 
+     * and no spaces.
+     * 
+     * @return HTML code for an icon. 
+     */
     public String getLgSizeWithNoSpace() {
         return code + "fa-lg\"></i>";
     }
     
+    /**
+     * Access the HTML code for the particular icon in normal size 
+     * with no spaces.
+     * 
+     * @return HTML code for an icon. 
+     */
     public String get1xSizeWithNoSpace() {
         return code + "fa-1x\"></i>";
     }
 
+    /**
+     * Access the HTML code for the particular icon with 200% increase in size 
+     * and two literal spaces at the end.
+     * 
+     * @return HTML code for an icon. 
+     */
     public String get2xSize() {
         return code + "fa-2x\"></i>&nbsp;&nbsp;";
     }
 
+    /**
+     * Access the HTML code for the particular icon with 300% increase in size 
+     * and two literal spaces at the end.
+     * 
+     * @return HTML code for an icon. 
+     */
     public String get3xSize() {
         return code + "fa-3x\"></i>&nbsp;&nbsp;";
     }
 
+    /**
+     * Access the HTML code for the particular icon with 400% increase in size 
+     * and two literal spaces at the end.
+     * 
+     * @return HTML code for an icon. 
+     */
     public String get4xSize() {
         return code + "fa-4x\"></i>&nbsp;&nbsp;";
     }
 
+    /**
+     * Access the HTML code for the particular icon with 500% increase in size 
+     * and two literal spaces at the end.
+     * 
+     * @return HTML code for an icon. 
+     */
     public String get5xSize() {
         return code + "fa-5x\"></i>&nbsp;&nbsp;";
     }
     
+    /**
+     * Access the HTML code for the particular icon with 500% increase in size 
+     * and no extra spaces.
+     * 
+     * @return HTML code for an icon. 
+     */
     public String get5xSizeWithNoSpace() {
         return code + "fa-5x\"></i>";
-    }
-    
-    public String getSpinner() {
-        return code + "&nbsp;&nbsp;";
     }
 
 }

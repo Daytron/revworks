@@ -31,6 +31,14 @@ import java.time.format.FormatStyle;
 @SuppressWarnings("serial")
 public class LocalDateTimeColumnGenerator implements Table.ColumnGenerator {
 
+    /**
+     * Generates a custom cell a text formatted String value of LocalDateTime.
+     * 
+     * @param source the associated table 
+     * @param itemId item id which pertains to a specific row in the table
+     * @param columnId the corresponding column
+     * @return the formatted text date time
+     */
     @Override
     @SuppressWarnings("Unchecked")
     public Object generateCell(Table source, Object itemId, Object columnId) {

@@ -31,7 +31,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- *
+ * Event handler for clicking notification button.
+ * 
  * @author Ryan Gilera
  */
 public class NotificationButtonListener implements Button.ClickListener {
@@ -39,6 +40,12 @@ public class NotificationButtonListener implements Button.ClickListener {
     public NotificationButtonListener() {
     }
 
+    /**
+     * Opens a new pop window and populate it with notifications if now window  
+     * is currently opened, otherwise it closes the current popup window.
+     * 
+     * @param event button click event
+     */
     @Override
     public void buttonClick(Button.ClickEvent event) {
 

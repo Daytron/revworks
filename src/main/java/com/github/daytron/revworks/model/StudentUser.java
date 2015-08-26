@@ -43,7 +43,7 @@ public class StudentUser extends User {
     }
 
     /**
-     * Returns student's id code.
+     * Access the student's id code.
      *
      * @return String object for student id information
      */

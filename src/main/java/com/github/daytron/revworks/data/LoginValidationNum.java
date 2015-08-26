@@ -16,7 +16,7 @@
 package com.github.daytron.revworks.data;
 
 /**
- * Collection of constant integer values for Login screen.
+ * Collection of constant integer values for the Login screen.
  * 
  * @author Ryan Gilera
  */
@@ -35,6 +35,11 @@ public enum LoginValidationNum {
         this.value = value;
     }
 
+    /**
+     * Access the integer constants used for the login view.
+     * 
+     * @return the integer value of an item 
+     */
     public int getValue() {
         return value;
     }

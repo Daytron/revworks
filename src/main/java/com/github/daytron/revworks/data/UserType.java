@@ -32,6 +32,11 @@ public enum UserType {
         this.text = text;
     }
 
+    /**
+     * Access the String value for the user type.
+     * 
+     * @return the text value of an item 
+     */
     public String getText() {
         return text;
     }

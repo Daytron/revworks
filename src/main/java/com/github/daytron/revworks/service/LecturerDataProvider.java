@@ -15,11 +15,11 @@
  */
 package com.github.daytron.revworks.service;
 
-import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.vaadin.data.util.BeanItemContainer;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -29,9 +29,29 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public interface LecturerDataProvider {
 
+    /**
+     * Retrieves coursework data from the database for the lecturer. Returns a 
+     * ConcurrentHashMap object with ClassTable as its key and BeanItemContainer 
+     * as the value. Empty map is return if lecturer has no class registered. 
+     * BeanItemContainer becomes empty if no coursework data is found for a 
+     * particular {@link ClassTable}.
+     * 
+     * <p>
+     * A temporary file is created to hold the stream data of coursework itself.
+     * 
+     * <p>
+     * Throws custom exceptions for various error events.
+     * 
+     * @return ConcurrentHashMap with ClassTable as its key and BeanItemContainer 
+     * as the value
+     * @throws SQLErrorRetrievingConnectionAndPoolException thrown if error 
+     * connecting to the SQL connection pool occurs
+     * @throws SQLErrorQueryException occurs when SQLException is captured
+     * @throws java.io.IOException occurs when writing byte stream data into the file
+     */
     public ConcurrentHashMap<ClassTable,BeanItemContainer> extractCourseworkData() 
             throws 
             SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, 
-            NoClassAttachedToLecturerException;
+            IOException;
     
 }

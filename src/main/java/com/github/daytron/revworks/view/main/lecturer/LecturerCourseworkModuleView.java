@@ -19,7 +19,6 @@ import com.github.daytron.revworks.MainUI;
 import com.github.daytron.revworks.data.ErrorMsg;
 import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
-import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.model.ClassTable;
@@ -47,13 +46,15 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.ValoTheme;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * The view component for coursework module view for the lecturers.
+ * 
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
@@ -67,10 +68,19 @@ public class LecturerCourseworkModuleView extends Panel implements View {
     private ConcurrentHashMap<ClassTable, BeanItemContainer> listOfNBeanItemContainers;
     private final TabSheet tabSheet;
 
+    /**
+     * Initialises a new TabSheet object in the constructor.
+     */
     public LecturerCourseworkModuleView() {
         this.tabSheet = new TabSheet();
     }
 
+    /**
+     * The entry point for all derived classes of View. If not currently 
+     * initialised, then builds the UI components.
+     * 
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         // Important!!
@@ -86,13 +96,7 @@ public class LecturerCourseworkModuleView extends Panel implements View {
                 initView();
                 isInitialised = true;
 
-            } catch (NoClassAttachedToLecturerException ex) {
-                Logger.getLogger(LecturerCourseworkModuleView.class.getName())
-                        .log(Level.SEVERE, null, ex);
-                NotificationUtil.showError(
-                        ErrorMsg.LECTURER_NO_CLASS_FOUND.getText(),
-                        ErrorMsg.CONSULT_YOUR_ADMIN.getText());
-            } catch (SQLErrorRetrievingConnectionAndPoolException 
+            } catch (IOException | SQLErrorRetrievingConnectionAndPoolException 
                     | SQLErrorQueryException ex) {
                 Logger.getLogger(LecturerCourseworkModuleView.class.getName())
                         .log(Level.SEVERE, null, ex);
@@ -103,6 +107,9 @@ public class LecturerCourseworkModuleView extends Panel implements View {
         }
     }
 
+    /**
+     * Creates the main content of this view. 
+     */
     private void initView() {
         setSizeFull();
 
@@ -173,6 +180,12 @@ public class LecturerCourseworkModuleView extends Panel implements View {
         private final Table moduleTable;
         private Coursework selectedCoursework;
 
+        /**
+         * A class constructor that takes BeanItemContainer and String objects.
+         * 
+         * @param beanItemContainer contains Coursework objects as bean
+         * @param moduleNameAsTableName module name for the Table label
+         */
         public TabWidget(BeanItemContainer beanItemContainer, String moduleNameAsTableName) {
             this.beanItemContainer = beanItemContainer;
             this.moduleNameAsTableName = moduleNameAsTableName;
@@ -180,14 +193,29 @@ public class LecturerCourseworkModuleView extends Panel implements View {
             this.selectedCoursework = null;
         }
 
+        /**
+         * Access the courseworks via bean container
+         * 
+         * @return BeanItemContainer object
+         */
         public BeanItemContainer getBeanItemContainer() {
             return beanItemContainer;
         }
 
+        /**
+         * Access the module name.
+         * 
+         * @return module name as String value 
+         */
         public String getModuleNameAsTableName() {
             return moduleNameAsTableName;
         }
 
+        /**
+         * Builds the tab item for the particular module.
+         * 
+         * @return CssLayout object
+         */
         public CssLayout createNewTab() {
             final CssLayout wrapperItem = new CssLayout();
             wrapperItem.setWidth("100%");
@@ -234,6 +262,14 @@ public class LecturerCourseworkModuleView extends Panel implements View {
             return wrapperItem;
         }
 
+        /**
+         * Creates the table itself. The table will contain the list of 
+         * courseworks submitted for the particular module.
+         * 
+         * @param beanItemContainer bean container for courseworks
+         * @param moduleNameAsTableName module name
+         * @return Table object
+         */
         public Table createSubmittedCourseworkTable(BeanItemContainer beanItemContainer,
                 String moduleNameAsTableName) {
 
@@ -314,6 +350,12 @@ public class LecturerCourseworkModuleView extends Panel implements View {
 
         }
 
+        /**
+         * Creates the panel that consists of a button for opening the selected 
+         * coursework in the table.
+         * 
+         * @return HorizontalLayout object
+         */
         public HorizontalLayout createPanelHeader() {
             final HorizontalLayout layoutHeader = new HorizontalLayout();
             layoutHeader.addStyleName("v-panel-caption");

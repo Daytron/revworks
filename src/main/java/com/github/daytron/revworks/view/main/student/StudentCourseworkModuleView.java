@@ -21,7 +21,6 @@ import com.github.daytron.revworks.event.AppEvent;
 import com.github.daytron.revworks.event.AppEventBus;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.presenter.LecturerNameColumnGenerator;
 import com.github.daytron.revworks.presenter.LocalDateTimeColumnGenerator;
@@ -50,6 +49,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * The view component for coursework module view for the students.
  *
  * @author Ryan Gilera
  */
@@ -64,11 +64,20 @@ public class StudentCourseworkModuleView extends Panel implements View {
     private BeanItemContainer<Coursework> courseworksContainer;
     private Coursework selectedCoursework;
 
+    /**
+     * Initially sets selected coursework as null by default.
+     */
     public StudentCourseworkModuleView() {
         // init empty by default
         this.selectedCoursework = null;
     }
 
+    /**
+     * The entry point for all derived classes of View. If not currently
+     * initialised, then builds the UI components.
+     *
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         // Important!!
@@ -83,7 +92,7 @@ public class StudentCourseworkModuleView extends Panel implements View {
                         .extractCourseworkData();
                 initView();
                 isInitialised = true;
-            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException | SQLNoResultFoundException | IOException ex) {
+            } catch (SQLErrorRetrievingConnectionAndPoolException | SQLErrorQueryException | IOException ex) {
                 Logger.getLogger(StudentCourseworkModuleView.class.getName()).log(Level.SEVERE, null, ex);
                 NotificationUtil.showError(
                         ErrorMsg.DATA_FETCH_ERROR.getText(),
@@ -92,6 +101,9 @@ public class StudentCourseworkModuleView extends Panel implements View {
         }
     }
 
+    /**
+     * Creates the main content of this view.
+     */
     private void initView() {
         setSizeFull();
 
@@ -171,6 +183,12 @@ public class StudentCourseworkModuleView extends Panel implements View {
         setContent(wrapperLayout);
     }
 
+    /**
+     * Creates the table itself. The table will contain the list of courseworks
+     * submitted for the particular module.
+     *
+     * @return Table object
+     */
     public Table createSubmittedCourseworkTable() {
         final Table courseworksTable = new Table("", courseworksContainer);
         courseworksTable.setEditable(false);
@@ -251,6 +269,13 @@ public class StudentCourseworkModuleView extends Panel implements View {
         return courseworksTable;
     }
 
+    /**
+     * Creates the panel that consists of a button for opening the selected
+     * coursework in the table and another button for submitting a new
+     * coursework.
+     *
+     * @return HorizontalLayout object
+     */
     public HorizontalLayout createPanelHeader() {
         final HorizontalLayout layoutHeader = new HorizontalLayout();
         layoutHeader.addStyleName("v-panel-caption");
@@ -296,7 +321,7 @@ public class StudentCourseworkModuleView extends Panel implements View {
                         StudentSubmitCourseworkView.VIEW_NAME);
             }
         });
-        
+
         layoutHeader.addComponent(submitButton);
 
         layoutHeader.setExpandRatio(titleLabel, 1);

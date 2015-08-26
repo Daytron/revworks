@@ -21,7 +21,13 @@ import com.vaadin.shared.Position;
 import com.vaadin.ui.Notification;
 
 /**
- * Utility class for formatted notifications.
+ * Utility class for formatted notifications. These notifications last for few 
+ * seconds as soon the user triggers mouse movement. Other notification like 
+ * information notification can be closed by clicking the balloon.
+ * 
+ * <p>
+ * These notifications are different from the user notifications which can be 
+ * found in the notification pop window.
  *
  * @author Ryan Gilera
  */
@@ -32,7 +38,7 @@ public final class NotificationUtil {
     }
 
     /**
-     * Creates an error notification with a single parameter for caption.
+     * Creates an error notification that takes a single argument for caption.
      *
      * @param caption The main message of the notification
      */
@@ -41,7 +47,7 @@ public final class NotificationUtil {
     }
 
     /**
-     * Creates an error notification with two parameters for caption and time
+     * Creates an error notification that takes two arguments for caption and time
      * delay.
      *
      * @param caption The main message of the notification
@@ -52,7 +58,7 @@ public final class NotificationUtil {
     }
 
     /**
-     * Creates an error notification with two parameters for caption and
+     * Creates an error notification that takes two arguments for caption and
      * description.
      *
      * @param caption The main message of the notification
@@ -63,7 +69,7 @@ public final class NotificationUtil {
     }
 
     /**
-     * Creates an error notification with three parameters for caption,
+     * Creates an error notification that takes three arguments for caption,
      * description and time delay.
      *
      * @param caption The main message of the notification
@@ -93,10 +99,25 @@ public final class NotificationUtil {
         errorNotification.show(Page.getCurrent());
     }
 
+    /**
+     * Creates an information notification that takes two arguments for title 
+     * and message.
+     * 
+     * @param title the title of the message
+     * @param message the message itself
+     */
     public static void showInformation(String title, String message) {
         showInformation("", title, message);
     }
 
+    /**
+     * Creates an information notification that takes three arguments for icon, 
+     * title and message.
+     * 
+     * @param fontAwesomeIcon an icon from FontAwesomeIcon
+     * @param title the title of the message
+     * @param message the message itself 
+     */
     public static void showInformation(String fontAwesomeIcon, String title,
             String message) {
         if (!fontAwesomeIcon.isEmpty()) {
@@ -119,6 +140,13 @@ public final class NotificationUtil {
         newNotification.show(Page.getCurrent());
     }
 
+    /**
+     * Creates a warning notification that takes two arguments for title and 
+     * message.
+     * 
+     * @param title the title of the message
+     * @param message the message itself 
+     */
     public static void showWarning(String title, String message) {
         
         title = FontAwesomeIcon.EXCLAMATION_CIRCLE.get2xSize() + title;

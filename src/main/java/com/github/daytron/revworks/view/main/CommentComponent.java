@@ -45,7 +45,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Shared GUI view component for lecturers and students for displaying comments 
+ * in the coursework view.
+ * 
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
@@ -65,11 +67,32 @@ public class CommentComponent extends VerticalLayout {
     private final CourseworkView courseworkView;
     private final Panel commentContainerPanel;
 
+    /**
+     * This constructor is used when creating a comment and a note at the same 
+     * time. It does not take note id as an argument as a result. By default it 
+     * is set to zero. Note id starts at 1.
+     * 
+     * @param coursework the associated coursework
+     * @param isFirstComment boolean value for initial comment creation
+     * @param page the associated page
+     * @param courseworkView The associated view object
+     */
     public CommentComponent(Coursework coursework,
             boolean isFirstComment, int page, CourseworkView courseworkView) {
         this(coursework, isFirstComment, page, 0, courseworkView);
     }
 
+    /**
+     * This constructor is used when creating a comment in an existing note. It 
+     * launches an executor service for update and retrieval of comments from 
+     * the database. 
+     * 
+     * @param coursework the associated coursework
+     * @param isFirstComment boolean value for initial comment creation
+     * @param page the associated page
+     * @param noteId the note id where the comments are associated with
+     * @param courseworkView The associated view object
+     */
     public CommentComponent(Coursework coursework,
             boolean isFirstComment, int page, int noteId,
             CourseworkView courseworkView) {
@@ -106,6 +129,14 @@ public class CommentComponent extends VerticalLayout {
                 0, 500, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Creates a header bar on top of this component with label and a close 
+     * button. The close button allows this component to be hidden in plain 
+     * sight. When a new comment component replaces this object, this object is 
+     * then destroyed.
+     * 
+     * @return HorizontalLayout object
+     */
     private HorizontalLayout createHeader() {
         final HorizontalLayout headerLayout = new HorizontalLayout();
         headerLayout.addStyleName("v-panel-caption");
@@ -146,6 +177,12 @@ public class CommentComponent extends VerticalLayout {
         return headerLayout;
     }
 
+    /**
+     * Creates the content area consists of comment area, textArea and a submit 
+     * button.
+     * 
+     * @return 
+     */
     private VerticalLayout createContent() {
         final VerticalLayout contentLayout = new VerticalLayout();
         contentLayout.setSizeFull();
@@ -210,28 +247,57 @@ public class CommentComponent extends VerticalLayout {
         return contentLayout;
     }
 
+    /**
+     * Access the comment label.
+     * 
+     * @return label object
+     */
     public Label getCommentLabel() {
         return commentLabel;
     }
 
+    /**
+     * Access the text area.
+     * 
+     * @return TextArea object
+     */
     public TextArea getWriterArea() {
         return writerArea;
     }
 
+    /**
+     * Sets the noteId.
+     * 
+     * @param noteId integer value
+     */
     public void setNoteId(int noteId) {
         this.noteId = noteId;
     }
 
+    /**
+     * Access the note id.
+     * 
+     * @return integer value
+     */
     public int getNoteId() {
         return noteId;
     }
 
+    /**
+     * shuts down the executor service for retrieving and updating comments 
+     * in real time.
+     */
     public void shutdownCommentExecutor() {
         scheduledFuture.cancel(true);
         scheduler.shutdownNow();
     }
 
-    final class CommentsExtractorRunnable extends DataProviderAbstract implements Runnable {
+    /**
+     * A Runnable object for Executor service that updates and retrieves comments 
+     * continuously. 
+     */
+    final class CommentsExtractorRunnable extends DataProviderAbstract 
+    implements Runnable {
 
         private int previousCommentCount = 0;
         private final boolean isStudentUser;
@@ -240,6 +306,11 @@ public class CommentComponent extends VerticalLayout {
             this.isStudentUser = isStudentUser;
         }
 
+        /**
+         * Updates and retrieves comments continuously from the database. If 
+         * the associated comment component only just created its first comment, 
+         * no need to retrieve non-existing previous comments.
+         */
         @Override
         public void run() {
             if (!isFirstComment && noteId > 0) {

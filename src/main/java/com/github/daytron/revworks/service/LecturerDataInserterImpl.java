@@ -35,6 +35,9 @@ import java.util.logging.Logger;
 public class LecturerDataInserterImpl extends DataInserterAbstract implements
         LecturerDataInserter {
 
+    /**
+     * {@inheritDoc }
+     */
     @Subscribe
     @Override
     public void insertNewAnnouncement(final LecturerSubmitNewAnnouncementEvent event) {

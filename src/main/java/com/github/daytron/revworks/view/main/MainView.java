@@ -30,7 +30,9 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- *
+ * The main view page for the student and lecturer users. Menu, content and footer  
+ * components are built and combined in this class.
+ * 
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
@@ -42,8 +44,12 @@ public class MainView extends VerticalLayout {
     private final FooterComponent dashboardFooter;
     private final Panel scrollableContentPanel;
     
+    /**
+     * Builds the main components as object is created.
+     * 
+     * @param mainUI The one and only derived class of UI passed as an argument
+     */
     public MainView(MainUI mainUI) {
-
         setSizeFull();
         addStyleName("dashscreen-main-layout");
         
@@ -57,8 +63,8 @@ public class MainView extends VerticalLayout {
         scrollableContentPanel.setSizeFull();
         
         viewContainer = new VerticalLayout();
-//        viewContainer.setWidth("100%");
-//        viewContainer.setHeightUndefined();
+        // viewContainer.setWidth("100%");
+        // viewContainer.setHeightUndefined();
         viewContainer.setSizeFull();
         
         
@@ -126,6 +132,11 @@ public class MainView extends VerticalLayout {
         navigator.navigateTo(HomeView.VIEW_NAME);
     }
     
+    /**
+     * Toggles the occurrence of maximising or minimising the coursework view.
+     * 
+     * @param event a custom event object defined in {@link com.github.daytron.revworks.event.AppEvent} class
+     */
     @Subscribe
     public void toggleMaxViewForCourseworkView(final ToggleCourseworkViewEvent event) {
         viewContainer.setVisible(true);

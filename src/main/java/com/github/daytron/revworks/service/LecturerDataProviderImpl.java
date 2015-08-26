@@ -21,7 +21,6 @@ import com.github.daytron.revworks.data.ExceptionMsg;
 import com.github.daytron.revworks.data.FilePath;
 import com.github.daytron.revworks.data.PreparedQueryStatement;
 import com.github.daytron.revworks.event.AppEvent.*;
-import com.github.daytron.revworks.exception.NoClassAttachedToLecturerException;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLErrorUpdateException;
@@ -59,10 +58,13 @@ public class LecturerDataProviderImpl extends DataProviderAbstract
         super();
     }
 
+    /**
+     * {@inheritDoc } 
+     */
     @Override
     public ConcurrentHashMap<ClassTable, BeanItemContainer> extractCourseworkData() throws
-            SQLErrorRetrievingConnectionAndPoolException,
-            SQLErrorQueryException, NoClassAttachedToLecturerException {
+            SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException, 
+            IOException {
         CopyOnWriteArrayList<ClassTable> listOfClassTables
                 = CurrentUserSession.getCurrentClassTables();
 

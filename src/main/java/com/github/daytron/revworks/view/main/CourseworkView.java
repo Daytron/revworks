@@ -56,7 +56,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Shared GUI view component for lecturers and students for displaying coursework.
+ * This component consist of three sections, the coursework page view, the notes 
+ * panel and the comment component.
+ * 
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
@@ -82,12 +85,23 @@ public class CourseworkView extends VerticalLayout implements View {
     private Runnable noteRunnableTask;
     private ScheduledFuture noteScheduledFuture;
 
+    /**
+     * Builds its corresponding GUI components upon creation of this object.
+     */
     public CourseworkView() {
         this.pageField = new TextField();
         coursework = null;
         setSizeFull();
     }
 
+    /**
+     * The entry point for all derived classes of View. If not currently 
+     * initialised, then builds the UI components. Skips UI creation if the 
+     * received coursework is null. It launches an executor service for update 
+     * and retrieval of notes from the database. 
+     * 
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
@@ -134,6 +148,13 @@ public class CourseworkView extends VerticalLayout implements View {
         }
     }
 
+    /**
+     * Creates the main content of this view. The three main sub components are 
+     * wrapped by a VerticalLayout which can be maximised or minimised.
+     * 
+     * @throws Exception occurs when there is failure in extracting pages from 
+     * the coursework.
+     */
     private void initView() throws Exception {
         final VerticalLayout expanderWraperLayout = new VerticalLayout();
         expanderWraperLayout.setSizeFull();
@@ -156,6 +177,15 @@ public class CourseworkView extends VerticalLayout implements View {
         addComponent(expanderWraperLayout);
     }
 
+    /**
+     * A header bar component just above the three main sub components. The 
+     * header has a label on the left and an expander/minimiser button on the 
+     * right.
+     * 
+     * @param expanderLayout the layout in which the header lies to control its 
+     * size
+     * @return header as HorizontalLayout object 
+     */
     private HorizontalLayout createHeaderView(final VerticalLayout expanderLayout) {
         HorizontalLayout toolbarLayout = new HorizontalLayout();
         toolbarLayout.addStyleName("content-toolbar");
@@ -195,6 +225,16 @@ public class CourseworkView extends VerticalLayout implements View {
         return toolbarLayout;
     }
 
+    /**
+     * Creates a sub-section for the main three components of this view namely 
+     * the coursework viewer, notes panel and comment component.
+     * 
+     * @return the sub-section content as VerticalLayout object
+     * @throws IOException pass from createCourseworkViewer() method for failing 
+     * to extract pages from the coursework
+     * @throws Exception throws the highest level of exception for various 
+     * failures on the process of extracting pages.
+     */
     private VerticalLayout createContentLayout() throws IOException, Exception {
         final VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setSizeFull();
@@ -232,6 +272,16 @@ public class CourseworkView extends VerticalLayout implements View {
         return verticalLayout;
     }
 
+    /**
+     * The component for coursework viewer. Allows to navigate to other pages 
+     * through buttons and textfield for quick page turn.
+     * 
+     * @return the coursework viewer as VerticalLayout object
+     * @throws IOException occurs when extracting pages from the coursework
+     * fails
+     * @throws Exception throws the highest level of exception for various 
+     * failures on the process of extracting pages.
+     */
     private VerticalLayout createCourseworkViewer() throws IOException, Exception {
         final VerticalLayout viewerLayout = new VerticalLayout();
         viewerLayout.setSizeFull();
@@ -381,6 +431,12 @@ public class CourseworkView extends VerticalLayout implements View {
         return viewerLayout;
     }
 
+    /**
+     * The note panel component that holds the note buttons. Each button 
+     * corresponds to a comment component.
+     * 
+     * @return the note panel as VerticalLayout object
+     */
     private VerticalLayout createNoteComponent() {
         final VerticalLayout noteLayout = new VerticalLayout();
         noteLayout.setSizeFull();
@@ -444,43 +500,91 @@ public class CourseworkView extends VerticalLayout implements View {
         return noteLayout;
     }
 
+    /**
+     * Access the area where button lies.
+     * 
+     * @return VerticalLayout object
+     */
     public VerticalLayout getScrollNoteLayout() {
         return scrollNoteLayout;
     }
 
+    /**
+     * Access the current comment component.
+     * 
+     * @return CommentComponent object
+     */
     public CommentComponent getCommentLayout() {
         return commentLayout;
     }
 
+    /**
+     * Access the list of note buttons.
+     * 
+     * @return Map object
+     */
     public Map<Integer, Button> getListOfNoteButtons() {
         return listOfNoteButtons;
     }
 
+    /**
+     * Shuts down the executor service for update and retrieval of notes.
+     */
     public void shutdownNoteExecutor() {
         noteScheduledFuture.cancel(true);
         noteScheduler.shutdownNow();
     }
 
+    /**
+     * Access the immediate wrapper layout for the three sub main components.
+     * 
+     * @return HorizontalLayout object
+     */
     public HorizontalLayout getCoreContentLayout() {
         return coreContentLayout;
     }
 
+    /**
+     * Access the coursework.
+     * 
+     * @return Coursework object
+     */
     public Coursework getCoursework() {
         return coursework;
     }
 
+    /**
+     * Access the current page.
+     * 
+     * @return current page as integer value
+     */
     public int getCurrentPage() {
         return currentPage;
     }
 
+    /**
+     * Sets a CommentComponent object.
+     * 
+     * @param commentLayout CommentComponent object
+     */
     public void setCommentLayout(CommentComponent commentLayout) {
         this.commentLayout = commentLayout;
     }
 
+    /**
+     * Sets the current page.
+     * 
+     * @param currentPage as integer value
+     */
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
     }
 
+    /**
+     * Flips to the associated page received as an argument.
+     * 
+     * @param pageNumber page as integer value
+     */
     public void flipToPage(int pageNumber) {
         FileResource fileResource
                 = new FileResource(listOfPdfPages.get(pageNumber - 1));
@@ -492,6 +596,10 @@ public class CourseworkView extends VerticalLayout implements View {
         pageField.setValue("" + currentPage);
     }
 
+    /**
+     * A Runnable object for Executor service that updates and retrieves notes 
+     * continuously. 
+     */
     final class NotesExtractorRunnable extends DataProviderAbstract implements Runnable {
 
         private int previousNoteCount = 0;

@@ -22,14 +22,31 @@ package com.github.daytron.revworks.exception;
  */
 public class SQLErrorRetrievingConnectionAndPoolException extends Exception {
 
+    /**
+     * A class constructor that customises the Throwable object with a custom 
+     * message.
+     * 
+     * @param msg the custom message 
+     * @param t Throwable object
+     */
     public SQLErrorRetrievingConnectionAndPoolException(String msg, Throwable t) {
         super(msg, t);
     }
 
+    /**
+     * A class constructor that accepts only a custom message.
+     * 
+     * @param msg the custom message as a String value
+     */
     public SQLErrorRetrievingConnectionAndPoolException(String msg) {
         super(msg);
     }
 
+    /**
+     * A class constructor that accepts only a Throwable object.
+     * 
+     * @param t Throwable object
+     */
     public SQLErrorRetrievingConnectionAndPoolException(Throwable t) {
         super(t);
     }

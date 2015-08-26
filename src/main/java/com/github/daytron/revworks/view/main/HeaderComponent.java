@@ -47,7 +47,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Ui widget component for dashboard header.
+ * UI widget component as the main header for the main view.
  *
  * @author Ryan Gilera
  */
@@ -59,6 +59,11 @@ public class HeaderComponent extends HorizontalLayout {
     private final Runnable runnableTask;
     private final ScheduledFuture scheduledFuture;
 
+    /**
+     * A class constructor that builds its UI components upon object creation. 
+     * It launches an executor service for update and retrieval of notifications 
+     * from the database. 
+     */
     public HeaderComponent() {
         setSpacing(true);
         addStyleName("view-dashboard-header");
@@ -118,11 +123,18 @@ public class HeaderComponent extends HorizontalLayout {
                 0, 500, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Shuts down the executor service for update and retrieval of notifications.
+     */
     public void shutdownNotificationExecutor() {
         scheduledFuture.cancel(true);
         scheduler.shutdownNow();
     }
 
+    /**
+     * A Runnable object for Executor service that updates and retrieves 
+     * notifications continuously. 
+     */
     final class NotificationsExtractorRunnable extends DataProviderAbstract
             implements Runnable {
 

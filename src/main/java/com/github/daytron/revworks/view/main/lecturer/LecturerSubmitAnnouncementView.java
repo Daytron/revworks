@@ -57,9 +57,12 @@ public class LecturerSubmitAnnouncementView extends Panel implements View {
     
     private Label previewContent;
 
-    public LecturerSubmitAnnouncementView() {
-    }
-
+    /**
+     * The entry point for all derived classes of View. If not currently 
+     * initialised, then builds the UI components. 
+     * 
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         // Important!!
@@ -77,6 +80,9 @@ public class LecturerSubmitAnnouncementView extends Panel implements View {
         }
     }
 
+    /**
+     * Creates the main content for this view.
+     */
     private void initView() {
         setSizeFull();
         
@@ -101,6 +107,11 @@ public class LecturerSubmitAnnouncementView extends Panel implements View {
         setContent(wrapperLayout);
     }
 
+    /**
+     * Creates the editor component for creating classwide announcements.
+     * 
+     * @return Component object 
+     */
     private Component createContent() {
         HorizontalLayout horizontalLayout = 
                 new HorizontalLayout();
@@ -118,6 +129,13 @@ public class LecturerSubmitAnnouncementView extends Panel implements View {
         return horizontalLayout;
     }
     
+    /**
+     * Creates the preview section for the editor component. Preview is shown 
+     * automatically when the mouse lose focus on RichTextArea or the user clicks 
+     * the preview button. 
+     * 
+     * @return CssLayout object
+     */
     private CssLayout createPreviewSection() {
         final CssLayout wrapperItem = new CssLayout();
         wrapperItem.setSizeFull();
@@ -157,6 +175,11 @@ public class LecturerSubmitAnnouncementView extends Panel implements View {
         return wrapperItem;
     }
     
+    /**
+     * Creates the editor component.
+     * 
+     * @return FormLayout object
+     */
     private FormLayout createEditorComponent() {
         FormLayout contentLayout = new FormLayout();
 

@@ -24,7 +24,7 @@ import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- * The screen when a user tried to navigate to a view that does not exist.
+ * The screen for when a user tried to navigate to a view that does not exist.
  *
  * @author Ryan Gilera
  */
@@ -33,6 +33,9 @@ public class ErrorView extends Panel implements View {
 
     private final Label errorLabel;
 
+    /**
+     * A class constructor that builds its UI components upon object creation.
+     */
     public ErrorView() {
         setSizeFull();
         
@@ -55,6 +58,12 @@ public class ErrorView extends Panel implements View {
         setContent(wrapperLayout);
     }
 
+    /**
+     * The entry point for all derived classes of View. Initialise the error 
+     * message.
+     * 
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         String message = String.format(

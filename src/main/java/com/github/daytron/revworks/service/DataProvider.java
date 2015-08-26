@@ -28,6 +28,16 @@ import java.util.List;
  */
 public interface DataProvider {
 
+    /**
+     * Retrieves announcements from the database for the home view depending on 
+     * what type of user is the current user. An error is displayed to the user 
+     * when an SQLException occurs.
+     * 
+     * @return list of announcement as a polymorphic derived class of List
+     * @throws SQLErrorQueryException for detecting an SQLException
+     * @throws SQLErrorRetrievingConnectionAndPoolException for error in 
+     * in connecting to the database
+     */
     public List<Announcement> populateHomeViewWithData() throws
             SQLErrorQueryException, 
             SQLErrorRetrievingConnectionAndPoolException;

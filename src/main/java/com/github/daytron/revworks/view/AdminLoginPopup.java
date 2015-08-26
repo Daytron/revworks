@@ -41,6 +41,10 @@ public final class AdminLoginPopup extends Window {
     private static final long serialVersionUID = 1L;
     private TextField userField;
     
+    /**
+     * A class constructor that builds its UI components upon object creation. 
+     * Sets initial focus to the username field.
+     */
     public AdminLoginPopup() {
         super(LoginString.FORM_ADMIN_WINDOW_LABEL.getText()); // Window label
 

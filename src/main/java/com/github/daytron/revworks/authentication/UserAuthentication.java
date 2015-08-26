@@ -36,8 +36,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Responsible for verifying the user login credentials through the MySQL
- * database. It also extracts class table and verify semester of the signed user.
+ * A derived class of QueryManagerAbstract responsible for verifying 
+ * the user login credentials through the MySQL database. It also extracts 
+ * class table and verify semester of the signed user.
  *
  * @author Ryan Gilera
  */
@@ -48,7 +49,7 @@ public class UserAuthentication extends QueryManagerAbstract {
     }
 
     /**
-     * Connects to the database and retrieve user from it.
+     * Connects to the database and authenticate user login.
      *
      * @param userType A UserType object
      * @param userfield String for username field
@@ -137,15 +138,16 @@ public class UserAuthentication extends QueryManagerAbstract {
     }
 
     /**
-     * Retrieve Retrieve current classes associated with the current user within
-     * the current semester. Returns empty list of no class found.
+     * Retrieves current school classes associated with the current user in
+     * the current semester. Returns an empty list if no class is found.
      *
      * @param userType A UserType object
      * @param user Principal object
      * @param semesterID current semesterID
-     * @return
-     * @throws SQLErrorRetrievingConnectionAndPoolException
-     * @throws SQLErrorQueryException
+     * @return a list of lecture classes for the authenticated user
+     * @throws SQLErrorRetrievingConnectionAndPoolException for invalid SQL 
+     * connection
+     * @throws SQLErrorQueryException for any invalid SQL queries
      */
     CopyOnWriteArrayList<ClassTable> extractClassTables(UserType userType, Principal user, String semesterID) throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException {
         if (userType == UserType.ADMIN) {
@@ -260,7 +262,7 @@ public class UserAuthentication extends QueryManagerAbstract {
     }
 
     /**
-     * Retrieve the current semester id based on date it was accessed. Returns
+     * Retrieves the current semester id based on date it was accessed. Returns
      * an empty String if accessed outside the semester date range.
      *
      * @return The semester id

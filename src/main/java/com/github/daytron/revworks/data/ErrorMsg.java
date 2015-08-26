@@ -50,6 +50,11 @@ public enum ErrorMsg {
         this.text = text;
     }
 
+    /**
+     * Access the String value.
+     * 
+     * @return text stored in an item. 
+     */
     public String getText() {
         return text;
     }

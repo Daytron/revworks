@@ -24,8 +24,33 @@ import com.github.daytron.revworks.event.AppEvent;
  */
 public interface DataInserter {
     
+    /**
+     * Inserts new comment into the database. If successfully inserted a new row, 
+     * a new notification based on the previous event is created. This method is 
+     * triggered by the AppEventBus. An error is displayed to the user when an 
+     * SQLException occurs.
+     * 
+     * @param event a custom event object defined in {@link com.github.daytron.revworks.event.AppEvent} class
+     */
     public void insertNewComment(final AppEvent.SubmitNewCommentEvent event);
+
+    /**
+     * Inserts new note associated comment into the database. If successfully 
+     * inserted a new row, new notification based on the previous event is 
+     * created. This method is triggered by the AppEventBus. An error is 
+     * displayed to the user when an SQLException occurs.
+     * 
+     * @param event a custom event object defined in {@link com.github.daytron.revworks.event.AppEvent} class
+     */
     public void insertNewNote(AppEvent.SubmitNewNoteEvent event);
+
+    /**
+     * Updates the note status when clicked depending on the user type. This 
+     * method is triggered by the AppEventBus. An error is displayed to the 
+     * user when an SQLException occurs.
+     * 
+     * @param event a custom event object defined in {@link com.github.daytron.revworks.event.AppEvent} class
+     */
     public void updateNoteIsReadWhenClicked(
             AppEvent.UpdateNoteIsReadWhenClickEvent event);
     

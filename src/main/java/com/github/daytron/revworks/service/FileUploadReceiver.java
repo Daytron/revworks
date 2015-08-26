@@ -49,16 +49,34 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
     private boolean isUploaded;
     private boolean isCustomeError;
 
+    /**
+     * A class constructor that takes a ProgressBar object.
+     * 
+     * @param progressBar ProgressBar object to calculate the upload progress
+     */
     public FileUploadReceiver(ProgressBar progressBar) {
         this.progressbar = progressBar;
         this.isUploaded = false;
         this.isCustomeError = false;
     }
 
+    /**
+     * Mutates the Upload object.
+     * 
+     * @param upload Upload object
+     */
     public void setUploader(Upload upload) {
         this.uploader = upload;
     }
 
+    /**
+     * Creates a new file as a placeholder to be written by the FileOutStream.
+     * 
+     * @param filename the filename of the coursework file
+     * @param mimeType the mimetype of the file
+     * @return the OutputStream object if no FileNotFoundException occurs, 
+     * otherwise returns null
+     */
     @Override
     public OutputStream receiveUpload(String filename, String mimeType) {
         FileOutputStream fileOutputStream;
@@ -76,6 +94,14 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
         return fileOutputStream;
     }
 
+    /**
+     * Calculates and updates the upload progress bar. If contentLength is 
+     * of negative value, then set progress bar to indeterminate.
+     * 
+     * @param readBytes the total stored memory size of the received data in 
+     * bytes as long value
+     * @param contentLength the total length it takes to fill the bar 
+     */
     @Override
     public void updateProgress(long readBytes, long contentLength) {
 
@@ -89,6 +115,22 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
 
     }
 
+    /**
+     * Determines if the file's extension of the file being uploaded is within 
+     * the accepted file extension format and validates the existence of the 
+     * file. If no file is uploaded or invalid file type is detected, display an 
+     * appropriate error message. 
+     * 
+     * <p>
+     * The method also initialises the progress bar's value and set its 
+     * visibility to true.
+     * 
+     * <p>
+     * If the size of file being uploaded is greater than the database would 
+     * allow, cancel upload event and show the appropriate error to user.  
+     * 
+     * @param event the StartedEvent object defined by the Upload class
+     */
     @Override
     public void uploadStarted(Upload.StartedEvent event) {
         // Set progressbar visiblity
@@ -117,7 +159,7 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
         }
 
         // Detect the size of the file
-        // If file size if bigger than allowes, 
+        // If file size if bigger than allowed, 
         // cancel upload and notify user
         if (event.getContentLength() > MAX_SIZE_FILE_ALLOWED) {
             this.uploader.interruptUpload();
@@ -130,10 +172,22 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
 
     }
 
+    /**
+     * No concrete implementation needed. The uploadSucceeded method takes this 
+     * job.
+     * 
+     * @param event FinishedEvent object from Upload class
+     */
     @Override
     public void uploadFinished(Upload.FinishedEvent event) {
     }
 
+    /**
+     * If the upload failed, deletes the temporary file, resets the progress 
+     * bar and displays the appropriate error notification to the user.
+     * 
+     * @param event FailedEvent object from Upload class
+     */
     @Override
     public void uploadFailed(Upload.FailedEvent event) {
         this.isUploaded = false;
@@ -150,6 +204,12 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
         }
     }
 
+    /**
+     * If the upload succeed, show an information notification. Save the 
+     * temporary file created for cleanup later on when session ends.
+     * 
+     * @param event SucceededEvent object from Upload class
+     */
     @Override
     public void uploadSucceeded(Upload.SucceededEvent event) {
         NotificationUtil.showInformation(
@@ -167,16 +227,29 @@ public class FileUploadReceiver implements Upload.Receiver, Upload.ProgressListe
 
     }
 
+    /**
+     * Tries to delete the temporary file.
+     */
     public void tryDeleteFile() {
         if (fileUploaded != null) {
             fileUploaded.delete();
         }
     }
 
+    /**
+     * Access the uploaded file.
+     * 
+     * @return File object 
+     */
     public File getFileUploaded() {
         return fileUploaded;
     }
 
+    /**
+     * Access the flag for determining if the the file is uploaded or not.
+     * 
+     * @return true if uploaded successfully, otherwise false 
+     */
     public boolean isUploaded() {
         return isUploaded;
     }

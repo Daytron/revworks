@@ -33,6 +33,11 @@ public enum FilePath {
         this.path = path;
     }
 
+    /**
+     * Access the path value.
+     * 
+     * @return file path stored in an item. 
+     */
     public String getPath() {
         return path;
     }

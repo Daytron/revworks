@@ -28,7 +28,7 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- * The ui component for dashboard's main menu. It also acts as a wrapper for
+ * The UI component for main view's main menu. It also acts as a wrapper for
  * {@link Navigator} class method, addView() to create menu items and sets their
  * corresponding views.
  *
@@ -43,6 +43,11 @@ public class NavigationMenu extends HorizontalLayout {
     
     private MenuBar.MenuItem homeMenuItem;
 
+    /**
+     * Initialises menu navigator's member variables and apply style.
+     * 
+     * @param navigator Navigator object
+     */
     public NavigationMenu(Navigator navigator) {
         this.navigator = navigator;
 
@@ -122,13 +127,21 @@ public class NavigationMenu extends HorizontalLayout {
         // default is home
         private MenuBar.MenuItem previousItem = null;
 
-        public MenuItemClickBehaviour() {
-        }
-
+        /**
+         * Sets previous menu item.
+         * 
+         * @param previousItem MenuItem object
+         */
         public void setPreviousItem(MenuBar.MenuItem previousItem) {
             this.previousItem = previousItem;
         }
         
+        /**
+         * Custom behaviour when a menu button is clicked. Sets a new style for 
+         * clicked menu item.
+         * 
+         * @param selectedItem 
+         */
         @Override
         public void menuSelected(MenuBar.MenuItem selectedItem) {
             if (previousItem != null) {

@@ -28,7 +28,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- *
+ * UI widget component for help view page.
+ * 
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
@@ -40,6 +41,12 @@ public class HelpView extends Panel implements View {
 
     private boolean isInitialised = false;
 
+    /**
+     * The entry point for all derived classes of View. If not currently 
+     * initialised, then builds the UI components.
+     * 
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         // Important!!
@@ -55,6 +62,9 @@ public class HelpView extends Panel implements View {
 
     }
 
+    /**
+     * Creates the main UI components for this view.
+     */
     private void initView() {
         setSizeFull();
 
@@ -77,6 +87,11 @@ public class HelpView extends Panel implements View {
         setContent(wrapperLayout);
     }
 
+    /**
+     * Creates the core content of this view.
+     * 
+     * @return Component object
+     */
     private Component createContent() {
         final VerticalLayout layout = new VerticalLayout();
         layout.setSpacing(true);

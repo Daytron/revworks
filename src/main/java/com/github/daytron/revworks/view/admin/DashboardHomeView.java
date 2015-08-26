@@ -22,7 +22,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- *
+ * The home view that serves as the landing page for the administrators upon login.
+ * 
  * @author Ryan Gilera
  */
 public final class DashboardHomeView extends VerticalLayout implements View {
@@ -33,6 +34,12 @@ public final class DashboardHomeView extends VerticalLayout implements View {
     
     private boolean isInitialised = false;
     
+    /**
+     * The entry point for all derived classes of View. If not currently 
+     * initialised, then builds the UI components.
+     * 
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         if (!isInitialised) {
@@ -42,6 +49,10 @@ public final class DashboardHomeView extends VerticalLayout implements View {
         }
     }
     
+    /**
+     * Creates the main content of the home view. No concrete contents at the 
+     * moment.
+     */
     private void initView() {
         setSizeFull();
         setMargin(true);

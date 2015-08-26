@@ -24,7 +24,9 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- *
+ * The main view page for the admin users. Menu and content components are build 
+ * in this class.
+ * 
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
@@ -32,6 +34,11 @@ public class Dashboard extends HorizontalLayout {
 
     private final DashboardMenu menu;
     
+    /**
+     * A class constructor that builds its UI components upon object creation.
+     * 
+     * @param mainUI The one and only derived class of UI passed as an argument
+     */
     public Dashboard(MainUI mainUI) {
         Panel contentWrapperPanel = new Panel();
         contentWrapperPanel.setSizeFull();

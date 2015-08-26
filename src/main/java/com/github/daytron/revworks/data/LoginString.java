@@ -47,6 +47,11 @@ public enum LoginString {
         this.text = text;
     }
 
+    /**
+     * Access the String value for login view.
+     * 
+     * @return the text value of an item 
+     */
     public String getText() {
         return text;
     }

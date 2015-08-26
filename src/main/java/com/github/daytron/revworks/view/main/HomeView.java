@@ -38,8 +38,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * The default view of the navigator and dashboard screen. Displays all the
- * relevant announcements in the past 7 days.
+ * The default view of the navigator and main screen for students and lecturers. 
+ * Displays all the relevant announcements in the past 7 days.
  *
  * @author Ryan Gilera
  */
@@ -55,9 +55,13 @@ public class HomeView extends Panel implements View {
 
     private List<Announcement> listOfAnnouncements;
 
-    public HomeView() {
-    }
-
+    /**
+     * Creates an announcement panel item. Each panel has meta information 
+     * displayed regarding the announcement.
+     * 
+     * @param announcement Announcement object
+     * @return Component object
+     */
     private Component createAnnouncementPanel(final Announcement announcement) {
         final CssLayout wrapperItem = new CssLayout();
         wrapperItem.setWidth("100%");
@@ -113,6 +117,14 @@ public class HomeView extends Panel implements View {
         return wrapperItem;
     }
 
+    /**
+     * Creates a header for the announcement panel. It displays the title of the 
+     * announcement and the date submitted with an appropriate icon next to it.
+     * 
+     * @param title title of the announcement
+     * @param dateString date submitted in String value
+     * @return HorizontalLayout object
+     */
     private HorizontalLayout createPanelHeader(String title,
             LocalDateTime dateString) {
         final HorizontalLayout layoutHeader = new HorizontalLayout();
@@ -140,6 +152,12 @@ public class HomeView extends Panel implements View {
         return layoutHeader;
     }
 
+    /**
+     * The entry point for all derived classes of View. If not currently 
+     * initialised, then builds the UI components. 
+     * 
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         // Important!!
@@ -169,6 +187,9 @@ public class HomeView extends Panel implements View {
         }
     }
 
+    /**
+     * Creates the main content of this view. 
+     */
     private void initView() {
 
         setSizeFull();

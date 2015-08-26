@@ -56,6 +56,10 @@ public final class LoginScreen extends CssLayout {
     private PasswordField passwordField;
     private Button loginButton;
 
+    /**
+     * A class constructor that builds its UI components upon object creation.
+     * Sets initial focus to the username field.
+     */
     public LoginScreen() {
         buildUI();
         this.usernameField.focus();

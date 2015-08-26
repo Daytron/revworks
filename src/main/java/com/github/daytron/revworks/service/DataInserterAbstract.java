@@ -39,6 +39,9 @@ import java.util.logging.Logger;
  */
 public class DataInserterAbstract extends QueryManagerAbstract implements DataInserter {
 
+    /**
+     * {@inheritDoc }
+     */
     @Subscribe
     @Override
     public void insertNewComment(final AppEvent.SubmitNewCommentEvent event) {
@@ -84,13 +87,13 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
                         final Coursework coursework = event.getCoursework();
                         
                         if (MainUI.get().getAccessControl().isUserAStudent()) {
-                            AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                            AppEventBus.post(new AppEvent.InsertNotificationEvent(
                                     " has sent you a comment",
                                     "on ", UserNotificationType.COMMENT,
                                     coursework.getClassTable().getLecturerUser().getId(),
                                     coursework.getId()));
                         } else {
-                            AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                            AppEventBus.post(new AppEvent.InsertNotificationEvent(
                                     " has sent you a comment",
                                     "on ", UserNotificationType.COMMENT,
                                     coursework.getStudentUser().getId(),
@@ -109,6 +112,9 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Subscribe
     @Override
     public void insertNewNote(AppEvent.SubmitNewNoteEvent event) {
@@ -189,13 +195,13 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
                 final Coursework coursework = event.getCoursework();
                 
                 if (MainUI.get().getAccessControl().isUserAStudent()) {
-                    AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                    AppEventBus.post(new AppEvent.InsertNotificationEvent(
                             " has created a note",
                             "on ", UserNotificationType.NOTE,
                             coursework.getClassTable().getLecturerUser().getId(),
                             coursework.getId()));
                 } else {
-                    AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                    AppEventBus.post(new AppEvent.InsertNotificationEvent(
                             " has created a note",
                             "on ", UserNotificationType.NOTE,
                             coursework.getStudentUser().getId(),
@@ -214,6 +220,9 @@ public class DataInserterAbstract extends QueryManagerAbstract implements DataIn
         }
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Subscribe
     @Override
     public void updateNoteIsReadWhenClicked(AppEvent.UpdateNoteIsReadWhenClickEvent event) {

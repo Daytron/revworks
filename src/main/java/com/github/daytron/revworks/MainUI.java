@@ -106,37 +106,83 @@ public class MainUI extends UI {
         }
     }
 
+    /**
+     * {@link  MainUI} is the entry point class for the whole application. 
+     * It holds many initialised variables that requires this object to 
+     * access those variables.
+     * 
+     * @return The one and only MainUI object exist throughout the application 
+     * cycle.
+     */
     public static MainUI get() {
         return (MainUI) UI.getCurrent();
     }
 
+    /**
+     * Any polymorphic derived object of {@link  AccessControl}.
+     * 
+     * @return AccessControl polymorphic object
+     */
     public AccessControl getAccessControl() {
         return accessControl;
     }
 
+    /**
+     * {@link SQLConnectionManager} is responsible for connecting to 
+     * MySQL database server.
+     * 
+     * @return SQLConnectionManager is only instantiated once. 
+     */
     public SQLConnectionManager getConnectionManager() {
         return connectionManager;
     }
 
+    /**
+     * {@link LecturerDataProviderImpl} is responsible for providing non-static 
+     * lecturer data from the database.
+     * 
+     * @return LecturerDataProviderImpl object
+     */
     public LecturerDataProviderImpl getLecturerDataProvider() {
         return lecturerDataProvider;
     }
 
+    /**
+     * {@link StudentDataProviderImpl} is responsible for providing non-static 
+     * student data from the database.
+     * 
+     * @return StudentDataProviderImpl object
+     */
     public StudentDataProviderImpl getStudentDataProvider() {
         return studentDataProvider;
     }
 
+    /**
+     * {@link UserAuthentication} is responsible for login authentication processes.
+     * 
+     * @return UserAuthentication object 
+     */
     public UserAuthentication getUserAuthentication() {
         return userAuthentication;
     }
 
+    /**
+     * {@link NotificationProvider} is responsible for retrieving notifications 
+     * from the database.
+     * 
+     * @return NotificationProvider object 
+     */
     public NotificationProvider getNotificationsProvider() {
         return notificationsProvider;
     }
 
+    /**
+     * Reroutes a student or lecturer user to the main view after successfully 
+     * logging in.
+     */
     public void showMainScreen() {
-        // Register it first before building mainscreen
-        // Before it runs a new thread for updating user notifications
+        // Register notificationsProvider first before building mainscreen and
+        // before it spawn a new thread for updating user notifications
         AppEventBus.register(notificationsProvider);
 
         MainView mainScreen = new MainView(MainUI.this);
@@ -154,6 +200,10 @@ public class MainUI extends UI {
         getNavigator().navigateTo(getNavigator().getState());
     }
 
+    /**
+     * Reroutes an admin user to the main view after successfully 
+     * logging in.
+     */
     public void showAdminDashboard() {
         Dashboard dashboard = new Dashboard(MainUI.this);
 
@@ -161,23 +211,50 @@ public class MainUI extends UI {
         getNavigator().navigateTo(getNavigator().getState());
     }
 
+    /**
+     * {@link AppEventBus} is responsible for managing application events.
+     * 
+     * @return AppEventBus object 
+     */
     public static AppEventBus getAppEventbus() {
         return get().appEventBus;
     }
 
+    /**
+     * Registers the first set of event handlers. These event handlers are 
+     * registered before user logs in.
+     */
     private void registerEventHandlers() {
         AppEventBus.register(accessControl);
         AppEventBus.register(this);
     }
 
+    /**
+     * This is an external window used for displaying user notifications. Acts 
+     * as a popup window.
+     * 
+     * @return Window object
+     */
     public Window getNotificationsWindow() {
         return notificationsWindow;
     }
 
+    /**
+     * Sets a {@link Window} object.
+     * 
+     * @param notificationsWindow Window object 
+     */
     public void setNotificationsWindow(Window notificationsWindow) {
         this.notificationsWindow = notificationsWindow;
     }
 
+    /**
+     * Process the CloseNotificationWindowEvent event triggered by AppEventBus. 
+     * Closes any opened notification window and pauses the timely thread for 
+     * retrieving user notifications.
+     * 
+     * @param event CloseNotificationWindowEvent object
+     */
     @Subscribe
     public void closeNotificationWindows(AppEvent.CloseNotificationWindowEvent event) {
         if (notificationsWindow != null) {
@@ -189,6 +266,12 @@ public class MainUI extends UI {
         }
     }
 
+    /**
+     * {@link AdminDataInserter} is responsible for updating or inserting 
+     * admin data in the database.
+     * 
+     * @return AdminDataInserter object 
+     */
     public AdminDataInserter getAdminDataInserter() {
         return adminDataInserter;
     }
@@ -204,9 +287,9 @@ public class MainUI extends UI {
                 listOfUserSessions = new ConcurrentHashMap<>();
 
         /**
-         * Saves the new login session to the collection member,
-         * ConcurrentHashmap. If user is previously login from other session, it
-         * automatically close that previous session, to prevent multi-login
+         * Saves the new session to the collection member,
+         * ConcurrentHashmap. If the user is previously login in other session,
+         * it automatically closes the previous session to prevent multi-login
          * sessions for a single user.
          *
          * @param userID The id of the user
@@ -234,7 +317,7 @@ public class MainUI extends UI {
         }
 
         /**
-         * Returns the list of sessions for different users.
+         * Returns the list of sessions for various users.
          *
          * @return {@link Map} object
          */
@@ -244,7 +327,7 @@ public class MainUI extends UI {
         }
 
         /**
-         * Simply prints the current sessions for logging purposes.
+         * Simply prints the sessions for logging purposes.
          *
          * @param customeMsg A custom message is required to notify where
          * printing method is triggered.
@@ -269,7 +352,7 @@ public class MainUI extends UI {
          * attached a custom {@link SessionDestroyListener}, which is the same
          * object of this class.
          *
-         * @throws ServletException
+         * @throws ServletException for failing to initialise the servlet
          */
         @Override
         protected void servletInitialized() throws ServletException {
@@ -278,8 +361,8 @@ public class MainUI extends UI {
         }
 
         /**
-         * Overrides sessionDestroy method to implement removal of session when
-         * session is destroyed.
+         * Overrides sessionDestroy method to implement the removal of session 
+         * when session is destroyed.
          *
          * @param event The event object triggered when closing a session
          */

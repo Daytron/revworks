@@ -17,7 +17,7 @@ package com.github.daytron.revworks.service;
 
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
+import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.vaadin.data.util.BeanItemContainer;
 import java.io.FileNotFoundException;
@@ -30,9 +30,27 @@ import java.io.IOException;
  */
 public interface StudentDataProvider {
 
+    /**
+     * Retrieves coursework data from the database for the student. Returns a 
+     * BeanItemContainer object containing {@link ClassTable} objects. Empty bean 
+     * container is return if student has no class registered.
+     * 
+     * <p>
+     * A temporary file is created to hold the stream data of coursework itself.
+     * 
+     * <p>
+     * Throws custom exceptions for various error events.
+     * 
+     * @return BeanItemContainer object containing {@link ClassTable} objects
+     * @throws SQLErrorRetrievingConnectionAndPoolException thrown if error 
+     * connecting to the SQL connection pool occurs
+     * @throws SQLErrorQueryException occurs when SQLException is captured
+     * @throws FileNotFoundException occurs  occurs if no file is found
+     * @throws IOException occurs when writing byte stream data into the file 
+     * fails
+     */
     public BeanItemContainer<Coursework> extractCourseworkData()
             throws SQLErrorRetrievingConnectionAndPoolException,
-            SQLErrorQueryException, SQLNoResultFoundException,
-            FileNotFoundException, IOException;
+            SQLErrorQueryException, FileNotFoundException, IOException;
     
 }

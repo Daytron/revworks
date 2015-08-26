@@ -24,7 +24,6 @@ import com.github.daytron.revworks.event.AppEvent.*;
 import com.github.daytron.revworks.exception.SQLErrorQueryException;
 import com.github.daytron.revworks.exception.SQLErrorRetrievingConnectionAndPoolException;
 import com.github.daytron.revworks.exception.SQLErrorUpdateException;
-import com.github.daytron.revworks.exception.SQLNoResultFoundException;
 import com.github.daytron.revworks.model.ClassTable;
 import com.github.daytron.revworks.model.Coursework;
 import com.github.daytron.revworks.model.StudentUser;
@@ -62,9 +61,12 @@ public class StudentDataProviderImpl extends DataProviderAbstract
         super();
     }
 
+    /**
+     * {@inheritDoc} 
+     */
     @Override
     public BeanItemContainer<Coursework> extractCourseworkData() throws SQLErrorRetrievingConnectionAndPoolException, SQLErrorQueryException,
-            SQLNoResultFoundException, FileNotFoundException, IOException {
+            FileNotFoundException, IOException {
         CopyOnWriteArrayList<ClassTable> listOfClassTables
                 = CurrentUserSession.getCurrentClassTables();
 
@@ -164,7 +166,7 @@ public class StudentDataProviderImpl extends DataProviderAbstract
 
                             // Get the bytes data (pdf) from the resultset
                             byte[] pdfData = resultSet.getBytes(4);
-
+                            
                             // Retrieve file extension
                             String fileExtension = resultSet.getString(5);
 
@@ -231,6 +233,15 @@ public class StudentDataProviderImpl extends DataProviderAbstract
         }
     }
 
+    /**
+     * Saves the coursework data from coursework module view (table view) for 
+     * later used in the coursework view. The coursework read status is updated 
+     * to true in the database. Then the user is rerouted to the coursework 
+     * view if successfully updated its status, otherwise page transition is 
+     * skipped entirely and displays an error notification to the user.
+     * 
+     * @param event a custom event object defined in {@link com.github.daytron.revworks.event.AppEvent} class
+     */
     @Subscribe
     public void receiveCourseworkDataFromTable(final StudentViewCourseworkEvent event) {
         setReceivedCoursework(event.getCoursework());

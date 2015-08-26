@@ -34,7 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * The menu bar component for the Adminitrators. Allows navigation to various 
+ * views.
+ * 
  * @author Ryan Gilera
  */
 @SuppressWarnings("serial")
@@ -45,6 +47,13 @@ final class DashboardMenu extends CssLayout {
     
     private final Map<String, Button> listOfButtons = new HashMap<>();
     
+    /**
+     * A class constructor that takes the one and only one Navigator object in the 
+     * entire session lifecycle. Builds its UI components upon object creation.
+     * 
+     * @param navigator Navigator object responsible for switching to various 
+     * views
+     */
     DashboardMenu(Navigator navigator) {
         this.navigator = navigator;
         

@@ -22,7 +22,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- *
+ * A custom component derived class of Button for user notifications.
+ * 
  * @author Ryan Gilera
  */
 public class NotificationButton extends Button {
@@ -30,6 +31,9 @@ public class NotificationButton extends Button {
     private final String UNREAD_STYLE = "unread";
     private final String COMPONENT_ID = "dashboard-notifications";
     
+    /**
+     * Constructor. Apply custom icon and design.
+     */
     public NotificationButton() {
         setIcon(FontAwesome.BELL);
         setId(COMPONENT_ID);
@@ -38,12 +42,24 @@ public class NotificationButton extends Button {
         addStyleName(ValoTheme.BUTTON_ICON_ONLY);
     }
     
+    /**
+     * Retrieves the total unread notifications and calls updateUnreadBadge 
+     * method.
+     * 
+     * @param event a custom event object defined in 
+     * {@link com.github.daytron.revworks.event.AppEvent} class
+     */
     @Subscribe
     public void retrieveCurrentBadgeCount(
             AppEvent.UpdateNotificationButtonBadgeCountEvent event) {
         updateUnreadBadge(event.getCount());
     }
     
+    /**
+     * Updates the number of unread notifications in the notification button.
+     * 
+     * @param count the total unread notifications
+     */
     public void updateUnreadBadge(int count) {
         setCaption(String.valueOf(count));
         

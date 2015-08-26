@@ -36,13 +36,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Concrete implementation of {@link StudentDataInserter}
+ * Concrete implementation of {@link StudentDataInserter} interface.
  *
  * @author Ryan Gilera
  */
 public class StudentDataInserterImpl extends  DataInserterAbstract 
 implements StudentDataInserter {
 
+    /**
+     * {@inheritDoc}
+     */
     @Subscribe
     @Override
     public void insertNewCoursework(StudentSubmitCourseworkEvent event) {
@@ -97,7 +100,7 @@ implements StudentDataInserter {
                 resultSet.close();
                 
                 // Create new user notification for the corresponding user
-                AppEventBus.post(new AppEvent.InsertNotificationNewNoteEvent(
+                AppEventBus.post(new AppEvent.InsertNotificationEvent(
                                     " has submitted a coursework",
                                     "", UserNotificationType.COURSEWORK,
                                     event.getClassTable().getLecturerUser().getId(),

@@ -43,7 +43,7 @@ public class AdminUser extends User {
     }
 
     /**
-     * Returns admin's email address.
+     * Access the admin's email address.
      *
      * @return String object for admin's email information
      */

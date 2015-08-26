@@ -25,6 +25,18 @@ import com.github.daytron.revworks.event.AppEvent.*;
  */
 public interface LecturerDataInserter {
 
+    /**
+     * Inserts new classwide announcement from the lecturer to the database. An 
+     * error notification is displayed to the lecturer when an SQLException 
+     * occurs or error in retrieving connection pool. 
+     * 
+     * <p>
+     * No page transition occurs when successfully submitted an announcement, 
+     * allowing the lecturer to send another announcement easily to another 
+     * class. All form fields are reset after a successful submission.
+     * 
+     * @param event a custom event object defined in {@link com.github.daytron.revworks.event.AppEvent} class 
+     */
     public void insertNewAnnouncement(final LecturerSubmitNewAnnouncementEvent event);
     
 }

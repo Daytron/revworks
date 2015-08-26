@@ -38,6 +38,11 @@ public enum ExceptionMsg {
         this.msg = msg;
     }
 
+    /**
+     * Access the String value, which is the exception message.
+     * 
+     * @return message stored in an item. 
+     */
     public String getMsg() {
         return msg;
     }

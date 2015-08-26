@@ -35,6 +35,11 @@ public enum LoginValidationMsg {
         this.text = text;
     }
 
+    /**
+     * Access the validation message for the login view.
+     * 
+     * @return the text value of an item 
+     */
     public String getText() {
         return text;
     }

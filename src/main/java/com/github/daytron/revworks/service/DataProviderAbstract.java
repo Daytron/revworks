@@ -56,6 +56,9 @@ public abstract class DataProviderAbstract extends QueryManagerAbstract
         receivedCoursework = null;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public List<Announcement> populateHomeViewWithData() throws
             SQLErrorQueryException, 

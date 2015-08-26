@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 /**
  * The top level abstract class for common SQL reserving connection process for
- * both data insertion and retrieval.
+ * both data insertions and retrievals.
  *
  * @author Ryan Gilera
  */
@@ -36,7 +36,16 @@ public class QueryManagerAbstract {
     private JDBCConnectionPool connectionPool;
     private Connection connection;
 
-    public boolean reserveConnectionPool() {
+    /**
+     * Connects to the database via connection manager. No extra connection pool 
+     * is created. The same SimpleJDBCConnectionPool object is used to connect 
+     * throughout the session's lifecycle. A connection is established from the 
+     * same connection pool. Although SimpleJDBCConnectionPool is not a connection 
+     * pool per se, its implementation acts like one.
+     * 
+     * @return boolean value true if successfully connected, otherwise false
+     */
+    public final boolean reserveConnectionPool() {
         try {
             this.connectionPool = MainUI.get().getConnectionManager().connect();
             this.connection = connectionPool.reserveConnection();
@@ -54,21 +63,38 @@ public class QueryManagerAbstract {
         }
     }
 
-    public void releaseConnection() {
+    /**
+     * Releases the current connection from the connection pool so it can be 
+     * used by others later on.
+     */
+    public final void releaseConnection() {
         if (connectionPool != null || connection != null) {
             this.connectionPool.releaseConnection(connection);
         }
     }
 
-    public Connection getConnection() {
+    /**
+     * Access the current connection created from the connection pool.
+     * 
+     * @return Connection object
+     */
+    public final Connection getConnection() {
         return connection;
     }
 
-    public JDBCConnectionPool getConnectionPool() {
+    /**
+     * Access the connection pool itself.
+     * 
+     * @return JDBCConnectionPool object
+     */
+    public final JDBCConnectionPool getConnectionPool() {
         return connectionPool;
     }
     
-    public void notifyDataSendError() {
+    /**
+     * Displays a generic data send error notification for query error events.
+     */
+    public final void notifyDataSendError() {
         NotificationUtil.showError(
                 ErrorMsg.DATA_SEND_ERROR.getText(),
                 ErrorMsg.CONSULT_YOUR_ADMIN.getText());

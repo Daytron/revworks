@@ -34,6 +34,18 @@ import java.util.logging.Logger;
  */
 public final class AdminDataInserter extends QueryManagerAbstract {
 
+    /**
+     * Inserts new systemwide announcement from the admin to the database. An 
+     * error notification is displayed to the admin when an SQLException 
+     * occurs or error in retrieving connection pool. 
+     * 
+     * <p>
+     * No page transition occurs when successfully submitted an announcement, 
+     * allowing the admin to send another announcement easily to all of the 
+     * users. All form fields are reset after a successful submission.
+     * 
+     * @param event a custom event object defined in {@link com.github.daytron.revworks.event.AppEvent} class 
+     */
     @Subscribe
     public void insertNewAnnouncement(final AppEvent.AdminSubmitNewAnnouncementEvent event) {
         if (reserveConnectionPool()) {

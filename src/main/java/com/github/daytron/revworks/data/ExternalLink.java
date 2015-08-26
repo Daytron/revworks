@@ -43,10 +43,20 @@ public enum ExternalLink {
         this.link = link;
     }
 
+    /**
+     * Access the URL value.
+     * 
+     * @return URL stored in an item. 
+     */
     public String getLink() {
         return link;
     }
 
+    /**
+     * Access the site name.
+     * 
+     * @return name stored in an item. 
+     */
     public String getName() {
         return name;
     }

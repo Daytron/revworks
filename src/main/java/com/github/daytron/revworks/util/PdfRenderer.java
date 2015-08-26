@@ -30,16 +30,22 @@ import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 /**
- * Utility wrapper for extracting pages of PDF files as images using PDFBox
+ * Utility wrapper for extracting pages of PDF file using PDFBox
  * library.
  *
  * @author Ryan Gilera
  */
 public final class PdfRenderer {
 
-    private PdfRenderer() {
-    }
-
+    /**
+     * Extract pages as images to retain the exact page structure. Warning: 
+     * This app uses a snapshot version of the upcoming version 2 of PDFBox. The 
+     * current implementation could change in the release version.
+     * 
+     * @param coursework the coursework that is about to be extracted
+     * @return list of file images as pages of the coursework
+     * @throws IOException occurs when extracting pages fails
+     */
     public static List<File> extractPages(Coursework coursework) throws IOException {
         List<File> listOfPages = new ArrayList<>();
 

@@ -60,6 +60,12 @@ public class StudentSubmitCourseworkView extends Panel
     private boolean isInitialised = false;
     private CopyOnWriteArrayList<ClassTable> listOfClasses;
 
+    /**
+     * The entry point for all derived classes of View. If not currently
+     * initialised, then builds the UI components.
+     *
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         // Important!!
@@ -75,6 +81,9 @@ public class StudentSubmitCourseworkView extends Panel
         }
     }
 
+    /**
+     * Creates the main content of this view.
+     */
     private void initView() {
         setSizeFull();
         
@@ -112,6 +121,12 @@ public class StudentSubmitCourseworkView extends Panel
         setContent(wrapperLayout);
     }
     
+    /**
+     * Builds a side note panel on the right for information about the chosen 
+     * file extension and how to convert their non-pdf files to pdf.
+     * 
+     * @return Component object
+     */
     private Component createRightContentSideNote() {
         VerticalLayout sideNoteLayout = new VerticalLayout();
         setSizeFull();
@@ -171,6 +186,11 @@ public class StudentSubmitCourseworkView extends Panel
         return sideNoteLayout;
     }
 
+    /**
+     * Creates the form for coursework submisson.
+     * 
+     * @return Component object
+     */
     private Component createSubmitCourseworkForm() {
         VerticalLayout layout = new VerticalLayout();
 

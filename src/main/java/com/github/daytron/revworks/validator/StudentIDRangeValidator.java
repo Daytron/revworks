@@ -57,7 +57,7 @@ public class StudentIDRangeValidator extends AbstractValidator<String> {
     }
 
     /**
-     * Returns the type of input
+     * Access the type of input.
      *
      * @return The String class as type
      */

@@ -28,6 +28,15 @@ public class ClassTable {
     private final String moduleName;
     private final LecturerUser lecturerUser;
 
+    /**
+     * A class constructor that takes an integer, two Strings, and a LecturerUser 
+     * object.
+     * 
+     * @param id the id of the class
+     * @param moduleId the module id associated with the class
+     * @param moduleName module name associated with the class
+     * @param lecturerUser The lecturer user object associated with the class
+     */
     public ClassTable(int id, String moduleId, String moduleName, 
             LecturerUser lecturerUser) {
         this.id = id;
@@ -36,18 +45,38 @@ public class ClassTable {
         this.lecturerUser = lecturerUser;
     }
 
+    /**
+     * Access the lecturer user object.
+     * 
+     * @return LecturerUser object
+     */
     public LecturerUser getLecturerUser() {
         return lecturerUser;
     }
 
+    /**
+     * Access the class id.
+     * 
+     * @return class id as integer 
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Access module id.
+     * 
+     * @return module id as String 
+     */
     public String getModuleId() {
         return moduleId;
     }
 
+    /**
+     * Access the module name.
+     * 
+     * @return module name as String 
+     */
     public String getModuleName() {
         return moduleName;
     }

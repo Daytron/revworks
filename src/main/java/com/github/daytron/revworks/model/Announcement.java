@@ -35,6 +35,17 @@ public class Announcement {
     private final String moduleId;
     private final String modulename;
 
+    /**
+     * A class constructor that takes an integer, three String objects, a 
+     * LocaDateTime object and an AnnouncementType enum item.
+     * 
+     * @param id announcement id
+     * @param title announcement title
+     * @param message announcement message
+     * @param dateTimeSubmitted date time submitted
+     * @param announcementType type of announcement
+     * @param announcementSource  source of announcement
+     */
     public Announcement(int id, String title, String message,
             LocalDateTime dateTimeSubmitted, AnnouncementType announcementType,
             String announcementSource) {
@@ -42,6 +53,19 @@ public class Announcement {
                 announcementSource, null, null);
     }
 
+    /**
+     * A class constructor that takes an integer, four String objects, a 
+     * LocalDateTime object and an AnnouncementType enum item.
+     * 
+     * @param id announcement id
+     * @param title announcement title
+     * @param message announcement message
+     * @param dateTimeSubmitted date time of the announcement submission
+     * @param announcementType type of announcement
+     * @param announcementSource source of announcement
+     * @param moduleId module id of the associated announcement
+     * @param moduleName module name of the associated announcement
+     */
     public Announcement(int id, String title, String message,
             LocalDateTime dateTimeSubmitted, AnnouncementType announcementType,
             String announcementSource, String moduleId, String moduleName) {
@@ -55,42 +79,93 @@ public class Announcement {
         this.modulename = moduleName;
     }
 
+    /**
+     * Access announcement id.
+     * 
+     * @return id of the announcement as an integer
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Access the announcement title.
+     * 
+     * @return title of the announcement as String. 
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Access the announcement message.
+     * 
+     * @return message of the announcement as String  
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Access the date and time of announcement submission.
+     * 
+     * @return LocalDateTime object
+     */
     public LocalDateTime getDateTimeSubmitted() {
         return dateTimeSubmitted;
     }
 
+    /**
+     * Access the type of announcement.
+     * 
+     * @return AnnouncementType enum item 
+     */
     public AnnouncementType getAnnouncementType() {
         return announcementType;
     }
 
+    /**
+     * Checks whether the announcement is class wide type.
+     * 
+     * @return true if the announcement is class wide type otherwise false 
+     */
     public boolean isClassWideAnnouncement() {
         return announcementType == AnnouncementType.CLASS_WIDE;
     }
 
+    /**
+     * Checks whether the announcement is system wide type.
+     * 
+     * @return true if the announcement is system wide type otherwise false 
+     */
     public boolean isSystemWideAnnouncement() {
         return announcementType == AnnouncementType.SYSTEM_WIDE;
     }
 
+    /**
+     * Access the source of announcement. This pertains to the author of 
+     * the announcement.
+     * 
+     * @return author of announcement as String value.
+     */
     public String getAnnouncementSource() {
         return announcementSource;
     }
 
+    /**
+     * Access the module id associated with the announcement.
+     * 
+     * @return module id as String 
+     */
     public String getModuleId() {
         return moduleId;
     }
 
+    /**
+     * Access the module name associated with the announcement.
+     * 
+     * @return module name as String 
+     */
     public String getModulename() {
         return modulename;
     }

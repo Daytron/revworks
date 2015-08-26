@@ -43,7 +43,7 @@ public class LecturerUser extends User {
     }
 
     /**
-     * Returns the lecturer's email address.
+     * Access the lecturer's email address.
      *
      * @return String object for lecturer's email information
      */

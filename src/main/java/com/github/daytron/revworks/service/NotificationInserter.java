@@ -29,13 +29,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Class responsible for all SQL user notification data insertions.
+ * 
  * @author Ryan Gilera
  */
 public class NotificationInserter extends QueryManagerAbstract {
 
+    /**
+     * Inserts a user notification to the database. Notification type is filtered 
+     * and applied. All notifications that are associated to any coursework must 
+     * insert a new notification coursework row data.
+     * 
+     * <p>
+     *  An error notification is displayed to the lecturer when an SQLException 
+     * occurs or error in retrieving connection pool.
+     * 
+     * @param event a custom event object defined in {@link com.github.daytron.revworks.event.AppEvent} class 
+     */
     @Subscribe
-    public void insertNotificationNote(AppEvent.InsertNotificationNewNoteEvent event) {
+    public void insertUserNotification(AppEvent.InsertNotificationEvent event) {
         if (reserveConnectionPool()) {
             try {
                 PreparedStatement preparedStatement
@@ -86,6 +98,8 @@ public class NotificationInserter extends QueryManagerAbstract {
                     return;
                 }
 
+                // If notification type pertains to a coursework row in the 
+                // Coursework table, inserts a new notification coursework data
                 if (notificationTypeId <= 3 && notificationTypeId > 0) {
                     PreparedStatement prepareStatementNC
                             = getConnection().prepareStatement(
@@ -101,7 +115,8 @@ public class NotificationInserter extends QueryManagerAbstract {
                 }
 
             } catch (SQLException ex) {
-                Logger.getLogger(NotificationInserter.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NotificationInserter.class.getName())
+                        .log(Level.SEVERE, null, ex);
                 notifyDataSendError();
             } finally {
                 releaseConnection();
@@ -116,14 +131,16 @@ public class NotificationInserter extends QueryManagerAbstract {
 
         if (reserveConnectionPool()) {
             try {
-                for (UserNotification userNotification : event.getListOfUserNotifications()) {
+                for (UserNotification userNotification : event
+                        .getListOfUserNotifications()) {
                     // Skip if it is already read
                     if (userNotification.isRead()) {
                         continue;
                     }
 
                     PreparedStatement preparedStatement
-                            = getConnection().prepareStatement(PreparedQueryStatement.UPDATE_NOTIFICATION_TO_READ.getQuery());
+                            = getConnection().prepareStatement(PreparedQueryStatement
+                                    .UPDATE_NOTIFICATION_TO_READ.getQuery());
                     preparedStatement.setInt(1, userNotification.getId());
 
                     preparedStatement.executeUpdate();

@@ -35,6 +35,11 @@ public class StudentSubmitCourseworkSucessView extends Panel
 
     public static final String VIEW_NAME = "SubmitCourseworkSuccessView";
 
+    /**
+     * A class constructor that builds its UI components upon object creation. 
+     * The purpose of this view is to notify student that they have successfully 
+     * submitted a coursework.
+     */
     public StudentSubmitCourseworkSucessView() {
         setSizeFull();
         
@@ -105,6 +110,11 @@ public class StudentSubmitCourseworkSucessView extends Panel
         setContent(wrapperLayout);
     }
 
+    /**
+     * No concrete implementation.
+     * 
+     * @param event ViewChangeEvent object
+     */
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
     }

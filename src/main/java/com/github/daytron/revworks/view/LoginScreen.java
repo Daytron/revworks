@@ -135,7 +135,7 @@ public final class LoginScreen extends CssLayout {
         // TextField for userid/email
         usernameField = new TextField(
                 LoginString.FORM_STUDENT_ID.getText());
-        usernameField.setWidth(16.4f, UNITS_EM);
+        usernameField.setWidth(15f, UNITS_EM);
         usernameField.setMaxLength(
                 LoginValidationNum.STUDENT_ID_LENGTH.getValue());
         // By default, hides validation error. Only to show later on explicitly
@@ -160,7 +160,7 @@ public final class LoginScreen extends CssLayout {
         // Password field
         passwordField = new PasswordField(
                 LoginString.FORM_USER_PASSWORD.getText());
-        passwordField.setWidth(16.4f, UNITS_EM);
+        passwordField.setWidth(15f, UNITS_EM);
         passwordField.setMaxLength(
                 LoginValidationNum.PASSWORD_MAX_LENGTH.getValue());
         passwordField.setIcon(FontAwesome.LOCK);
@@ -192,11 +192,11 @@ public final class LoginScreen extends CssLayout {
         });
 
         // Not yet register button
-        Button notYetRegisterButton = new Button("Not yet registered?");
-        notYetRegisterButton.setDescription("If you're not yet registered "
+        Button requestAccessButton = new Button("Request Access");
+        requestAccessButton.setDescription("If you want access to the demo "
                 + "click here for instructtion.");
-        notYetRegisterButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        notYetRegisterButton.addClickListener(new Button.ClickListener() {
+        requestAccessButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        requestAccessButton.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
@@ -214,31 +214,18 @@ public final class LoginScreen extends CssLayout {
                 content.setMargin(true);
                 content.setSpacing(true);
                 
-                Label titleLabel = new Label("Registration Notice");
+                Label titleLabel = new Label("Request Access");
                 titleLabel.addStyleName(ValoTheme.LABEL_BOLD);
                 
-                Label noteLabel = new Label("If you would like to join to the "
-                        + "ongoing user test pilot, then send me an email to "
-                        + "ryangilera@gmail.com with your:");
+                Label noteLabel = new Label("Want to look around? "
+                        + "Kindly drop me an email to "
+                        + "ryangilera@gmail.com and I'll get back to you "
+                        + "as soon as possible.");
                 
-                
-                Label listLabel = new Label();
-                listLabel.setContentMode(ContentMode.HTML);
-                listLabel.setValue("<ul>"
-                        + "<li>GSM student id</li>"
-                        + "<li>Your first and last name</li>"
-                        + "<li>Your module id and name</li>"
-                        + "<li>Your complete course name</li>"
-                        + "<li>Lecturer name</li>"
-                        + "<li>Desired password</li>"
-                        + "</ul>");
-                
-                Label lastNoteLabel = new Label("I'll contact you as "
-                        + "soon as possible. You may close this window "
+                Label lastNoteLabel = new Label("You may close this window "
                         + "to return back to the login area. Thank you.");
                 
-                content.addComponents(titleLabel,noteLabel,listLabel,
-                        lastNoteLabel);
+                content.addComponents(titleLabel,noteLabel,lastNoteLabel);
                 noteWindow.setContent(content);
                 
                 MainUI.get().addWindow(noteWindow);
@@ -247,7 +234,7 @@ public final class LoginScreen extends CssLayout {
 
         Label expandingGap = new Label();
         expandingGap.setWidth("100%");
-        buttonBar.addComponents(loginButton, notYetRegisterButton,expandingGap);
+        buttonBar.addComponents(loginButton, requestAccessButton,expandingGap);
         buttonBar.setExpandRatio(expandingGap, 1);
 
         // Add all together

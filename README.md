@@ -38,7 +38,7 @@ See [Javadoc](https://daytron.github.io/revworks/) for more information.
 
 
 ### License
-MIT
+Apache 2.0
 
 
 

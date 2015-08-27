@@ -1,15 +1,14 @@
 # RevWorks
 
-RevWorks is a web application for distant formative coursework feedback service for students and lecturers. The application is created as part of my final project for the undergraduate course of BSc. in Computer Science.
+RevWorks is a web application for distant formative coursework feedback service for students and lecturers. The application is created as part of my final project for the completion of the course in BSc. in Computer Science.
 
 ### Features
 
-  - Submit and manage coursework
-  - View submitted coursework
-  - Create and submit comments for a particular page
+  - Submit and view coursework
+  - Both users can raise comments for a particular page
   - Automatically jump to the associated page when viewing a feedback note
   - Real-time feedback chat
-  - Create systemwide or classwide announcements
+  - Create systemwide and classwide announcements
   - User notifications
   - Maximise the view of the coursework panel
 
@@ -24,8 +23,8 @@ RevWorks is a web application for distant formative coursework feedback service 
 ### Requirements
 - JDK 1.8
 - Vaadin Framework 7.4.8
-- MySQL 14.14
-- Tomcat or Glassfish for deployment
+- MySQL 5.6
+- Tomcat or GlassFish for deployment
 
 ### Dependencies
 
@@ -38,7 +37,7 @@ See [Javadoc](https://daytron.github.io/revworks/) for more information.
 
 
 ### License
-Apache 2.0
+The source code is released under Apache 2.0.
 
 
 
